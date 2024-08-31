@@ -1,5 +1,6 @@
 type CustomOptions = Omit<RequestInit, 'method'> & {
     baseUrl?: string | undefined
+    token?: string | null
 }
 
 export class HttpError extends Error {
@@ -16,7 +17,6 @@ export const request = async<T>(
     method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
     url: string, 
     options?: CustomOptions | undefined,
-    token?: string
     ) => {
     
     let body: FormData | string | undefined = undefined
@@ -37,8 +37,8 @@ export const request = async<T>(
               'Content-Type': 'application/json'
         }
 
-    if (token) {
-        baseHeaders['Authorization'] = token
+    if (options && options.token) {
+        baseHeaders['Authorization'] = `Bearer ${options.token}`
     }
 
     const baseUrl =
@@ -53,13 +53,13 @@ export const request = async<T>(
             method,
             body,
             headers: baseHeaders,
-            credentials: 'include',
         })
         if (!res.ok) {
             const errorData = await res.json();
+     
             throw new HttpError({
                 status: res.status,
-                message: errorData.msg || res.statusText,
+                message: errorData.message || res.statusText,
             });
         }
 
@@ -72,9 +72,10 @@ export const request = async<T>(
 
         return data
     } catch (error: any) {
+      console.log(error)
         throw new HttpError({
             status: 500,
-            message: error.msg || 'An unexpected error occurred.',
+            message: error.message || 'An unexpected error occurred.',
         });
     }
 }
@@ -85,7 +86,7 @@ export const http = {
       options?: Omit<CustomOptions, 'body'> | undefined,
       token?: string 
     ) {
-      return request<T>('GET', url, options, token)
+      return request<T>('GET', url, options)
     },
     post<T>(
       url: string,
@@ -93,7 +94,7 @@ export const http = {
       options?: Omit<CustomOptions, 'body'> | undefined,
       token?: string,
     ) {
-      return request<T>('POST', url, { ...options, body }, token)
+      return request<T>('POST', url, { ...options, body })
     },
     put<T>(
       url: string,
@@ -101,7 +102,7 @@ export const http = {
       options?: Omit<CustomOptions, 'body'> | undefined,
       token?: string,
     ) {
-      return request<T>('PUT', url, { ...options, body }, token)
+      return request<T>('PUT', url, { ...options, body })
     },
     patch<T>(
         url: string,
@@ -109,13 +110,13 @@ export const http = {
         options?: Omit<CustomOptions, 'body'> | undefined,
         token?: string,
     ) {
-        return request<T>('PATCH', url, { ...options, body }, token)
+        return request<T>('PATCH', url, { ...options, body })
     },
     delete<T>(
       url: string,
       options?: Omit<CustomOptions, 'body'> | undefined,
       token?: string,
     ) {
-      return request<T>('DELETE', url, { ...options }, token)
+      return request<T>('DELETE', url, { ...options })
     }
 }

@@ -1,7 +1,29 @@
 import { http } from "@/lib/utils/http";
 
+export type filterOptions = {
+    // product_sku?: string,
+    search?: string;
+    sort?: string;
+    category?: string;
+    fromPrice?: string;
+    toPrice?: string;
+    sizes?: string[];
+}
+
+
 export const productsApiRequest = {
-    getList: (size: number) => http.get<ProductDataResponse>(`/api/products?sizes=${size}`),
-    getRecommendList: (size: number) => http.get<ProductDataResponse>(`/api/productsHomepage?limit=${size}&sort=-rating`),
-    getBestSeller: (size: number) => http.get<ProductDataResponse>(`/api/productsHomepage?limit=${size}&sort=-sold`)
+    getList: (limit?: number, page?: number, filterOptions?: filterOptions) => {
+        let query = limit && page ? `limit=${limit}&page=${page}` : ''
+        if(filterOptions) {
+            filterOptions.search && (query += `&title[regex]=${filterOptions.search}`)
+            filterOptions.category && (query += `&category=${filterOptions.category}`)
+            filterOptions.fromPrice ? (query += `&price[gte]=${filterOptions.fromPrice}`) : (query += `&price[gte]=0`)
+            filterOptions.toPrice && (query += `&price[lte]=${filterOptions.toPrice}`)
+            filterOptions.sort && (query += `&${filterOptions.sort}`)
+            filterOptions.sizes && (query += `&sizes=${filterOptions.sizes.toString()}`)
+        }
+        return http.get<ProductDataResponse>(`/products?${query}`) 
+    },
+    getRecommendList: (limit: number) => http.get<ProductDataResponse>(`/products?limit=${limit}&sort=-rating`),
+    getBestSeller: (limit: number) => http.get<ProductDataResponse>(`/products?limit=${limit}&sort=-sold`)
 }

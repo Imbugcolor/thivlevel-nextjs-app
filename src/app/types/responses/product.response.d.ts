@@ -1,5 +1,5 @@
 interface ProductDataResponse {
-    status: string,
-    result: number,
-    products: Product[],
+    page: string,
+    total: number,
+    data: Product[],
 }

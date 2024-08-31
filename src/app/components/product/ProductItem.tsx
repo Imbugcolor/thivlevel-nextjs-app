@@ -1,12 +1,10 @@
-import "./styles/product-item.css"
+import "../styles/product-item.css"
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
-import SoldOut from '../../images/sold-out-2.png'
-import Rating from './Rating';
+import Rating from '../Rating';
 
-export default function ProductItem({ product }: { product: any}) {
-    if (!product.isPublished) return null;
+export default function ProductItem({ product }: { product: Product}) {
     return (
       <div className="col l-3 m-4 c-6">
         <div className="product_card">
@@ -19,7 +17,6 @@ export default function ProductItem({ product }: { product: any}) {
                 <Image className="product_img-2" src={product.images[1]?.url} alt="product_thumbnail" width={500} height={500}/>
               </>
             }
-            {product.countInStock <= 0 && <Image className="product_img-sold-out" src={SoldOut} alt="product_thumbnail" width={500} height={500}/>}
             <div className="quick-view">
               Xem nhanh
             </div>
@@ -32,7 +29,8 @@ export default function ProductItem({ product }: { product: any}) {
               </Link>
             </h3>
             <Rating
-              value={product.rating}
+              color="#ffce3d"
+              value={product.rating as number}
               text={`${product.numReviews} reviews`}
             />
             <h4 className="product_price">${product.price}</h4>

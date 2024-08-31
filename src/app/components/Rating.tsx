@@ -59,9 +59,9 @@ export default function Rating({ value, text, color }: { value: number, text: st
       )
 }
 
-Rating.defaultProps = {
-    color: '#ffce3d',
-}
+// Rating.defaultProps = {
+//     color: '#ffce3d',
+// }
   
 Rating.propTypes = {
     value: PropTypes.number.isRequired,

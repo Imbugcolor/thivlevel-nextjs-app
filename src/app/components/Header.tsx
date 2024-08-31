@@ -18,7 +18,7 @@ export default function Header() {
                 <div className="logo">
                     <div style={{ width: 'fit-content' }}>
                         <Link href="/">
-                            <Image src={Logo} alt="" className="header-logo"/>
+                            <Image src={Logo} priority alt="" className="header-logo"/>
                         </Link>
                     </div>
                 </div>

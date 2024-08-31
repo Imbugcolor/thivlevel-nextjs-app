@@ -1,4 +1,3 @@
-type LoginResponse = {
-    token: string,
-    user: any,
+interface LoginResponse extends User {
+    accessToken: string,
 }

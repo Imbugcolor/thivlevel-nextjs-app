@@ -10,7 +10,7 @@ import BestSABanner from '../images/best-seller-banner.jpg'
 import NewABanner from '../images/img-banner-index.jpg'
 import Link from "next/link";
 import { productsApiRequest } from "./api-request/products.api";
-import ProductItem from "./components/ProductItem";
+import ProductItem from "./components/product/ProductItem";
 
 export default async function Home() {
   const iconStyle = {
@@ -20,9 +20,9 @@ export default async function Home() {
 
   const recommendDataResponse = await productsApiRequest.getRecommendList(8)
   const bestSellerDataResponse = await productsApiRequest.getBestSeller(8)
-  const recommendList = recommendDataResponse.payload.products
-  const bestSellerList = bestSellerDataResponse.payload.products
-
+  const recommendList = recommendDataResponse.payload.data
+  const bestSellerList = bestSellerDataResponse.payload.data
+  
   return (
     <main className={styles.main}>
        <>
@@ -68,14 +68,20 @@ export default async function Home() {
             <div className="col l-10 l-o-1">
                 <div className="res-row best-seller-container">
                     <div className='banner__products_wrapper'>
-                        <Image className="banner__products_type_list" src={RecomFYBanner} alt="banner_1"/>
+                        <Image className="banner__products_type_list" 
+                        src={RecomFYBanner} 
+                        priority 
+                        width={0} 
+                        height={0}
+                        style={{width: '100%', height: 'auto'}}
+                        alt="banner_1" />
                     </div>
                     <div className="col l-12 m-12 c-12">
                         {
-                            recommendList.length > 0 &&
+                            recommendList?.length > 0 &&
                             <div className="res-row products">
                                 {
-                                    recommendList.map((product: any) => {
+                                    recommendList.map((product: Product) => {
                                         return <ProductItem key={product._id} product={product}/>
                                     })
                                 }
@@ -85,15 +91,20 @@ export default async function Home() {
                 </div>
                 <div className="res-row best-seller-container">
                     <div className='banner__products_wrapper'>
-                        <Image className="banner__products_type_list" src={BestSABanner} alt="banner_2"/>
+                        <Image className="banner__products_type_list" 
+                        priority
+                        width={0} 
+                        height={0}
+                        style={{width: '100%', height: 'auto'}}
+                        src={BestSABanner} alt="banner_2"/>
                     </div>
                     <div className="col l-12 m-12 c-12">
                         {
-                            bestSellerList.length > 0 &&
+                            bestSellerList?.length > 0 &&
                             <div className="res-row products">
                                 {
                                     bestSellerList.map(product => {
-                                        return <ProductItem key={product._id} product={product} />
+                                        return <ProductItem key={product._id} product={product}/>
                                     })
                                 }
                             </div>
@@ -103,7 +114,12 @@ export default async function Home() {
 
                 <div className="res-row best-seller-container">
                     <div className='banner__products_wrapper'>
-                        <Image className="banner__products_type_list" src={NewABanner} alt="banner_3"/>
+                        <Image className="banner__products_type_list" src={NewABanner} 
+                        priority 
+                        width={0} 
+                        height={0}
+                        style={{width: '100%', height: 'auto'}} 
+                        alt="banner_3"/>
                     </div>
                     <div className="col l-12 m-12 c-12">
                         {/* {

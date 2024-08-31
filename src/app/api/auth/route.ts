@@ -17,7 +17,7 @@ export async function POST(request: Request) {
             const errorData = await res.json();
             return new Response(JSON.stringify({
                 status: res.status,
-                message: errorData.msg || res.statusText,
+                message: errorData.message || res.statusText,
             }), {
                 status: res.status,
                 statusText: res.statusText,
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
         return new Response(JSON.stringify({
             status: 500,
             message: 'Internal Server Error',
-            details: error.msg || 'An unexpected error occurred.',
+            details: error.message || 'An unexpected error occurred.',
         }), {
             status: 500,
         });
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/refresh_token`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/refreshtoken`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -58,16 +58,16 @@ export async function GET(request: Request) {
             const errorData = await res.json();
             return new Response(JSON.stringify({
                 status: res.status,
-                message: errorData.msg || res.statusText,
+                message: errorData.message || res.statusText,
             }), {
                 status: res.status,
                 statusText: res.statusText,
             });
         }
         const data = await res.json()
-        const accesstoken = data.accesstoken
+        const accessToken = data.accessToken
 
-        return new Response(JSON.stringify(accesstoken), {
+        return new Response(JSON.stringify(accessToken), {
             status: 200,
         });
 
@@ -75,10 +75,9 @@ export async function GET(request: Request) {
         return new Response(JSON.stringify({
             status: 500,
             message: 'Internal Server Error',
-            details: error.msg || 'An unexpected error occurred.',
+            details: error.message  || 'An unexpected error occurred.',
         }), {
             status: 500,
         });
     }
-
 }

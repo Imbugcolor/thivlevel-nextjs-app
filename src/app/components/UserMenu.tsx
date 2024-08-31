@@ -1,22 +1,51 @@
 'use client'
-import { useAppSelector } from '@/lib/hooks'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react'
+import React, { LinkHTMLAttributes } from 'react'
 import { RiArrowDropDownLine } from 'react-icons/ri'
 import { CgProfile } from 'react-icons/cg'
 import { BiLogOut } from 'react-icons/bi'
 import { MdHistory } from 'react-icons/md'
 import { HiOutlineShoppingBag } from 'react-icons/hi'
+import { userApiRequest } from '../api-request/user.api';
+import { logout } from '@/lib/features/authSlice';
 
 export default function UserMenu() {
   const user = useAppSelector((state) => state.auth).user
+  const token = useAppSelector((state) => state.auth).token
+  const dispatch = useAppDispatch()
 
-  const logout = () => {
-
+  const handleLogout = async<E extends Element = HTMLAnchorElement>(
+    e: React.MouseEvent<E, MouseEvent>
+  )  => {
+    e.preventDefault()
+    if (token) {
+        await userApiRequest.logOut(token) 
+        dispatch(logout())
+        // window.location.href = '/auth';
+    }
   }
 
-  if (!user) return null;
+  if (!user) return  <>
+  <li className="user__container">
+             <div className="user__wrapper">
+                 <div className='user__name'>
+                     <span style={{ width: '2.5rem' }}></span>
+                     <RiArrowDropDownLine />
+                 </div>
+                 <Image src={'https://res.cloudinary.com/dnv2v2tiz/image/upload/v1679802559/instagram-avt-profile/unknow_fc0uaf.jpg'} width={100} height={100} referrerPolicy="no-referrer" alt="profile-avt" />
+             </div>
+         </li>
+         <li>
+             <div className="cart-icon">
+                 {/* <span>{cart ? cart.cart.items.length : 0}</span> */}
+                 <Link href="/cart">
+                     <HiOutlineShoppingBag />
+                 </Link>
+             </div>
+         </li>
+    </>
   return (
     <>
          <li className="user__container">
@@ -25,7 +54,7 @@ export default function UserMenu() {
                             <span>{user.username}</span>
                             <RiArrowDropDownLine />
                         </div>
-                        <Image src={user.imageProfile.url} width={100} height={100} referrerPolicy="no-referrer" alt="profile-avt" />
+                        <Image src={user.avatar} width={100} height={100} referrerPolicy="no-referrer" alt="profile-avt" />
                     </div>
                     <ul className="user__dropdown">
                         <li>
@@ -41,7 +70,7 @@ export default function UserMenu() {
                             </Link>
                         </li>
                         <li>
-                            <Link href="/" onClick={logout}>
+                            <Link href="/" onClick={handleLogout}>
                                 <BiLogOut style={{ fontSize: 20 }} />
                                 <span>Đăng xuất</span>
                             </Link>
