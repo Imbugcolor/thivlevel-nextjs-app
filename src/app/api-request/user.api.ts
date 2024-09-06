@@ -1,3 +1,4 @@
+import { NEXT_SERVER_URL } from "@/config";
 import { checkTokenExp } from "@/lib/refreshtoken";
 import { http } from "@/lib/utils/http";
 import { ThunkDispatch } from "@reduxjs/toolkit";
@@ -11,7 +12,7 @@ export const userApiRequest = {
           const result = await checkTokenExp(token, dispatch)
           accessToken = result ? result  : token
         }
-        const res = await fetch(`http://localhost:8080/api/user`, {
+        const res = await fetch(`${NEXT_SERVER_URL}/api/user`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",

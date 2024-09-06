@@ -6,7 +6,7 @@ import { login } from '@/lib/features/authSlice'
 import { userApiRequest } from './api-request/user.api'
 import { getProducts } from '@/lib/features/productSlice'
 import { getCategories } from '@/lib/features/categorySlice'
-import { NUM_PER_PAGE } from '@/config'
+import { NEXT_SERVER_URL, NUM_PER_PAGE } from '@/config'
 import { getCart } from '@/lib/features/cartSlice'
 
 export default function StoreProvider({
@@ -27,7 +27,7 @@ export default function StoreProvider({
 
   useEffect(() => {
       if(refreshToken) {
-          fetch('http://localhost:8080/api/auth', {
+          fetch(`${NEXT_SERVER_URL}/api/auth`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
