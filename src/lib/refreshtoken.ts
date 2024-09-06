@@ -5,7 +5,7 @@ import { setNotify } from "./features/notifySlice";
 
 export const checkTokenExp = async (
   token: string,
-  dispatch: ThunkDispatch<any, any, any> | null
+  dispatch: ThunkDispatch<any, any, any> | undefined
 ) => {
   const decode = jwtDecode(token);
 
