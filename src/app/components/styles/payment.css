@@ -1,0 +1,108 @@
+
+.payment-method-options-modal{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    z-index: 102;
+}
+
+.payment-method-options-modal .payment-method{
+    width: 800px;
+    padding: 15px 25px;
+    position: relative;
+    background: #fff;
+    animation: zoomOut ease .3s;
+    margin: 0 15px;
+}
+
+.payment-method-options-modal-close {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    cursor: pointer;
+    font-size: 40px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    padding: 1px;
+}
+
+.cod-btn-confirm {
+    text-align: center;
+    background: #f5bd00;
+    color: #fff;
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+}
+
+.stripe-checkout, .completed-check-option{
+    width: 100%;
+    background: #000;
+    height: 40px;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.list__method_wrapper {
+    margin: 25px 0;
+}
+
+.list__method_wrapper .method_item {
+    display: flex;
+    align-items: center;
+    padding: 15px
+}
+
+.list__method_wrapper .stripe_method_option {
+    border-bottom: none;
+}
+
+.list__method_wrapper .method_item .content_options_method, 
+.credit-card-content {
+    display: flex;
+    align-items: center;
+    color: #666666;
+    font-weight: 300;
+    margin-left: 15px;
+}
+
+.method_item .content_options_method .img_options_method, 
+.credit-card-content .img_options_method {
+    max-width: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content_options_method .img_options_method img,
+.credit-card-content .img_options_method img{
+    width: 100%;
+}
+
+.method_item .content_options_method .text_options_method,
+.credit-card-content .text_options_method, 
+.credit-card-img {
+    margin-left: 25px;
+}
+
+.check_options_method input {
+    width: 18px;
+    height: 18px;
+}
+
+.credit-card-method {
+    display: block;
+    line-height: 30px;
+}
+
+.paypal_section {
+    padding: 15px;
+}
+
+@media (max-width: 768px) {
+    .credit-card-content {
+        display: block;
+    }
+}

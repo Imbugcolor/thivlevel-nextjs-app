@@ -1,4 +1,13 @@
 /* Filters */
+.filter_menu {
+    display: flex;
+    justify-content: space-between;
+}
+
+.filter__search-sort {
+    display: flex;
+    align-items: center;
+}
 
 .products__container {
     justify-content: space-between;
@@ -75,7 +84,6 @@
 .filter_menu {
     min-height: 40px;
     color: #008c90;
-    padding: 5px 10px;
     justify-content: space-between;
 }
 
@@ -114,10 +122,6 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-}
-
-.filter_menu input {
-    flex: 1;
 }
 
 .filter_menu .search {
@@ -221,7 +225,8 @@
     max-width: 350px;
 }
 
-.products_price_filter {
+.products_price_filter,
+.products_size_filter {
     margin-top: 25px;
 }
 
@@ -352,8 +357,17 @@
     font-size: 20px;
 }
 
+.filter-apply-btn {
+    height: 45px;
+    padding: 2px 15px;
+    background-color: #e66294;
+    color: #fff;
+}
 
 @media (max-width: 1113px) {
+    .cate-side-bar {
+        display: none;
+    }
     .filter_menu .filter,
     .filter_menu .sort {
         justify-content: space-between;

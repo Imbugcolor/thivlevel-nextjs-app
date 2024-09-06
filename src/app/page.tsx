@@ -24,7 +24,7 @@ export default async function Home() {
   const bestSellerList = bestSellerDataResponse.payload.data
   
   return (
-    <main className={styles.main}>
+    <main className={`container-box`}>
        <>
             <MySlider></MySlider>
             <div className="res-row service-container">
@@ -65,7 +65,7 @@ export default async function Home() {
                     </div>
                 </div>
             </div>
-            <div className="col l-10 l-o-1">
+            <div className="col">
                 <div className="res-row best-seller-container">
                     <div className='banner__products_wrapper'>
                         <Image className="banner__products_type_list" 
@@ -76,7 +76,7 @@ export default async function Home() {
                         style={{width: '100%', height: 'auto'}}
                         alt="banner_1" />
                     </div>
-                    <div className="col l-12 m-12 c-12">
+                    <div className="w-100">
                         {
                             recommendList?.length > 0 &&
                             <div className="res-row products">
@@ -98,7 +98,7 @@ export default async function Home() {
                         style={{width: '100%', height: 'auto'}}
                         src={BestSABanner} alt="banner_2"/>
                     </div>
-                    <div className="col l-12 m-12 c-12">
+                    <div className="w-100">
                         {
                             bestSellerList?.length > 0 &&
                             <div className="res-row products">
@@ -121,7 +121,7 @@ export default async function Home() {
                         style={{width: '100%', height: 'auto'}} 
                         alt="banner_3"/>
                     </div>
-                    <div className="col l-12 m-12 c-12">
+                    <div className="w-100">
                         {/* {
                             loading.newarrival ? <div><Loading/></div> :
                             <div className="res-row products">

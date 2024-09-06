@@ -34,7 +34,6 @@ header.fix-scroll .menu__nav_header_bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0 10px;
 }
 
 .wd100 {
@@ -43,7 +42,7 @@ header.fix-scroll .menu__nav_header_bottom {
 
 header .logo {
     flex: 1;
-    margin-left: 10px;
+    margin-right: 20px;
 }
 
 .header__top .search__bar_header, .search__bar_mobile {
@@ -239,6 +238,7 @@ header .header-nav .login_sign_up_nav {
     color: #bf6b03;
     cursor: pointer;
     position: relative;
+    padding: 0 20px;
 }
 
 .user__container:hover .user__dropdown {
@@ -346,7 +346,6 @@ header .header-nav .login_sign_up_nav {
 
 .cart-icon {
     position: relative;
-    margin-right: 20px;
 }
 
 .cart-icon>span {

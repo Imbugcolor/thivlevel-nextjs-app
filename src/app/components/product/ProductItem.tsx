@@ -24,7 +24,7 @@ export default function ProductItem({ product }: { product: Product}) {
   
           <div className="product_box">
             <h3 title={product.title}>
-              <Link href={`/detail/${product._id}`}>
+              <Link href={`/product/${product._id}`}>
                 {product.title}
               </Link>
             </h3>

@@ -14,7 +14,7 @@ export default function Header() {
     const token = cookieStore.get('refreshtoken')?.value
     return (
         <header>
-            <div className='header__top'>
+            <div className='container-box header__top'>
                 <div className="logo">
                     <div style={{ width: 'fit-content' }}>
                         <Link href="/">

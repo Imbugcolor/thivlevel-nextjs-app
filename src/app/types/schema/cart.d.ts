@@ -3,8 +3,8 @@ interface Cart {
   userId: string;
   items: CartItem[];
   subTotal: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }
 
 interface CartItem {
@@ -14,6 +14,6 @@ interface CartItem {
   quantity: number;
   price: number;
   total: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | null;
+  updatedAt: Date | null;
 }

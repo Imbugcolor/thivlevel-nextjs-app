@@ -3,3 +3,5 @@ interface ProductDataResponse {
     total: number,
     data: Product[],
 }
+
+interface ProductDetailDataResponse extends Product {}

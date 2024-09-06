@@ -590,3 +590,10 @@
         margin-left: 91.66667%;
     }
 }
+
+/* Tablet - PC low resolution */
+@media (max-width: 739px) {
+   .container-box {
+        padding: 0 15px;
+   }
+}

@@ -11,7 +11,7 @@ interface Product {
     rating?: number,
     numReviews?: number,
     isPublished: boolean,
-    category?: string,
+    category?: Category,
     reviews?: Review[],
     createdAt?: string,
     updatedAt?: string,

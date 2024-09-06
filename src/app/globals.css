@@ -39,6 +39,14 @@ code {
   background: #eee;
 }
 
+.container-box {
+  padding: 0 50px;
+}
+
+.w-100 {
+  width: 100%;
+}
+
 a {
   text-decoration: none;
 }
@@ -49,6 +57,10 @@ a {
 
 ul li {
   list-style: none;
+}
+
+input {
+  outline: none;
 }
 
 button {
@@ -69,4 +81,54 @@ table {
 .address-form.active {
   display: block;
   position: initial;
+}
+
+/* file path: src/app/globals.css */
+
+.breadcrumbs{
+  display: flex;
+  align-items: center;
+  height: 10px;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.breadcrumbs li{
+  list-style: none;
+}
+
+
+/* PAYMENT MODAL */
+.payment-method-option-box {
+  display: none;
+}
+
+.payment-method-option-box .active {
+  display: block;
+}
+
+
+/* REVIEW MODAL */
+.review-modal {
+  display: none;
+}
+
+.review-modal .active {
+  display: block;
+}
+
+
+/* SKELETON LOADING */
+.skeleton {
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(240, 21%, 91%);
+  }
+  100% {
+    background-color: hsl(240, 5%, 96%);
+  }
 }

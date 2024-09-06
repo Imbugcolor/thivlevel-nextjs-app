@@ -3,7 +3,11 @@ import { RootReducers } from './features/root.reducer'
 
 export const makeStore = () => {
   return configureStore({
-    reducer: RootReducers
+    reducer: RootReducers,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: false,
+      }),
   })
 }
 

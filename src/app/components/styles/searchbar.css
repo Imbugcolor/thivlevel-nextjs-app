@@ -1,6 +1,10 @@
 .search__bar_wrapper {
+    display: flex;
+    height: 45px;
     border-radius: 20px;
     border: 1px solid #d5d2d3;
+    width: 100%;
+    position: relative;
 }
 
 .search__bar_wrapper .search__bar_input{
@@ -9,6 +13,7 @@
     margin-right: 20px;
     padding: 5px 0px;
     font-size: 14px;
+    width: 100%;
 }
 
 .search__bar_wrapper .search__input_icon {

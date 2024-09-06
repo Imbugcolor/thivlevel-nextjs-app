@@ -84,7 +84,6 @@ export const http = {
     get<T>(
       url: string,
       options?: Omit<CustomOptions, 'body'> | undefined,
-      token?: string 
     ) {
       return request<T>('GET', url, options)
     },
@@ -92,7 +91,6 @@ export const http = {
       url: string,
       body: any,
       options?: Omit<CustomOptions, 'body'> | undefined,
-      token?: string,
     ) {
       return request<T>('POST', url, { ...options, body })
     },
@@ -108,14 +106,12 @@ export const http = {
         url: string,
         body: any,
         options?: Omit<CustomOptions, 'body'> | undefined,
-        token?: string,
     ) {
         return request<T>('PATCH', url, { ...options, body })
     },
     delete<T>(
       url: string,
       options?: Omit<CustomOptions, 'body'> | undefined,
-      token?: string,
     ) {
       return request<T>('DELETE', url, { ...options })
     }

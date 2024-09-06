@@ -1,119 +1,102 @@
 'use client'
 import './styles/searchbar.css'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { GoSearch } from 'react-icons/go'
+import useDebounce from '../hooks/useDebounce';
+import { productsApiRequest } from '../api-request/products.api';
+import Link from 'next/link';
+import Image from 'next/image';
+import { InputChange } from '../types/html-elements';
+import { replaceAccentedCharacters } from '@/lib/utils/regex';
 
 export default function SearchBar() {
+    const [wordEntered, setWordEntered] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [search, setSearch] = useState<Product[]>([])
+    const [openResult, setOpenResult] = useState(false)
+    const [moveOut, setMoveOut] = useState(false)
 
-    // const state = useContext(GlobalState)
-    // const [data, setData] = state.productsAPI.suggestions
-    // const [filterData, setFilterData] = useState([])
-    // const [wordEntered, setWordEntered] = useState('')
-    // const [sort, setSort] = state.productsAPI.sort
-    // const [search, setSearch] = state.productsAPI.search
-    // const [category, setCategory] = state.productsAPI.category
+    useDebounce(async () => {
+        if(wordEntered) {
+            setLoading(true)
+            const searchData = await productsApiRequest.getList(8, 1, { search: wordEntered })
+            setSearch(searchData.payload.data);
+            setOpenResult(true)
+            setLoading(false)
+        }
+    }, [wordEntered], 800
+    );
 
-    // const [open, setOpen] = useState(false)
+    const handleSearch = (e: InputChange) => {
+        setSearch([])
+        setMoveOut(false)
+        setOpenResult(false)
+        setWordEntered(e.target.value)
+    }
 
-    // useEffect(() => {
-    //     setSearch('')
-    //     setSort('')
-    //     setCategory('')
-    // }, [])
-
-    // const handleSearch = (e, keySearch) => {
-    //     if (e.key === 'Enter') {
-    //         setWordEntered(keySearch)
-    //         setOpen(false)
-    //     }
-    // }
-
-
-    // const handleSuggest = e => {
-    //     setOpen(true)
-    //     const searchWord = e.target.value
-    //     setWordEntered(searchWord)
-    //     const newFilter = data.filter((product) => {
-    //         return product.title.toLowerCase().includes(searchWord.toLowerCase())
-    //     })
-    //     // setSuggestions(e.target.value.toLowerCase())
-    //     if(searchWord === '') {
-    //         setFilterData([])
-    //     } else {
-    //         setFilterData(newFilter)
-    //     }
-        
-    // }
-
-    // const handleCloseSearch = () => {
-    //     setWordEntered('')
-    //     setFilterData([])
-    // }
+    const handleCloseSearch = () => {
+        setWordEntered('')
+        setSearch([])
+    }
 
     return (
         <div className="filter_menu product">
-
             <div className="search search__bar_wrapper" >
                 <div className="search__input_icon">
                     <GoSearch />
                 </div>
                 <input className="search-input-bd-none search__bar_input" type="text" placeholder="Nhập sản phẩm bạn muốn tìm kiếm ..."
-                    // value={wordEntered}
-                    // onKeyPress={(e) => {handleSearch(e,wordEntered)}}
-                    // onChange={handleSuggest}
-                    // onFocus={() => setOpen(true)}
-                    // onBlur={e => {
-                    //     e.relatedTarget?.classList.contains('redirect_item_result') ?
-                    //         e.preventDefault() :
-                    //         setOpen(false)
-                    // }}
+                    value={wordEntered}
+                    onChange={handleSearch}
                 />
-                {/* <div className='close_search_bar' style={{opacity: wordEntered ? 1 : 0}}
-                onClick={handleCloseSearch}>
+                <div className='close_search_bar' style={{ opacity: wordEntered ? 1 : 0 }}
+                    onClick={handleCloseSearch}>
                     Hủy
                 </div>
                 {
-                    open && filterData.length > 0 ?
-                        <ul className="list_item_suggest">
-                            <li className='key_search_msg'>
-                                <GoSearch /> kết quả cho '{wordEntered}'
-                            </li>
-                            {
-                                filterData.map((item, index) => {
-                                    return index > 15 ? null :
-                                        <li key={item._id} className="item_suggest_result">
-                                            <div className='left__item_suggest_result'>
-                                                <Link to={`/detail/${item._id}`} className="redirect_item_result" onClick={(e) => {
-                                                    setWordEntered(e.target.innerText)  
-                                                    setSearch('')  
-                                                    setCategory('')                                        
-                                                    setOpen(false)
-                                                }}>
-                                                    {item.title}
-                                                </Link>
-                                                <span>{item.price} $</span>
-                                            </div>
-                                            <div className='right__item_suggest_result'>
-                                                <Link to={`/detail/${item._id}`} className="redirect_item_result" onClick={(e) => {
-                                                    setSearch('')
-                                                    setCategory('')
-                                                    setWordEntered(e.target.innerText)                                            
-                                                    setOpen(false)
-                                                }}>
-                                                    <img src={item.images[0].url}/>
-                                                </Link>    
-                                            </div>                                          
-                                        </li>
-                                })
-                            }
-                        </ul>
-                        : open && filterData.length === 0 && wordEntered ? 
-                        <ul className="list_item_suggest">
-                            <li className='not__found_msg'>
-                                <GoSearch /> Không có kết quả cho '{wordEntered}'
-                            </li>
-                        </ul> : null
-                } */}
+                    wordEntered && search.length > 0 &&
+                    <ul className="list_item_suggest">
+                        <li className='key_search_msg'>
+                            <GoSearch /> kết quả cho &apos;{wordEntered}&apos;
+                        </li>
+                        {
+                            search.map((item, index) => {
+                                return index > 15 ? null :
+                                    <li key={item._id} className="item_suggest_result">
+                                        <div className='left__item_suggest_result'>
+                                            <Link href={`/product/${item._id}`} className="redirect_item_result" onClick={(e) => {
+                                                setWordEntered((e.target as HTMLElement).innerText)
+                                                setOpenResult(false)
+                                                setSearch([])
+                                                setMoveOut(true)
+                                            }}>
+                                                {item.title}
+                                            </Link>
+                                            <span>{item.price} $</span>
+                                        </div>
+                                        <div className='right__item_suggest_result'>
+                                            <Link href={`/product/${item._id}`} className="redirect_item_result" onClick={(e) => {
+                                                setWordEntered((e.target as HTMLElement).innerText)
+                                                setOpenResult(false)
+                                                setSearch([])
+                                                setMoveOut(true)
+                                            }}>
+                                                <Image src={item.images[0].url} width={500} height={500} alt='product-image-search' />
+                                            </Link>
+                                        </div>
+                                    </li>
+                            })
+                        }
+                    </ul>
+                }
+                {
+                    wordEntered && search.length == 0 && openResult && !moveOut &&
+                    <ul className="list_item_suggest">
+                        <li className='not__found_msg'>
+                            <GoSearch /> Không có kết quả cho &apos;{wordEntered}&apos;
+                        </li>
+                    </ul>
+                }
             </div>
 
         </div >

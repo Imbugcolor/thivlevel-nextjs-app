@@ -5,6 +5,10 @@ import "./styles/response.css"
 import StoreProvider from "./StoreProvider";
 import { cookies } from "next/headers";
 import Header from "./components/Header";
+import ReapopProvider from "./ReapopProvider";
+import Notify from "./components/toast/Notify";
+import Breadcrumbs from "./components/Breadcrumb";
+import Footer from "./components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,8 +29,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <StoreProvider refreshToken={token}>
-          <Header />
-          {children}
+          <ReapopProvider>
+            <Header />
+            <Notify />
+            <Breadcrumbs />
+            {children}
+            <Footer />
+          </ReapopProvider>
         </StoreProvider>
       </body>
     </html>

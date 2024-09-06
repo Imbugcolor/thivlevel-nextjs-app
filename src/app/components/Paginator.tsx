@@ -2,16 +2,17 @@ import { NUM_PER_PAGE } from '@/config';
 import './styles/paginator.css'
 import React from 'react'
 
-interface ListState {
+export interface ListData {
     data: any[];
     total: number;
     page: number;
 }
 
-export default function Paginator<T extends ListState>({ list, total, callback }: { list: T, total: number, callback: (num: number) => void }) {
+export default function Paginator<T extends ListData>({ list, total, limit, callback }: { list: T, total: number, limit?: number, callback: (num: number) => void }) {
     const { page } = list
 
-    const newArr = [...Array(Math.ceil(total/ NUM_PER_PAGE))].map((_, i) => i + 1)
+    const totalPages = Math.ceil(total/( limit ? limit : NUM_PER_PAGE))
+    const newArr = [...Array(totalPages)].map((_, i) => i + 1)
 
     const isActive = (index: number) => {
         if (index === page) return 'active';
@@ -48,7 +49,7 @@ export default function Paginator<T extends ListState>({ list, total, callback }
                 }
 
                 {
-                    page < total &&
+                    page < totalPages &&
                     <li className="page-item"
                         onClick={() => handlePagination(page + 1)}>
                         <span className="page-link" aria-label="Next">

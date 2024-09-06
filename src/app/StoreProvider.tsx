@@ -7,6 +7,7 @@ import { userApiRequest } from './api-request/user.api'
 import { getProducts } from '@/lib/features/productSlice'
 import { getCategories } from '@/lib/features/categorySlice'
 import { NUM_PER_PAGE } from '@/config'
+import { getCart } from '@/lib/features/cartSlice'
 
 export default function StoreProvider({
   refreshToken,
@@ -16,7 +17,6 @@ export default function StoreProvider({
   children: React.ReactNode
 }) {
   const [accessToken, setAccessToken] = useState(null)
-  const [isLoading, setLoading] = useState(true)
  
   const storeRef = useRef<AppStore>()
 
@@ -27,8 +27,7 @@ export default function StoreProvider({
 
   useEffect(() => {
       if(refreshToken) {
-          setLoading(true)
-          fetch('api/auth', {
+          fetch('http://localhost:8080/api/auth', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -69,12 +68,39 @@ export default function StoreProvider({
           // Create the store instance the first time this renders
           storeRef.current.dispatch(login({ token: accessToken, user: data }))
         }
-        setLoading(false)
       })
       .catch(async(error) => {
         console.log(error)
         await userApiRequest.logOut()
         window.location.href = '/auth'
+      })
+    }
+    
+  },[accessToken])
+
+  useEffect(() => {
+    if(accessToken) {
+      fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/cart`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
+        },
+      })
+      .then(async(res) => {
+        const data = await res.json()
+        if (!res.ok) {
+          await userApiRequest.logOut()
+          throw Error(data)
+        }
+        if (storeRef.current) {
+          // Create the store instance the first time this renders
+          storeRef.current.dispatch(getCart(data))
+        }
+      })
+      .catch(async(error) => {
+        console.log(error)
+        throw Error(error)
       })
     }
     
@@ -89,7 +115,7 @@ export default function StoreProvider({
       })
       .then(async(res) => {
         if (!res.ok) {
-          throw Error("Get products failed.")
+          throw Error("Fetch products failed.")
         }
         const productsData = await res.json()
         if (storeRef.current) {
@@ -99,6 +125,7 @@ export default function StoreProvider({
       })
       .catch(async(error) => {
         console.log(error)
+        throw Error("Error server.")
       })
   },[])
 
@@ -111,7 +138,7 @@ export default function StoreProvider({
     })
     .then(async(res) => {
       if (!res.ok) {
-        throw Error("Get categories failed.")
+        throw Error("Fetch categories failed.")
       }
      
       const categoriesData: Category[] = await res.json()
@@ -123,8 +150,9 @@ export default function StoreProvider({
     })
     .catch(async(error) => {
       console.log(error)
+      throw Error("Error server.")
     })
-},[])
+  },[])
 
   return <Provider store={storeRef.current}>{children}</Provider>
 }

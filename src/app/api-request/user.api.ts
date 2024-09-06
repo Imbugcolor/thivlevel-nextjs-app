@@ -1,14 +1,21 @@
+import { checkTokenExp } from "@/lib/refreshtoken";
 import { http } from "@/lib/utils/http";
+import { ThunkDispatch } from "@reduxjs/toolkit";
 
 export const userApiRequest = {
   getUserCurrent: (token: string) => http.get("/user/current", { token }),
-  logOut: async (token?: string) => {
+  logOut: async (token?: string, dispatch?: ThunkDispatch<any, any, any>) => {
     try {
-        const res = await fetch(`api/user`, {
+        let accessToken = '';
+        if (token) {
+          const result = await checkTokenExp(token, dispatch)
+          accessToken = result ? result  : token
+        }
+        const res = await fetch(`http://localhost:8080/api/user`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": token ? token : '',
+              "Authorization": accessToken ? accessToken : '',
             },
         })
 
@@ -17,7 +24,7 @@ export const userApiRequest = {
             console.log(errorData);
             throw Error(errorData);
         }
-  
+        
         return window.location.href = '/auth';
     } catch (error: any) {
         throw Error(error);
