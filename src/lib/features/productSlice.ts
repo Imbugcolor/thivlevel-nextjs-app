@@ -2,6 +2,12 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export interface ProductPayload {
+  data: Product[];
+  total: number;
+  page: number;
+}
+
 export interface ProductFilterFields {
   search: string;
   sort: string;
@@ -37,7 +43,7 @@ export const ProductSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    getProducts: (state, action: PayloadAction<GetProductsAction>) => {
+    getProducts: (state, action: PayloadAction<ProductPayload>) => {
       state.data = action.payload.data;
       state.total = action.payload.total;
       state.page = action.payload.page;
