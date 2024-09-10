@@ -9,13 +9,33 @@ import * as MdIcons from 'react-icons/md'
 import * as BiIcons from 'react-icons/bi'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 import { HiOutlineShoppingBag } from 'react-icons/hi'
+import { Twirl as Hamburger } from 'hamburger-react'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { setNotify } from '@/lib/features/notifySlice';
+import { userApiRequest } from '../api-request/user.api';
 
 export default function NavMobile({ token }: { token: string | undefined }) {
+    const cart = useAppSelector(state => state.cart)
+    const dispatch = useAppDispatch()
     const [open, setOpen] = useState(false);
-    const [cart, setCart] = useState(null)
 
-    const logoutUser = () => {
-
+    const handleLogout = async<E extends Element = HTMLAnchorElement>(
+        e: React.MouseEvent<E, MouseEvent>
+    ) => {
+        e.preventDefault()
+        if (token) {
+            dispatch(setNotify({ loading: true }))
+            try {
+                await userApiRequest.logOut(token, dispatch)
+                dispatch(setNotify({ loading: false }))
+            } catch (error) {
+                dispatch(setNotify({ loading: false }))
+                console.log("An unexpected error occurred:", error);
+                dispatch(setNotify({ error: 'Có lỗi xảy ra' }))
+                  
+            }
+            // window.location.href = '/auth';
+        }
     }
 
     const loggedRouterMobile = () => {
@@ -24,26 +44,26 @@ export default function NavMobile({ token }: { token: string | undefined }) {
                 <li className="user__container-mobile">
                     <ul>
                         <li className="cart-icon">
-                            {/* <span>{cart ? cart.cart.items.length : 0}</span> */}
+                            <span>{cart ? cart.items.length : 0}</span>
                             <Link href="/cart" onClick={() => setOpen(false)}>
                                 <HiOutlineShoppingBag style={{ fontSize: 24, marginRight: 15 }} />
                                 <span>Giỏ hàng</span>
                             </Link>
                         </li>
                         <li>
-                            <Link href="/user" onClick={() => setOpen(false)}>
+                            <Link href="/user/profile" onClick={() => setOpen(false)}>
                                 <CgIcons.CgProfile style={{ fontSize: 24, marginRight: 15 }} />
                                 <span>Thông tin</span>
                             </Link>
                         </li>
                         <li>
-                            <Link href="/history" onClick={() => setOpen(false)}>
+                            <Link href="/user/purchase" onClick={() => setOpen(false)}>
                                 <MdIcons.MdHistory style={{ fontSize: 24, marginRight: 15 }} />
                                 <span>Đơn hàng của tôi</span>
                             </Link>
                         </li>
                         <li>
-                            <Link href="/" onClick={logoutUser}>
+                            <Link href="/" onClick={(e) => handleLogout(e)}>
                                 <BiIcons.BiLogOut style={{ fontSize: 20, marginRight: 15 }} />
                                 <span>Đăng xuất</span>
                             </Link>
@@ -63,10 +83,10 @@ export default function NavMobile({ token }: { token: string | undefined }) {
                         </div>
                 }
                 <div className="navbar-icon">
-                    {/* <Hamburger
+                    <Hamburger
                         color="rgb(64, 64, 64)" toggled={open}
-                        size="40" rounded toggle={setOpen}
-                    /> */}
+                        size={40} rounded toggle={setOpen}
+                    />
                 </div>
                 <div className={`navbar-tablet-mobile-wrapper ${open ? 'active' : ''}`}>
                     <div className='search__bar_mobile'>
@@ -75,7 +95,7 @@ export default function NavMobile({ token }: { token: string | undefined }) {
                     <ul>
                         <li><Link href="/" onClick={() => setOpen(false)}>Trang chủ</Link></li>
                         <li><Link href="/products" onClick={() => setOpen(false)}>Shop</Link></li>
-                        <li><Link href="/pages/introduction" onClick={() => setOpen(false)}>About us</Link></li>
+                        <li><Link href="/about/introduction" onClick={() => setOpen(false)}>About us</Link></li>
                         {
                             token && loggedRouterMobile()
                         }
@@ -83,7 +103,7 @@ export default function NavMobile({ token }: { token: string | undefined }) {
                     <div className='sign_in__mobile_wrapper'>
                         {
                             !token &&
-                            <Link href="/login" onClick={() => setOpen(false)}>
+                            <Link href="/auth" onClick={() => setOpen(false)}>
                                 <div className='sign_in__mobile'>
                                     <CiUser />
                                     <h4>ĐĂNG NHẬP</h4>

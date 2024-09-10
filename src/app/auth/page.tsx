@@ -6,8 +6,14 @@ import { BiShow, BiHide } from 'react-icons/bi'
 import Link from 'next/link'
 import { useAppDispatch } from "@/lib/hooks";
 import { setNotify } from "@/lib/features/notifySlice";
+import { useSearchParams } from "next/navigation";
+import { useGoogleLogin } from "@react-oauth/google";
+import { FcGoogle } from "react-icons/fc";
 
 export default function Login() {
+  const searchParams = useSearchParams()
+  const previousUrl = searchParams.get('previous')
+  
   const [user, setUser] = useState<LoginRequest>({
     email: '',
     password: ''
@@ -69,7 +75,13 @@ export default function Login() {
         return dispatch(setNotify({ error: errorData.message ? errorData.message : 'Đăng nhập thất bại'}))
       } 
       setLoading(false)
-      window.location.href = '/';
+
+      if(previousUrl) {
+        window.location.href = `/${previousUrl}`
+      } else {
+        window.location.href = '/';
+      }
+      
       dispatch(setNotify({ success: 'Đăng nhập thành công'}))
     })
     .catch(err => {
@@ -80,6 +92,46 @@ export default function Login() {
     })
   }
 
+  const googleButton = useGoogleLogin({
+    onSuccess: tokenResponse => handleGoogleLogin(tokenResponse.code),
+    flow: 'auth-code',
+  })
+
+  const handleGoogleLogin = async(code: string) => {
+    setDisableForm(true)
+    setLoading(true)
+    await fetch(`api/auth/google`, {
+      method: 'POST',
+      body: JSON.stringify({ code }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    })
+    .then(async(res) => {
+      if(!res.ok) {
+        const errorData = await res.json();
+        console.log(errorData)
+        setDisableForm(false)
+        setLoading(false)
+        return dispatch(setNotify({ error: errorData.message ? errorData.message : 'Đăng nhập thất bại'}))
+      } 
+      setLoading(false)
+
+      if(previousUrl) {
+        window.location.href = `/${previousUrl}`
+      } else {
+        window.location.href = '/';
+      }
+      
+      dispatch(setNotify({ success: 'Đăng nhập thành công'}))
+    })
+    .catch(err => {
+      setLoading(false)
+      setDisableForm(false)
+      console.log(err)
+      return dispatch(setNotify({ error: err.message ? err.message : 'Đăng nhập thất bại'}))
+    })
+  }
 
   return (
     <div className='login-page'>
@@ -89,7 +141,7 @@ export default function Login() {
             <h2 className='active'>Đăng nhập</h2>
           </div>
           <div className='sign__up_heading'>
-            <h2><Link href="/register">Đăng ký</Link></h2>
+            <h2><Link href="/auth/register">Đăng ký</Link></h2>
           </div>
         </div>
 
@@ -152,17 +204,10 @@ export default function Login() {
       </form>
       <div className="signin-with-social">
         <span>Hoặc đăng nhập với</span>
-        <div className='google-login-button-wrapper'>
-          {/* <GoogleLogin
-            onSuccess={credentialResponse => {
-              const data = jwt_decode(credentialResponse.credential)
-              responseGoogleSuccess(data)
-            }}
-            onError={() => {
-              responseGoogleFailure('login failed!')
-            }}
-            width='280px'
-          /> */}
+        <div className='google-login-button-wrapper' onClick={googleButton}>
+            <div className='google-btn-login'>        
+                <FcGoogle /> 
+            </div>
         </div>
         <div className='facebook-login-button-wrapper'>
           {/* <FacebookLogin

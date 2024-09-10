@@ -58,7 +58,7 @@ export default function TopBarProduct() {
   return (
     <div>
        <div className="filter_menu product res-row">
-                <div className='filter__search-sort col l-4 m-12'>
+                <div className='filter__search-sort col l-4'>
                     {
                         <div className='remove__filter_wrapper'>
                             <button onClick={handleRemoveFilter}><FcClearFilters /></button>
@@ -76,7 +76,7 @@ export default function TopBarProduct() {
 
                     </div>
                 </div>
-                <div className="tool-wrapper col l-4 m-12">
+                <div className="tool-wrapper col l-4">
                     <div className='filter_right_side'>
 
                         <div className="sort">
@@ -92,7 +92,7 @@ export default function TopBarProduct() {
                         </div>
                     </div>
                 </div>
-                <div className="tool-wrapper col l-4 m-12">
+                <div className="tool-wrapper col l-4">
                     <div className='filter_right_side'>
 
                         <div className="sort">

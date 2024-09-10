@@ -9,6 +9,7 @@ import { setNotify } from '@/lib/features/notifySlice';
 import { CreatePaypalCheckoutRequest, ordersApiRequest } from '@/app/api-request/orders.api';
 import { io, Socket } from "socket.io-client";
 import { BACKEND_SERVER_URL } from "@/config";
+import { HttpError } from "@/lib/utils/http";
 
 export default function Paypal({ name, phone, address }: { name: string, phone: string, address: AddressFullObject}) {
   const token = useAppSelector(state => state.auth).token
@@ -78,9 +79,19 @@ export default function Paypal({ name, phone, address }: { name: string, phone: 
         throw new Error(errorMessage);
       }
     } catch (error: any) {
-      dispatch(setNotify({ error: 'Thanh toán thất bại' }))
-      console.error(error);
-      throw new Error(error);
+      if (error instanceof HttpError) {
+        // Handle the specific HttpError
+        console.log("Error message:", error.message);
+        // Example: show error message to the user
+        dispatch(setNotify({ error: 'Thanh toán thất bại' }))
+      } else {
+        // Handle other types of errors
+        console.log("An unexpected error occurred:", error);
+        dispatch(setNotify({ error: 'An unexpected error occurred' }))
+      }
+      // dispatch(setNotify({ error: 'Thanh toán thất bại' }))
+      // console.error(error);
+      // throw new Error(error);
     }
   }
 

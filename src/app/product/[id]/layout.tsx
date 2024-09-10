@@ -16,13 +16,13 @@ export async function generateMetadata(
     const product = await productsApiRequest.getProduct(id)
    
     // optionally access and extend (rather than replace) parent metadata
-    const previousImages = (await parent).openGraph?.images || []
+    // const previousImages = (await parent).openGraph?.images || []
    
     return {
       title: product.payload.title,
-    //   openGraph: {
-    //     images: ['/some-specific-page-image.jpg', ...previousImages],
-    //   },
+      openGraph: {
+        images: product.payload.images[0].url,
+      },
     }
   }
 

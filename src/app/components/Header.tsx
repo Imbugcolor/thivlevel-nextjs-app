@@ -45,7 +45,7 @@ export default function Header() {
                 <ul className="header-nav">
                     <li className="nav_1 menu_nav_li"><Link href="/">Trang chủ</Link></li>
                     <li className="nav_2 menu_nav_li"><Link href="/products">Sản phẩm</Link></li>
-                    <li className="nav_3 menu_nav_li"><Link href="/pages/introduction">Giới thiệu</Link></li>
+                    <li className="nav_3 menu_nav_li"><Link href="/about/introduction">Giới thiệu</Link></li>
                 </ul>
             </div>
 

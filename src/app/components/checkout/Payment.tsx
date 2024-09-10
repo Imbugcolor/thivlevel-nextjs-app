@@ -10,6 +10,7 @@ import PaypalIcon from '../../../images/paypal-credit-card-1.png'
 import Paypal from './Paypal'
 import { CreateCheckoutSessionRequest, ordersApiRequest } from "@/app/api-request/orders.api"
 import { useAppDispatch, useAppSelector } from "@/lib/hooks"
+import { IoCloseOutline } from "react-icons/io5"
 
 interface OrderProps extends CreateCheckoutSessionRequest {}
 
@@ -164,10 +165,10 @@ export default function Payment({ order }: { order: OrderProps}) {
                         }
                     </button> : null
                 }
-                <div className="payment-method-options-modal-close" onClick={handleCloseView}>
-                        <FaRegTimesCircle style={{ color: '#d93938' }} />
-                </div>
             </div> 
+            <div className="payment-method-options-modal-close" onClick={handleCloseView}>
+                <IoCloseOutline />
+            </div>
         </div>
   )
 }

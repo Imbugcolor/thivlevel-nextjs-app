@@ -28,6 +28,7 @@ export async function GET(request: Request) {
                 statusText: res.statusText,
             });
         }
+        cookies().delete('refreshtoken')
         return new Response(JSON.stringify({ message: "Logged out."}), {
             status: 200,
         });

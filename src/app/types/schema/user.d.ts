@@ -1,14 +1,16 @@
+import { AddressProfile } from "../profile.address";
+
 interface User {
     _id: string;
     username: string;
     email: string;
     avatar: string;
     phone?: string;
-    address?: string;
+    address?: AddressProfile;
     dateOfbirth?: string;
     gender: string
     role: string[];
-    type: string;
+    authStrategy: string;
     createdAt: string;
     updatedAt: string;
 }

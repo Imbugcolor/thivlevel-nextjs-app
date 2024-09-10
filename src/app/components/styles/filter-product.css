@@ -118,11 +118,11 @@
     padding: 5px 15px;
 }
 
-.filter_menu .tool-wrapper {
+/* .filter_menu .tool-wrapper {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-}
+} */
 
 .filter_menu .search {
     display: flex;
@@ -360,7 +360,7 @@
 .filter-apply-btn {
     height: 45px;
     padding: 2px 15px;
-    background-color: #e66294;
+    background-color: #000;
     color: #fff;
 }
 

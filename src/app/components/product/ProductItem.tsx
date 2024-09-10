@@ -1,10 +1,14 @@
+'use client'
 import "../styles/product-item.css"
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
 import Rating from '../Rating';
+import { useAppDispatch } from "@/lib/hooks";
+import { setProductView } from "@/lib/features/quickviewSlice";
 
 export default function ProductItem({ product }: { product: Product}) {
+    const dispatch = useAppDispatch()
     return (
       <div className="col l-3 m-4 c-6">
         <div className="product_card">
@@ -17,7 +21,7 @@ export default function ProductItem({ product }: { product: Product}) {
                 <Image className="product_img-2" src={product.images[1]?.url} alt="product_thumbnail" width={500} height={500}/>
               </>
             }
-            <div className="quick-view">
+            <div className="quick-view" onClick={() => dispatch(setProductView(product))}>
               Xem nhanh
             </div>
           </div>

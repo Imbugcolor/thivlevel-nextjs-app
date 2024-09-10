@@ -20,11 +20,14 @@ export const PurchaseDetailSlice = createSlice({
         if(state.data_cached.find(data => data._id === action.payload._id)) return state;
         state.data_cached.push(action.payload)
     },
+    cancelOrder: (state, action: PayloadAction<string>) => {
+      state.data_cached.map(data => data._id === action.payload ? {...data, status: 'Cancel' } : data) 
+    }
   }
 });
 
 export const { 
-    getPurchaseDetail
+    getPurchaseDetail, cancelOrder
 } = PurchaseDetailSlice.actions;
 
 export default PurchaseDetailSlice.reducer;

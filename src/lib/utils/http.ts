@@ -31,7 +31,6 @@ export const request = async<T>(
         [key: string]: string
     } = body instanceof FormData ? 
         {
-            'Content-Type': 'multipart/form-data'
         }
         : {
               'Content-Type': 'application/json'

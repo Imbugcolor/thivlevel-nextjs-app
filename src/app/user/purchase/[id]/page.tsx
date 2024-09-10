@@ -2,7 +2,7 @@
 import "../purchase.css"
 import { ordersApiRequest } from '@/app/api-request/orders.api';
 import { Order, OrderItem } from '@/app/types/schema/order';
-import { getPurchaseDetail } from '@/lib/features/purchasedetailSlice';
+import { cancelOrder, getPurchaseDetail } from '@/lib/features/purchasedetailSlice';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import React, { useEffect, useState } from 'react'
 import moment from 'moment';
@@ -11,6 +11,8 @@ import { IoTrashBin } from 'react-icons/io5';
 import CodLogo from '../../../../images/cod-logo.webp'
 import Visa from '../../../../images/visa.png'
 import ReviewModal from '@/app/components/purchase/ReviewModal';
+import { setNotify } from "@/lib/features/notifySlice";
+import { HttpError } from "@/lib/utils/http";
 
 export default function PurchaseDetail({ params }: { params: { id: string } }) {
     const token = useAppSelector(state => state.auth).token
@@ -19,6 +21,7 @@ export default function PurchaseDetail({ params }: { params: { id: string } }) {
     const [purchaseDetail, setPurchaseDetail] = useState<Order>()
     const [loading, setLoading] = useState(false)
     const [itemReview, setItemReview] = useState<OrderItem>()
+    const [isCanceling, setIsCanceling] = useState(false)
 
     useEffect(() => {
         if(!params.id) return;
@@ -41,7 +44,28 @@ export default function PurchaseDetail({ params }: { params: { id: string } }) {
 
 
     const handleCancelPurchase = async() => {
-
+        if(token) {
+            try {
+                setIsCanceling(true)
+                await ordersApiRequest.cancelOrder(token, dispatch, params.id)
+                dispatch(cancelOrder(params.id))
+                dispatch(setNotify({ success: 'Hủy đơn thành công' }))
+                setIsCanceling(false)
+            } catch (error) {
+                if (error instanceof HttpError) {
+                    // Handle the specific HttpError
+                    console.log("Error message:", error.message);
+                    // Example: show error message to the user
+                    setIsCanceling(false)
+                    dispatch(setNotify({ error: error.message }))
+                  } else {
+                    // Handle other types of errors
+                    console.log("An unexpected error occurred:", error);
+                    setIsCanceling(false)
+                    dispatch(setNotify({ error: "An unexpected error occurred" }))
+                  }
+            }
+        }
     }
 
     const handleReviewClick = (item: OrderItem) => {
@@ -219,7 +243,7 @@ export default function PurchaseDetail({ params }: { params: { id: string } }) {
                         {
                             purchaseDetail?.status === 'Delivered' ? 
                             null :
-                            purchaseDetail?.status === 'Processing' || purchaseDetail?.status === 'Shipping' || purchaseDetail?.status === 'Cancel' ?                    
+                            purchaseDetail?.status === 'Processing' || purchaseDetail?.status === 'Shipping' || purchaseDetail?.status === 'Canceled' ?                    
                             <div className='cancel-order-disabled'>
                                 <button className='disabled-btn' disabled><IoTrashBin /> Hủy đơn hàng</button>
                             </div> :

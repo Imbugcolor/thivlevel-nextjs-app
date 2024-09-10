@@ -151,10 +151,11 @@ header .header-nav-tablet-mobile .navbar-icon {
 
 header .navbar-tablet-mobile-wrapper {
     position: fixed;
-    top: 68px;
+    top: 70px;
     right: 0;
     bottom: 0;
     background: #fff;
+    padding: 15px 5px;
     z-index: 10;
     width: 300px;
     max-width: 90%;
@@ -429,6 +430,11 @@ header .sign_in__mobile_wrapper .sign_in__mobile svg {
 }
 
 @media (max-width: 768px) {
+    header {
+        position: fixed;
+        top: 0;
+    }
+
     header .header__top .header-nav,
     header .header-nav {
         display: none;

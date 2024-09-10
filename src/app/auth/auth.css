@@ -136,6 +136,7 @@
 .google-login-button-wrapper, .facebook-login-button-wrapper {
     display: flex;
     justify-content: center;
+    cursor: pointer;
 }
 
 .login-page  .password_wrapper {

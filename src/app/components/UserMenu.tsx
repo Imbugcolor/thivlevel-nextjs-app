@@ -9,7 +9,6 @@ import { BiLogOut } from 'react-icons/bi'
 import { MdHistory } from 'react-icons/md'
 import { HiOutlineShoppingBag } from 'react-icons/hi'
 import { userApiRequest } from '../api-request/user.api';
-import { logout } from '@/lib/features/authSlice';
 import { useRouter } from 'next/navigation';
 import { setNotify } from '@/lib/features/notifySlice';
 
@@ -18,7 +17,6 @@ export default function UserMenu() {
     const cart = useAppSelector((state) => state.cart)
     const token = useAppSelector((state) => state.auth).token
     const dispatch = useAppDispatch()
-    const router = useRouter()
 
     const handleLogout = async<E extends Element = HTMLAnchorElement>(
         e: React.MouseEvent<E, MouseEvent>
@@ -26,8 +24,15 @@ export default function UserMenu() {
         e.preventDefault()
         if (token) {
             dispatch(setNotify({ loading: true }))
-            await userApiRequest.logOut(token, dispatch)
-            dispatch(setNotify({ loading: false }))
+            try {
+                await userApiRequest.logOut(token, dispatch)
+                dispatch(setNotify({ loading: false }))
+            } catch (error) {
+                dispatch(setNotify({ loading: false }))
+                console.log("An unexpected error occurred:", error);
+                dispatch(setNotify({ error: 'Có lỗi xảy ra' }))
+                  
+            }
             // window.location.href = '/auth';
         }
     }
@@ -73,7 +78,7 @@ export default function UserMenu() {
                         </Link>
                     </li>
                     <li>
-                        <Link href="/" onClick={handleLogout}>
+                        <Link href="#" onClick={handleLogout}>
                             <BiLogOut style={{ fontSize: 20 }} />
                             <span>Đăng xuất</span>
                         </Link>

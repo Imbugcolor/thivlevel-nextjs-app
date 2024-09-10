@@ -1,8 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap");
 
 * {
   padding: 0;
@@ -11,14 +10,14 @@
   /* font-family: 'Poppins', sans-serif; FONT CŨ NÈ*/
   /* font-family: 'Manrope', sans-serif; */
   /* font-family: 'Lexend', sans-serif; */
-  font-family: 'Roboto Condensed', sans-serif;
+  font-family: "Roboto Condensed", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-tap-highlight-color: transparent; 
+  -webkit-tap-highlight-color: transparent;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -26,7 +25,7 @@ code {
   position: relative;
 }
 
-.App>.client {
+.App > .client {
   /* max-width: 1200px; */
   /* min-height: 100vh; */
   /* margin-top: 100px !important; */
@@ -35,7 +34,7 @@ code {
   padding-top: 10px;
 }
 
-.App>.admin {
+.App > .admin {
   background: #eee;
 }
 
@@ -76,6 +75,8 @@ table {
 
 .address-form {
   display: none;
+  width: 400px;
+  margin: 15px 0;
 }
 
 .address-form.active {
@@ -85,7 +86,7 @@ table {
 
 /* file path: src/app/globals.css */
 
-.breadcrumbs{
+.breadcrumbs {
   display: flex;
   align-items: center;
   height: 10px;
@@ -94,20 +95,36 @@ table {
   margin-bottom: 20px;
 }
 
-.breadcrumbs li{
+.breadcrumbs li {
   list-style: none;
 }
 
+/* QUICK VIEW MODAL */
+.product-view-detail-box {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  z-index: 102;
+  width: 100%;
+}
 
 /* PAYMENT MODAL */
 .payment-method-option-box {
   display: none;
+  position: fixed;
+  z-index: 103;
+  height: 100vh;
+}
+
+.payment-method {
+  max-height: 93vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .payment-method-option-box .active {
   display: block;
 }
-
 
 /* REVIEW MODAL */
 .review-modal {
@@ -117,7 +134,6 @@ table {
 .review-modal .active {
   display: block;
 }
-
 
 /* SKELETON LOADING */
 .skeleton {
@@ -130,5 +146,12 @@ table {
   }
   100% {
     background-color: hsl(240, 5%, 96%);
+  }
+}
+
+
+@media (max-width: 768px) {
+  .margin-header {
+    margin-top: 75px
   }
 }

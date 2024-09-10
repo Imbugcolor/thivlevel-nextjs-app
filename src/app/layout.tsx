@@ -9,12 +9,20 @@ import ReapopProvider from "./ReapopProvider";
 import Notify from "./components/toast/Notify";
 import Breadcrumbs from "./components/Breadcrumb";
 import Footer from "./components/Footer";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import QuickViewLayout from "./components/product/QuickViewLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "thivlevel",
   description: "Clothing store for you",
+  icons: {
+    icon: 'https://res.cloudinary.com/dnv2v2tiz/image/upload/v1725970736/nestjs-app-images/thivlevel-low-resolution_qbljwn.png',
+  },
+  openGraph: {
+    images: 'https://res.cloudinary.com/dnv2v2tiz/image/upload/v1725969836/nestjs-app-images/slider3_qf1scn.png'
+  }
 };
 
 export default function RootLayout({
@@ -28,15 +36,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+      <GoogleOAuthProvider clientId="711887640793-m0i8nt5fjdidt4urjpio2jpd88suip6n.apps.googleusercontent.com">
         <StoreProvider refreshToken={token}>
           <ReapopProvider>
             <Header />
             <Notify />
+            <QuickViewLayout />
+            <div className="margin-header"></div>
             <Breadcrumbs />
             {children}
             <Footer />
           </ReapopProvider>
         </StoreProvider>
+      </GoogleOAuthProvider>
       </body>
     </html>
   );

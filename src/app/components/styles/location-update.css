@@ -1,0 +1,45 @@
+.address-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.address-select-container {
+    position: relative;
+    width: 500px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    animation: zoomOut ease .3s;
+}
+
+.address-select-container .close{
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.address-select-container .address-detail-input {
+    width: 100%;
+}
+
+.address-select-container .btn-wrapper {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.address-save-btn {
+    padding: 5px 15px;
+    background-color: #d1dae7;
+}
+
+.address-cancel-btn {
+    padding: 5px 15px;
+    background-color: #a4a5a7;
+}

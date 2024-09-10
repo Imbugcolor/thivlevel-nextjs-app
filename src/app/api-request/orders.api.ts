@@ -28,6 +28,7 @@ interface PaypalCheckoutSessionResponse extends PaypalDataResponse {}
 interface FilterOrdersOptions {
     search: string,
     sort: string,
+    status: string,
 }
   
 export const ordersApiRequest = {
@@ -53,6 +54,7 @@ export const ordersApiRequest = {
         let query = limit && page ? `limit=${limit}&page=${page}` : ''
         if(filterOptions) {
             filterOptions.search && (query += `&${filterOptions.search}`)
+            filterOptions.status && (query += `&${filterOptions.status}`)
             filterOptions.sort && (query += `&${filterOptions.sort}`)
         }
         return http.get<OrdersDataResponse>(`/order/my?${query}`, { token: accessToken }) 
@@ -63,5 +65,12 @@ export const ordersApiRequest = {
         accessToken = result ? result  : token
 
         return http.get<Order>(`/order/${id}`, { token: accessToken })
-    } 
+    },
+    cancelOrder: async(token: string, dispatch: any, id: string) => {
+        let accessToken = '';
+        const result = await checkTokenExp(token, dispatch)
+        accessToken = result ? result  : token
+
+        return http.patch<Order>(`/order/cancel-order/${id}`, {}, { token: accessToken })
+    }
 }

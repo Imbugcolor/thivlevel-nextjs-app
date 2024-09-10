@@ -25,7 +25,6 @@ export default function Purchase() {
     const [page, setPage] = useState(1)
     const [searchString, setSearchString] = useState('')
     const [searchInput, setSearchInput] = useState('')
-    const [sortString, setSortString] = useState('')
     const [sortInput, setSortInput] = useState('')
     const [statusInput, setStatusInput] = useState('')
 
@@ -33,7 +32,7 @@ export default function Purchase() {
         if (token) {
             const getHistory = async () => {
                 setLoading(true)
-                const res = await ordersApiRequest.getList(token, dispatch, 2, page, { search: searchString, sort: sortString })
+                const res = await ordersApiRequest.getList(token, dispatch, 2, page, { status: statusInput, search: searchString, sort: sortInput })
                 setPurchaseData({...res.payload, page: Number(res.payload.page)})
                 setPurchaseList(res.payload.data)
                 setPage(Number(res.payload.page)) 
@@ -41,16 +40,10 @@ export default function Purchase() {
             }
             getHistory()
         }
-    }, [dispatch, token, page, sortString, searchString]);
+    }, [dispatch, token, page, sortInput, statusInput, searchString]);
 
     const handleFilter = () => {
-        if(statusInput) {
-            setSearchString('name[regex]=' + searchInput + '&' + statusInput);
-            setSortString(sortInput);
-        } else {
-            setSearchString('name[regex]=' + searchInput);
-            setSortString(sortInput);
-        }
+        setSearchString(`name[regex]=${searchInput}`)
     }
 
     const handleChangePage = (page: number) => {
@@ -60,11 +53,16 @@ export default function Purchase() {
     return (
         <div className="container-box history-page">
             <h2>Đơn hàng của bạn</h2>
-            <button onClick={handleFilter}>Tìm kiếm</button>
             <div className="order-filter-client-wrapper">
                 <div className='order-search-client'>
-                    <input className="search-order-input" value={searchInput} type="text" placeholder="Tìm kiếm bằng mã đơn/tên/email/Sđt"
-                    onChange={(e) => setSearchInput(e.target.value)}/>
+                    <input className="search-order-input" value={searchInput} type="text" 
+                        placeholder="Tìm kiếm bằng tên người nhận hàng"
+                        onChange={(e) => setSearchInput(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter")
+                                handleFilter();
+                            }}   
+                    />
                 </div>
             </div>  
             <div className='my__order_wrapper res-row'>
@@ -97,7 +95,9 @@ export default function Purchase() {
                         </div>
 
                         <div className="order-sortdate-client">
-                            <select value={sortInput} onChange={e => setSortInput(e.target.value)}>
+                            <select value={sortInput} 
+                            onChange={e => setSortInput(e.target.value)}                     
+                            >
                                 <option value="">Mới nhất</option>
                                 <option value="sort=oldest">Cũ nhất</option>
                             </select>

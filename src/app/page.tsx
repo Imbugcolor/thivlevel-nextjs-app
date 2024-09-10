@@ -20,12 +20,14 @@ export default async function Home() {
 
   const recommendDataResponse = await productsApiRequest.getRecommendList(8)
   const bestSellerDataResponse = await productsApiRequest.getBestSeller(8)
+  const newArrivalDataResponse = await productsApiRequest.getNewArrival(8)
   const recommendList = recommendDataResponse.payload.data
   const bestSellerList = bestSellerDataResponse.payload.data
+  const newArrivalList = newArrivalDataResponse.payload.data
   
   return (
-    <main className={`container-box`}>
-       <>
+    <main className={`main`}>
+       <div className="container-box">
             <MySlider></MySlider>
             <div className="res-row service-container">
                 <div className="col l-3 m-3 c-12">
@@ -122,18 +124,16 @@ export default async function Home() {
                         alt="banner_3"/>
                     </div>
                     <div className="w-100">
-                        {/* {
-                            loading.newarrival ? <div><Loading/></div> :
+                        {
+                            bestSellerList?.length > 0 &&
                             <div className="res-row products">
                                 {
-                                    newArrival.map(product => {
-                                        return <ProductItem key={product._id} product={product}
-                                            setCurrentProduct={setCurrentProduct} handleViewDetail={handleViewDetail}
-                                        />
+                                    newArrivalList.map(product => {
+                                        return <ProductItem key={product._id} product={product} />
                                     })
                                 }
                             </div>
-                        } */}
+                        }
                     </div>
                 </div>
                 <div className="res-row">
@@ -145,11 +145,8 @@ export default async function Home() {
                         </div>
                     </div>
                 </div>
-                <div className="product-view-detail-box">
-                    {/* {currentProduct && <QuickViewProduct detailProduct={currentProduct} />} */}
-                </div>
             </div>
-        </>
+        </div>
     </main>
   );
 }

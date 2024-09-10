@@ -1,6 +1,7 @@
 import authReducer from "./authSlice";
 import productReducer from "./productSlice";
 import productDetailReducer from "./productdetailSlice";
+import quickViewReducer from "./quickviewSlice";
 import categoryReducer from "./categorySlice";
 import notifyReducer from "./notifySlice";
 import cartReducer from "./cartSlice";
@@ -14,4 +15,5 @@ export const RootReducers = {
     notify: notifyReducer,
     cart: cartReducer,
     purchaseDetail: purchaseDetailReducer,
+    quickview: quickViewReducer,
 }

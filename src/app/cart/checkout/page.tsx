@@ -111,6 +111,7 @@ export default function Checkout() {
         handlePaymentMethodModal()
     }
 
+    if(!cart.items.length) return <div className="container-box">404 | Not Found</div>
     return (
         <div className="container-box payment-section">
             <div className="wrapper">

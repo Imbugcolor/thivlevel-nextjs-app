@@ -1,0 +1,24 @@
+.active_page {
+    text-align: center;
+}
+
+.active_page .failed_active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d93938;
+}
+
+.active_page .sucess_active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #34a853
+}
+
+.active_page .back-to-sign-in {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 15px;
+    margin-top: 15px;
+}
