@@ -68,7 +68,7 @@ export default function PurchaseDetail({ params }: { params: { id: string } }) {
     }
 
     return (
-        loading ? <div>Loading</div> :
+        loading ? <div className="container-box">Loading</div> :
         <div className="container-box history-page res-row">
             <div className="order-infor-container col l-12 m-12 c-12">
                 <div className='order__infor_heading'>

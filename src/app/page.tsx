@@ -9,8 +9,33 @@ import RecomFYBanner from '../images/banner-clothing.jpg'
 import BestSABanner from '../images/best-seller-banner.jpg'
 import NewABanner from '../images/img-banner-index.jpg'
 import Link from "next/link";
-import { productsApiRequest } from "./api-request/products.api";
 import ProductItem from "./components/product/ProductItem";
+import { productsApiRequest } from "./api-request/products.api";
+
+const fetchData = async () => {
+    let recommendList: Product[] = [];
+    let bestSellerList: Product[] = [];
+    let newArrivalList: Product[] = [];
+    try {
+        const [recommendDataResponse, bestSellerDataResponse, newArrivalDataResponse] = await Promise.all([
+          productsApiRequest.getRecommendList(8),
+          productsApiRequest.getBestSeller(8),
+          productsApiRequest.getNewArrival(8),
+        ]);
+        
+        recommendList = recommendDataResponse.payload.data
+        bestSellerList = bestSellerDataResponse.payload.data
+        newArrivalList = newArrivalDataResponse.payload.data
+        
+        // Do something with the data
+        // console.log(recommendDataResponse, bestSellerDataResponse, newArrivalDataResponse);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        // Handle error, maybe retry or show a user-friendly message
+    }
+    const data =  { recommendList,  bestSellerList, newArrivalList }
+    return data
+}
 
 export default async function Home() {
   const iconStyle = {
@@ -18,13 +43,8 @@ export default async function Home() {
     fontSize: '26px'
   }
 
-  const recommendDataResponse = await productsApiRequest.getRecommendList(8)
-  const bestSellerDataResponse = await productsApiRequest.getBestSeller(8)
-  const newArrivalDataResponse = await productsApiRequest.getNewArrival(8)
-  const recommendList = recommendDataResponse.payload.data
-  const bestSellerList = bestSellerDataResponse.payload.data
-  const newArrivalList = newArrivalDataResponse.payload.data
-  
+  const data = await fetchData()
+
   return (
     <main className={`main`}>
        <div className="container-box">
@@ -80,10 +100,10 @@ export default async function Home() {
                     </div>
                     <div className="w-100">
                         {
-                            recommendList?.length > 0 &&
+                            data.recommendList.length > 0 &&
                             <div className="res-row products">
                                 {
-                                    recommendList.map((product: Product) => {
+                                    data.recommendList.map((product: Product) => {
                                         return <ProductItem key={product._id} product={product}/>
                                     })
                                 }
@@ -102,10 +122,10 @@ export default async function Home() {
                     </div>
                     <div className="w-100">
                         {
-                            bestSellerList?.length > 0 &&
+                            data.bestSellerList.length > 0 &&
                             <div className="res-row products">
                                 {
-                                    bestSellerList.map(product => {
+                                    data.bestSellerList.map(product => {
                                         return <ProductItem key={product._id} product={product}/>
                                     })
                                 }
@@ -125,10 +145,10 @@ export default async function Home() {
                     </div>
                     <div className="w-100">
                         {
-                            bestSellerList?.length > 0 &&
+                            data.newArrivalList.length > 0 &&
                             <div className="res-row products">
                                 {
-                                    newArrivalList.map(product => {
+                                    data.newArrivalList.map(product => {
                                         return <ProductItem key={product._id} product={product} />
                                     })
                                 }
