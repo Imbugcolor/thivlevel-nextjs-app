@@ -11,6 +11,7 @@ import Breadcrumbs from "./components/Breadcrumb";
 import Footer from "./components/Footer";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import QuickViewLayout from "./components/product/QuickViewLayout";
+import ReviewModalLayout from "./components/purchase/Review/ReviewModalLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -42,6 +43,7 @@ export default function RootLayout({
             <Header />
             <Notify />
             <QuickViewLayout />
+            <ReviewModalLayout />
             <div className="margin-header"></div>
             <Breadcrumbs />
             {children}

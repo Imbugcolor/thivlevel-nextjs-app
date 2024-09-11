@@ -380,3 +380,10 @@
         display: block;
     }
 }
+
+@media (max-width: 768px) {
+    .filter_menu .filter span,
+    .filter_menu .sort span {
+        display: none;
+    }
+}

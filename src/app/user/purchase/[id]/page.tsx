@@ -10,9 +10,9 @@ import Image from 'next/image';
 import { IoTrashBin } from 'react-icons/io5';
 import CodLogo from '../../../../images/cod-logo.webp'
 import Visa from '../../../../images/visa.png'
-import ReviewModal from '@/app/components/purchase/ReviewModal';
 import { setNotify } from "@/lib/features/notifySlice";
 import { HttpError } from "@/lib/utils/http";
+import { setItemReview } from "@/lib/features/reviewSlice";
 
 export default function PurchaseDetail({ params }: { params: { id: string } }) {
     const token = useAppSelector(state => state.auth).token
@@ -20,7 +20,6 @@ export default function PurchaseDetail({ params }: { params: { id: string } }) {
     const dispatch = useAppDispatch()
     const [purchaseDetail, setPurchaseDetail] = useState<Order>()
     const [loading, setLoading] = useState(false)
-    const [itemReview, setItemReview] = useState<OrderItem>()
     const [isCanceling, setIsCanceling] = useState(false)
 
     useEffect(() => {
@@ -66,10 +65,6 @@ export default function PurchaseDetail({ params }: { params: { id: string } }) {
                   }
             }
         }
-    }
-
-    const handleReviewClick = (item: OrderItem) => {
-        setItemReview(item)
     }
 
     return (
@@ -264,7 +259,7 @@ export default function PurchaseDetail({ params }: { params: { id: string } }) {
                                     <Image src={item.productId.images[0].url} className='item__img' alt='review-product' width={500} height={500} priority/>
                                     <div className='item__detail'>
                                         <p>{item.productId.title}</p>
-                                        <div className='item__color '>{item.variantId.color}</div>
+                                        <span>{item.variantId.color}</span>
                                         <span>/</span>
                                         <span>{item.variantId.size}</span>
                                         {/* {
@@ -279,7 +274,7 @@ export default function PurchaseDetail({ params }: { params: { id: string } }) {
                                              </button>
                                         } */}
                                         <button 
-                                            onClick={() => handleReviewClick(item)} 
+                                            onClick={() => dispatch(setItemReview(item))} 
                                             className='review-btn'>
                                                 Đánh giá
                                         </button>
@@ -290,12 +285,7 @@ export default function PurchaseDetail({ params }: { params: { id: string } }) {
                     </div>
                     }
                 </div>
-                
             </div>
-            {
-                itemReview &&
-                <ReviewModal item={itemReview} />
-            }
         </div>
     )
 }

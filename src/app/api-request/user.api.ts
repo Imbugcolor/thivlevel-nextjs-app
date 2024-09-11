@@ -29,6 +29,12 @@ interface UpdatePasswordRequest {
   new_password: string,
 }
 
+interface ResetPasswordRequest {
+  id: string,
+  token: string,
+  password: string,
+}
+
 export const userApiRequest = {
   register: (body: RegisterRequest) => http.post<{ message: string}>('/user/register', body),
   active: (token: string) => http.get<ActiveResponse>(`/user/active/${token}`), 
@@ -83,4 +89,7 @@ export const userApiRequest = {
         throw Error(error);
     }
   },
+  forgotPassword: async(email: string) =>  http.post<{ message: string }>('/user/forgotpassword', { email }),
+  verifyTokenRecovery: async(id: string, token: string) =>  http.get<{ message: string }>(`/user/verify-password-recovery?id=${id}&token=${token}`),
+  resetPassword: async(body: ResetPasswordRequest) => http.patch<{ message: string}>('/user/reset-password', body)
 };
