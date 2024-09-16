@@ -187,7 +187,7 @@ export default function QuickView() {
 
         if (product && selectedVariant && token) {
             setAddCartLoading(true)
-            const addCartRequest = { productId: product._id, variantId: selectedVariant._id, quantity }
+            const addCartRequest = { productId: product._id, variantId: selectedVariant._id as string, quantity }
             const addCart = await cartApiRequest.addCart(token, dispatch, addCartRequest)
             dispatch(getCart(addCart.payload))
             setAddCartLoading(false)
