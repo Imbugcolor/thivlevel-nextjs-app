@@ -11,6 +11,7 @@ import { HiOutlineShoppingBag } from 'react-icons/hi'
 import { userApiRequest } from '../api-request/user.api';
 import { useRouter } from 'next/navigation';
 import { setNotify } from '@/lib/features/notifySlice';
+import { UnknowAvatar } from '@/lib/utils/unknow.avatar';
 
 export default function UserMenu() {
     const user = useAppSelector((state) => state.auth).user
@@ -44,7 +45,7 @@ export default function UserMenu() {
                     <span style={{ width: '2.5rem' }}></span>
                     <RiArrowDropDownLine />
                 </div>
-                <Image src={'https://res.cloudinary.com/dnv2v2tiz/image/upload/v1679802559/instagram-avt-profile/unknow_fc0uaf.jpg'} width={100} height={100} referrerPolicy="no-referrer" alt="profile-avt" />
+                <Image src={UnknowAvatar} width={100} height={100} referrerPolicy="no-referrer" alt="profile-avt" />
             </div>
         </li>
         <div className="cart-icon">

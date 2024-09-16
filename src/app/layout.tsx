@@ -12,6 +12,8 @@ import Footer from "./components/Footer";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import QuickViewLayout from "./components/product/QuickViewLayout";
 import ReviewModalLayout from "./components/purchase/Review/ReviewModalLayout";
+import { jwtDecode } from "jwt-decode";
+import { JwtPayload } from "@/lib/jwt.payload";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,20 +36,33 @@ export default function RootLayout({
   const cookieStore = cookies()
   const token = cookieStore.get('refreshtoken')?.value
 
+  function isAdmin() {
+    if (token) {
+      const decode: JwtPayload = jwtDecode(token);
+        // TRƯỜNG HỢP LÀ ADMIN 
+      if (decode.role.some(rl => rl === 'admin')) {
+          return true
+      }
+      return false
+    } else {
+      return false
+    }
+  }
+
   return (
     <html lang="en">
       <body className={inter.className}>
       <GoogleOAuthProvider clientId="711887640793-m0i8nt5fjdidt4urjpio2jpd88suip6n.apps.googleusercontent.com">
         <StoreProvider refreshToken={token}>
           <ReapopProvider>
-            <Header />
+            { isAdmin() ? null : <Header /> } 
             <Notify />
             <QuickViewLayout />
             <ReviewModalLayout />
             <div className="margin-header"></div>
-            <Breadcrumbs />
+            { isAdmin() ? null : <Breadcrumbs /> } 
             {children}
-            <Footer />
+            { isAdmin() ? null :  <Footer /> } 
           </ReapopProvider>
         </StoreProvider>
       </GoogleOAuthProvider>

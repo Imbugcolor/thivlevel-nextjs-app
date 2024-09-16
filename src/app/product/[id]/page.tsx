@@ -156,6 +156,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                 const order = ["XS", "S", "M", "L", "XL", "XXL"];
 
                 const sortedObj: { [key: string]: string[] } = {};
+                const unsortObj: { [key: string]: string[] } = {};
 
                 order.forEach(key => {
                     if (sizeToColors[key]) {
@@ -163,7 +164,13 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                     }
                 });
 
-                setSizes(sortedObj);
+                Object.keys(sizeToColors).forEach(s => {
+                    if(!order.includes(s)) {
+                        unsortObj[s] = sizeToColors[s]
+                    }
+                })
+
+                setSizes({...sortedObj, ...unsortObj });
             }
         }
     }, [params.id, productDetail])
@@ -206,7 +213,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
             return setValidation({ size: message })
         }
 
-        if (productDetail && selectedVariant && token) {
+        if (productDetail && selectedVariant && selectedVariant._id && token) {
             setAddCartLoading(true)
             const addCartRequest = { productId: productDetail._id, variantId: selectedVariant._id, quantity }
             const addCart = await cartApiRequest.addCart(token, dispatch, addCartRequest)

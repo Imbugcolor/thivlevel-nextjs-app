@@ -10,6 +10,7 @@ import { FaStar } from 'react-icons/fa';
 import { IoCloseOutline } from 'react-icons/io5';
 import { addReviewProduct } from "@/lib/features/productdetailSlice";
 import { setNotify } from "@/lib/features/notifySlice";
+import { UnknowAvatar } from "@/lib/utils/unknow.avatar";
 
 export default function ReviewModal({ item }: { item: OrderItem }) {
   const token = useAppSelector(state => state.auth).token
@@ -110,7 +111,7 @@ export default function ReviewModal({ item }: { item: OrderItem }) {
                             {/* <label htmlFor="comment">Comment</label> */}
                             <div className="review__avt-user">
                                 <Image 
-                                  src={user?.avatar || "https://res.cloudinary.com/dnv2v2tiz/image/upload/v1679802559/instagram-avt-profile/unknow_fc0uaf.jpg"} 
+                                  src={user?.avatar || UnknowAvatar} 
                                   alt="user" 
                                   draggable={false} 
                                   width={500}

@@ -1,5 +1,5 @@
 interface Variant {
-    _id: string;
+    _id?: string;
 
     size: string;
   

@@ -8,6 +8,8 @@ import { getProducts } from '@/lib/features/productSlice'
 import { getCategories } from '@/lib/features/categorySlice'
 import { NEXT_SERVER_URL, NUM_PER_PAGE } from '@/config'
 import { getCart } from '@/lib/features/cartSlice'
+import { jwtDecode } from 'jwt-decode'
+import { JwtPayload } from '@/lib/jwt.payload'
 
 export default function StoreProvider({
   refreshToken,
@@ -16,6 +18,16 @@ export default function StoreProvider({
   refreshToken: string | undefined,
   children: React.ReactNode
 }) {
+  let publish = true;
+
+  if (refreshToken) {
+    const decode: JwtPayload = jwtDecode(refreshToken);
+    // TRƯỜNG HỢP LÀ ADMIN 
+    if (decode.role.some(rl => rl === 'admin')) {
+      publish = false;
+    }
+  }
+
   const [accessToken, setAccessToken] = useState(null)
  
   const storeRef = useRef<AppStore>()
@@ -103,11 +115,10 @@ export default function StoreProvider({
         throw Error(error)
       })
     }
-    
   },[accessToken])
 
   useEffect(() => {
-      fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/products?limit=${NUM_PER_PAGE}&page=1`, {
+      fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/products?limit=${NUM_PER_PAGE}&page=1${ publish ? '&isPublished=true' : ''}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -127,7 +138,7 @@ export default function StoreProvider({
         console.log(error)
         throw Error("Error server.")
       })
-  },[])
+  },[publish])
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/category`, {

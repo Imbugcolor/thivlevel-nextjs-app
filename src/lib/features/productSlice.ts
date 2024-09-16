@@ -1,6 +1,6 @@
 // Define the initial state using that type
 
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 
 export interface ProductPayload {
   data: Product[];
@@ -81,6 +81,15 @@ export const ProductSlice = createSlice({
     },
     changePage: (state, action: PayloadAction<number>) => {
       state.page = action.payload;
+    },
+    updatePublish: (state, action: PayloadAction<{ id: string, isPublised: boolean}>) => {
+      const { id, isPublised } = action.payload;
+      const product = state.data.find((product) => product._id === id);
+  
+      if (product) {
+        // Apply the updates to the found todo
+        product.isPublished = isPublised
+      }
     }
   },
 });
@@ -89,7 +98,8 @@ export const {
   getProducts, searchProducts, 
   sortProducts, filterCategory, 
   filterPrice, filterSizes, 
-  removeAllFilter, changePage 
+  removeAllFilter, changePage,
+  updatePublish
 } = ProductSlice.actions;
 
 export default ProductSlice.reducer;

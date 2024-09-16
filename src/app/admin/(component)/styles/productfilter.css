@@ -1,0 +1,34 @@
+.filter__search, .filter__category, .filter__sort {
+    display: flex;
+    align-items: center;
+}
+
+.filter__category {
+    justify-content: center;
+}
+
+.filter__sort {
+    justify-content: flex-end;
+}
+
+.filter__search .search input {
+    padding: 6px 15px;
+    margin: 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 250px;
+}
+
+.filter__category .category select {
+    padding: 5px 15px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.filter__sort .sort select {
+    padding: 5px 15px;
+    margin-left: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}

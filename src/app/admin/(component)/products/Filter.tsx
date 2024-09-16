@@ -1,4 +1,4 @@
-import '../styles/filter-product.css'
+import '../styles/productfilter.css'
 import { productsApiRequest } from '@/app/api-request/products.api'
 import { InputChange } from '@/app/types/html-elements'
 import { NUM_PER_PAGE } from '@/config'
@@ -8,7 +8,7 @@ import React, { useState } from 'react'
 import { FcClearFilters } from 'react-icons/fc'
 import { GoSearch } from 'react-icons/go'
 
-export default function TopBarProduct() {
+export default function Filter() {
     const categories = useAppSelector(state => state.categories).data
     const dispatch = useAppDispatch()
     const filter = useAppSelector(state => state.producs).filter
@@ -58,13 +58,13 @@ export default function TopBarProduct() {
   return (
     <div>
        <div className="filter_menu product res-row">
-                <div className='filter__search-sort col l-4'>
+                <div className='filter__search col l-4'>
                     {
                         <div className='remove__filter_wrapper'>
                             <button onClick={handleRemoveFilter}><FcClearFilters /></button>
                         </div>
                     }
-                    <div className="search " >
+                    <div className="search">
 
                         <input className="search-input-bd-none" type="text" placeholder="Nhập sản phẩm bạn muốn tìm kiếm ..."
                             value={searchInput}
@@ -80,10 +80,9 @@ export default function TopBarProduct() {
 
                     </div>
                 </div>
-                <div className="tool-wrapper col l-4">
-                    <div className='filter_right_side'>
-
-                        <div className="sort">
+                <div className="filter__category col l-4">
+                    <div className="category">
+                        <div>
                             <span>Danh mục</span>
                             <select value={filter.category} onChange={handleFilterCategories}>
                                 <option value="">Tất cả</option>
@@ -96,10 +95,9 @@ export default function TopBarProduct() {
                         </div>
                     </div>
                 </div>
-                <div className="tool-wrapper col l-4">
-                    <div className='filter_right_side'>
-
-                        <div className="sort">
+                <div className="filter__sort col l-4">
+                    <div className="sort">
+                        <div>
                             <span>Sắp xếp theo</span>
                             <select value={filter.sort} onChange={handleSortProduct}>
                                 <option value="">Mới nhất</option>

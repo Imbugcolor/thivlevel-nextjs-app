@@ -22,7 +22,7 @@ export const productsApiRequest = {
             filterOptions.sort && (query += `&${filterOptions.sort}`)
             filterOptions.sizes && (query += `&sizes=${filterOptions.sizes.toString()}`)
         }
-        return http.get<ProductDataResponse>(`/products?${query}`) 
+        return http.get<ProductDataResponse>(`/products?${query}&isPublished=true`) 
     },
     getRecommendList: (limit: number) => http.get<ProductDataResponse>(`/products?limit=${limit}&page=1&sort=-rating`),
     getBestSeller: (limit: number) => http.get<ProductDataResponse>(`/products?limit=${limit}&page=1&sort=-sold`),

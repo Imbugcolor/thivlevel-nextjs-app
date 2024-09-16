@@ -1,0 +1,1 @@
+interface CreateProduct extends Partial<Product> {}

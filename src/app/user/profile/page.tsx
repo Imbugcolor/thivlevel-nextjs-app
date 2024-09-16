@@ -14,6 +14,7 @@ import { setNotify } from "@/lib/features/notifySlice"
 import { updateUser } from "@/lib/features/authSlice"
 import moment from "moment"
 import LocationUpdate from "@/app/components/profile/LocationUpdate"
+import { UnknowAvatar } from "@/lib/utils/unknow.avatar"
 
 interface profileState {
   username: string,
@@ -28,12 +29,10 @@ export default function Profile() {
 
   const dispatch = useAppDispatch()
 
-  const anonymousPhoto = 'https://res.cloudinary.com/dnv2v2tiz/image/upload/v1679802559/instagram-avt-profile/unknow_fc0uaf.jpg'
-
   const [loading, setLoading] = useState(false)
 
   const [profile, setProfile] = useState<profileState | null>(null)
-  const [photo, setPhoto] = useState<Blob | string>(anonymousPhoto)
+  const [photo, setPhoto] = useState<Blob | string>(UnknowAvatar)
 
   const [address, setAddress] = useState<AddressProfile | string>('')
 

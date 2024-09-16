@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     description: "Clothing store for you",
 };
 
-export default function AuthLayout({
+export default function AboutLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
