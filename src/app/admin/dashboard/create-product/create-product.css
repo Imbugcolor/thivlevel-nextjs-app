@@ -2,10 +2,7 @@
   width: 100%;
   overflow-x: auto;
   font-size: 14px;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 20px;
+  padding: 0 20px;
 }
 
 #file_img img {
@@ -47,10 +44,18 @@
   color: #666666;
 }
 
+.create_product form input[type='text'],
+.create_product form input[type='number'] {
+  width: 400px;
+}
+
+.create_product form textarea {
+  width: 100%;
+}
+
 .create_product form input[type="text"],
 .create_product form input[type="number"],
 .create_product form textarea {
-  width: 400px;
   min-height: 30px;
   padding: 0 5px;
   font-size: 16px;
@@ -168,14 +173,14 @@
 }
 
 .upload .upload-product-images-btn {
-    margin-top: 10px;
-    padding: 10px 60px;
-    background-color: #000;
-    color: #fff;
-    font-size: 15px;
-    border-radius: 5px;
-    font-weight: 300;
-    width: fit-content;
+  margin-top: 10px;
+  padding: 10px 60px;
+  background-color: #000;
+  color: #fff;
+  font-size: 15px;
+  border-radius: 5px;
+  font-weight: 300;
+  width: fit-content;
 }
 
 ul.file-list {
@@ -254,7 +259,8 @@ li.file-item .actions .delete-image {
   margin: 5px;
 }
 
-.color-input, .size-input {
+.color-input,
+.size-input {
   margin: 5px;
 }
 
@@ -289,7 +295,7 @@ li.file-item .actions .delete-image {
 .variants th {
   padding-top: 12px;
   padding-bottom: 12px;
-  text-align: 'center';
+  text-align: "center";
   font-weight: normal;
 }
 

@@ -239,7 +239,7 @@ export default function CreateProduct() {
                 <h2>Tạo sản phẩm</h2>
             </div>
 
-            <div className="content-wrapper">
+            <div className="create-product-wrapper">
                 <div className="create_product">
                     <form onSubmit={handleSubmit}>
                         <div>
@@ -274,7 +274,7 @@ export default function CreateProduct() {
                             <div className="row">
                                 <label htmlFor="content">Nội dung</label>
                                 <textarea name="content" id="content" required
-                                    value={product.content} rows={4} onChange={handleChangeInput} />
+                                    value={product.content} rows={5} onChange={handleChangeInput} />
                             </div>
 
                             <div className="row">

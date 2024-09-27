@@ -33,7 +33,7 @@ export default function Charts() {
           <div className='content-header'>
             <h2>Thống kê</h2>
           </div>
-          <div className="content-wrapper">
+          <div className="charts-wrapper">
             <div className='chart grid-3'>
               <div className='card-total'>
                 <div className='chart-item row'>

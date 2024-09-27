@@ -11,12 +11,24 @@
     justify-content: flex-end;
 }
 
+.filter__search .search {
+    position: relative;
+}
+
 .filter__search .search input {
-    padding: 6px 15px;
+    padding: 7px 20px;
     margin: 0 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 250px;
+    width: 270px;
+}
+
+.filter__search .search .search-btn {
+    position: absolute;
+    top: 0;
+    right: 16px;
+    height: 33px;
+    padding: 0 5px;
 }
 
 .filter__category .category select {

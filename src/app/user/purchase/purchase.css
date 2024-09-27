@@ -316,6 +316,16 @@ th, td {
 .order-filter-client-wrapper .order-search-client{
     width: 100%;
     max-width: 500px;   
+    position: relative;
+}
+
+.order-search-client .search-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 40px;
+    padding: 0 20px;
+    border-radius: 20px;
 }
 
 .sidebar__filter_orders .order-sortdate-client {

@@ -1,11 +1,8 @@
 .pagination {
-    list-style: none;
-    display: flex;
-    height: 40px;
-    align-items: center;
+    margin-top: 15px;
 }
 
-.page-item  {
+.pagination .page-item  {
     color: black;
     float: left;
     padding: 8px 16px;

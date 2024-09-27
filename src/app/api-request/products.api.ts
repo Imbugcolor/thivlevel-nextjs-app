@@ -15,7 +15,7 @@ export const productsApiRequest = {
     getList: (limit?: number, page?: number, filterOptions?: filterOptions) => {
         let query = limit && page ? `limit=${limit}&page=${page}` : ''
         if(filterOptions) {
-            filterOptions.search && (query += `&title[regex]=${filterOptions.search}`)
+            filterOptions.search && (query += `&search=${filterOptions.search}`)
             filterOptions.category && (query += `&category=${filterOptions.category}`)
             filterOptions.fromPrice ? (query += `&price[gte]=${filterOptions.fromPrice}`) : (query += `&price[gte]=0`)
             filterOptions.toPrice && (query += `&price[lte]=${filterOptions.toPrice}`)

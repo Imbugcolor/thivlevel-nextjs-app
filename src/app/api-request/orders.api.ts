@@ -53,7 +53,7 @@ export const ordersApiRequest = {
 
         let query = limit && page ? `limit=${limit}&page=${page}` : ''
         if(filterOptions) {
-            filterOptions.search && (query += `&${filterOptions.search}`)
+            filterOptions.search && (query += `&search=${filterOptions.search}`)
             filterOptions.status && (query += `&${filterOptions.status}`)
             filterOptions.sort && (query += `&${filterOptions.sort}`)
         }

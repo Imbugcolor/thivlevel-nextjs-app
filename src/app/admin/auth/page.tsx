@@ -70,7 +70,7 @@ export default function AdminLogin() {
       } 
       setLoading(false)
 
-      window.location.href = '/admin/dashboard';
+      window.location.href = '/admin/dashboard/charts';
       
       dispatch(setNotify({ success: 'Đăng nhập thành công'}))
     })

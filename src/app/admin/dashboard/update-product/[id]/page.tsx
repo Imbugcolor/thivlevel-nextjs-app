@@ -13,7 +13,7 @@ import { uploadApiRequest } from "../../../api-request/upload.api";
 import { privateProductApiRequest } from "../../../api-request/products.api";
 import { CiCirclePlus } from "react-icons/ci";
 import { productsApiRequest } from "@/app/api-request/products.api";
-import { getProductDetail } from "@/lib/features/productdetailSlice";
+import { getProductDetail, updateProduct } from "@/lib/features/productdetailSlice";
 import { ImageObject } from "@/app/types/schema/image";
 import { findDuplicate } from "@/lib/utils/func";
 
@@ -328,8 +328,9 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
                 isPublished: publish,
             }
 
-            await privateProductApiRequest.update(token, dispatch, params.id, body)
+            const res = await privateProductApiRequest.update(token, dispatch, params.id, body)
 
+            dispatch(updateProduct(res.payload))
             dispatch(setNotify({ success: 'Cập nhật sản phẩm thành công' }))
         } catch (error) {
             if (error instanceof HttpError) {
@@ -352,7 +353,7 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
                 <h2>Cập nhật sản phẩm</h2>
             </div>
 
-            <div className="content-wrapper">
+            <div className="update-product-wrapper">
                 <div className="create_product">
                     <form onSubmit={handleSubmit}>
                         <div>
@@ -386,7 +387,7 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
                             <div className="row">
                                 <label htmlFor="content">Nội dung</label>
                                 <textarea name="content" id="content" required
-                                    value={product.content} rows={4} onChange={handleChangeInput} />
+                                    value={product.content} rows={5} onChange={handleChangeInput} />
                             </div>
 
                             <div className="row">

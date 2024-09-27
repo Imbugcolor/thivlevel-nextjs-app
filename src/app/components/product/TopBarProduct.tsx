@@ -102,9 +102,11 @@ export default function TopBarProduct() {
                         <div className="sort">
                             <span>Sắp xếp theo</span>
                             <select value={filter.sort} onChange={handleSortProduct}>
-                                <option value="">Mới nhất</option>
+                                <option value="">Tự động</option>
+                                <option value="sort=-createdAt">Mới nhất</option>
                                 <option value="sort=createdAt">Cũ nhất</option>
                                 <option value="sort=-sold">Best sales</option>
+                                <option value="sort=-rating">Best rating</option>
                                 <option value="sort=-price">Giá: Cao -&gt; Thấp</option>
                                 <option value="sort=price">Giá: Thấp -&gt; Cao</option>
                             </select>

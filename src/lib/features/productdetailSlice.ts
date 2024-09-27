@@ -20,15 +20,24 @@ export const ProductDetailSlice = createSlice({
         state.data_cached.push(action.payload)
     },
     addReviewProduct: (state, action: PayloadAction<Review>) => {
-      state.data_cached.map(data => { 
-        data._id === action.payload.productId ? data.reviews?.push(action.payload) : data 
-      })
+      const product = state.data_cached.find((product) => product._id === action.payload.productId)
+
+      if (product) {
+        product.reviews?.push(action.payload)
+      }
+    },
+    updateProduct: (state, action: PayloadAction<Product>) => {
+      const product = state.data_cached.find((product) => product._id === action.payload._id)
+      if (product) {
+        // This object is still wrapped in a Proxy, so we can "mutate" it
+        Object.assign(product, action.payload)
+      }
     },
   }
 });
 
 export const { 
- getProductDetail, addReviewProduct
+ getProductDetail, addReviewProduct, updateProduct
 } = ProductDetailSlice.actions;
 
 export default ProductDetailSlice.reducer;

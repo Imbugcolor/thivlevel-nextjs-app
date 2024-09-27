@@ -7,6 +7,7 @@ import notifyReducer from "./notifySlice";
 import cartReducer from "./cartSlice";
 import purchaseDetailReducer from "./purchasedetailSlice";
 import reviewReducer from "./reviewSlice"
+import userReducer from "./userSlice"
 
 export const RootReducers = {
     auth: authReducer,
@@ -18,4 +19,5 @@ export const RootReducers = {
     purchaseDetail: purchaseDetailReducer,
     quickview: quickViewReducer,
     review: reviewReducer,
+    users: userReducer
 }

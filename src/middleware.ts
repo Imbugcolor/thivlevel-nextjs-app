@@ -28,7 +28,7 @@ export function middleware(request: NextRequest) {
       const decode: JwtPayload = jwtDecode(token);
       // TRƯỜNG HỢP LÀ ADMIN 
       if (decode.role.some(rl => rl === 'admin')) {
-        return NextResponse.redirect(new URL('/admin/dashboard', request.url))
+        return NextResponse.redirect(new URL('/admin/dashboard/charts', request.url))
       }
       // TRƯỜNG HỢP NGƯỜI DÙNG 
       return NextResponse.redirect(new URL('/', request.url))
@@ -48,7 +48,7 @@ export function middleware(request: NextRequest) {
     const decode: JwtPayload = jwtDecode(token);
     // TRƯỜNG HỢP LÀ ADMIN 
     if (decode.role.some(rl => rl === 'admin')) {
-      return NextResponse.redirect(new URL('/admin/dashboard', request.url))
+      return NextResponse.redirect(new URL('/admin/dashboard/charts', request.url))
     }
   }
   

@@ -1,0 +1,102 @@
+.user-view-detail-box {
+    display: none;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.user-view-detail-box.active {
+    display: block;
+}
+
+.view-detail-user-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.view-detail-user-modal .user-details{
+    width: 500px;
+    position: relative;
+    background: #fff;
+    animation: zoomOut ease .3s;
+    border-radius: 10px;
+}
+
+.view-detail-user-modal .user-details .user-details-wrapper{
+    padding: 35px;
+}
+
+.user-details .user-profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.user-details .user-profile-img img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.user-details .user-details-wrapper .user-about-profile p {
+    font-size: 20px;
+    color:#24262d;
+}
+
+.user-details .user-details-wrapper .user-about-profile span {
+    color: #555;
+}
+
+.user-details .user-details-wrapper .user-details-card {
+    margin: 15px 0;
+}
+
+.user-details-card .user-details-field {
+    padding-bottom: 15px;
+}
+
+.user-details-card .user-details-field {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}    
+
+.user-details-card .user-details-field .user-name-field {
+    font-weight: 600;
+    width: 150px;
+}
+
+.user-details-card .user-details-field .user-text-field {
+    color: #555;
+    text-align: right;
+}
+.user-view-close {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    cursor: pointer;
+    font-size: 40px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    padding: 1px;
+}
+
+
+
+@keyframes zoomOut {
+    from {
+        transform: scale(1%)
+    } 
+    to {
+        transform: scale(100%)
+    }
+}
