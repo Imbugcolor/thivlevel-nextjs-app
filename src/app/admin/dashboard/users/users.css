@@ -1,10 +1,25 @@
 /* User Mangager css */
+.users-filter {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.users-filter .sort-user select {
+    height: 40px;
+}
+
 .search-user{
-    padding: 20px 15px;
-    border-radius: 10px;
-    background-color: #fff;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
+    position: relative;
+    width: 250px;
+}
+
+.search-user .search-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 40px;
+    padding: 0 20px;
 }
 
 .search-user-input {
@@ -22,6 +37,15 @@
     margin: auto;
     padding: 5px 0 0;
     font-size: 20px;
+}
+
+.users-list {
+    overflow-x: auto;
+    margin-top: 25px;
+}
+
+.products__count_number {
+    margin: 5px 0;
 }
 
 .users-list-table {

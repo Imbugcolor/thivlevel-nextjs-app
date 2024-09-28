@@ -10,6 +10,7 @@ import { NEXT_SERVER_URL, NUM_PER_PAGE } from '@/config'
 import { getCart } from '@/lib/features/cartSlice'
 import { jwtDecode } from 'jwt-decode'
 import { JwtPayload } from '@/lib/jwt.payload'
+import { setNotify } from '@/lib/features/notifySlice'
 
 export default function StoreProvider({
   refreshToken,
@@ -112,7 +113,10 @@ export default function StoreProvider({
       })
       .catch(async(error) => {
         console.log(error)
-        throw Error(error)
+        if (storeRef.current) {
+          // Create the store instance the first time this renders
+          storeRef.current.dispatch(setNotify({ error: 'Lỗi khi tải giỏ hàng'}))
+        }
       })
     }
   },[accessToken])
@@ -136,7 +140,10 @@ export default function StoreProvider({
       })
       .catch(async(error) => {
         console.log(error)
-        throw Error("Error server.")
+        if (storeRef.current) {
+          // Create the store instance the first time this renders
+          storeRef.current.dispatch(setNotify({ error: 'Lỗi khi tải sản phẩm.'}))
+        }
       })
   },[publish])
 
@@ -161,7 +168,10 @@ export default function StoreProvider({
     })
     .catch(async(error) => {
       console.log(error)
-      throw Error("Error server.")
+      if (storeRef.current) {
+        // Create the store instance the first time this renders
+        storeRef.current.dispatch(setNotify({ error: 'Lỗi khi tải danh mục sản phẩm.'}))
+      }
     })
   },[])
 

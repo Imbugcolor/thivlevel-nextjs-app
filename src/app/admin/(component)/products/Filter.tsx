@@ -67,7 +67,7 @@ export default function Filter() {
 
                     <input className="search-input-bd-none" type="text" placeholder="Nhập sản phẩm bạn muốn tìm kiếm ..."
                         value={searchInput}
-                        onChange={(e) => setSearchInput(e.target.value.toLowerCase())}
+                        onChange={(e) => setSearchInput(e.target.value)}
                         onKeyDown={(e) => {
                             if (e.key === "Enter")
                                 handleSearch();
@@ -76,7 +76,6 @@ export default function Filter() {
                     <button className="search-btn" onClick={handleSearch}>
                         <GoSearch />
                     </button>
-
                 </div>
             </div>
             <div className="filter__category col l-4">

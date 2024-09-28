@@ -84,8 +84,8 @@
 }
 
 /* TABLE */
-thead, tbody, tfoot, tr, td, th {
-    padding: 10px 5px;
+.products-list {
+    overflow-x: auto;
 }
 
 .products-list-table {
