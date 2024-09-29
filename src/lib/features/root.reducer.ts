@@ -8,6 +8,8 @@ import cartReducer from "./cartSlice";
 import purchaseDetailReducer from "./purchasedetailSlice";
 import reviewReducer from "./reviewSlice"
 import userReducer from "./userSlice"
+import ordersReducer from "./ordersSlice"
+import orderDetailReducer from './orderDetailSlice'
 
 export const RootReducers = {
     auth: authReducer,
@@ -19,5 +21,7 @@ export const RootReducers = {
     purchaseDetail: purchaseDetailReducer,
     quickview: quickViewReducer,
     review: reviewReducer,
-    users: userReducer
+    users: userReducer,
+    orders: ordersReducer,
+    orderDetail: orderDetailReducer,
 }

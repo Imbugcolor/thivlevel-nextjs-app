@@ -21,7 +21,11 @@ export const PurchaseDetailSlice = createSlice({
         state.data_cached.push(action.payload)
     },
     cancelOrder: (state, action: PayloadAction<string>) => {
-      state.data_cached.map(data => data._id === action.payload ? {...data, status: 'Cancel' } : data) 
+      const order = state.data_cached.find(data => data._id === action.payload)
+
+        if(order) {
+            order.status = 'Canceled';
+        }
     }
   }
 });

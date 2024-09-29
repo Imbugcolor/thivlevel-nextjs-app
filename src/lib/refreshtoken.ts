@@ -2,6 +2,7 @@ import { ThunkDispatch } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
 import { updateToken } from "./features/authSlice";
 import { setNotify } from "./features/notifySlice";
+import { NEXT_SERVER_URL } from "@/config";
 
 export const checkTokenExp = async (
   token: string,
@@ -11,7 +12,7 @@ export const checkTokenExp = async (
 
   if (decode.exp && decode.exp >= Date.now() / 1000) return null;
   try {
-    const res = await fetch("http://localhost:8080/api/auth", {
+    const res = await fetch(`${NEXT_SERVER_URL}/api/auth`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

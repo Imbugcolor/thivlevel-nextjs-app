@@ -5,19 +5,23 @@
     align-items: center;
 }
 
-.card-total {
+.card-total, .card-chart{
+    overflow: hidden;
     position: relative;
     display: flex;
     flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
+    margin-top: 15px;
+}
+
+.chart-item {
+    padding: 15px;
+    display: flex;
+    flex-wrap: wrap;
     background-color: #fff;
     background-clip: border-box;
     border: 1px solid rgba(0,0,0,.125);
     border-radius: 10px;
-    padding: 18px 25px;
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
-    margin-bottom: 15px;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
 }
 
 .card-total .icon-bg {
@@ -54,23 +58,6 @@
     background-color: #fff3cd;
     border-color: #ffecb5;
 }
-
-
-.card-chart{
-    overflow: hidden;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 1px solid rgba(0,0,0,.125);
-    border-radius: 10px;
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
-    margin-top: 15px;
-}
-
 
 .cart-title{
     padding: 15px;

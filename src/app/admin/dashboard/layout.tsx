@@ -28,11 +28,7 @@ export default function DashboardLayout({
           {/* <!-- partial --> */}
           <div className="main-panel">
             <div className="content-wrapper">
-              <div className="row">
-                <div className="col-sm-12 px-3">
                   {children}
-                </div>
-              </div>
             </div>
             {/* <!-- content-wrapper ends --> */}
             {/* <!-- partial:partials/_footer.html --> */}

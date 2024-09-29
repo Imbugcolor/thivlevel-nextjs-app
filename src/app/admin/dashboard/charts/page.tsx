@@ -11,6 +11,7 @@ import { USDollar } from '@/lib/utils/func'
 export default function Charts() {
     const token = useAppSelector(state => state.auth).token
     const totalProduct = useAppSelector(state => state.producs).total || 0
+    const [totalOrders, setTotalOrders] = useState(0);
     const dispatch = useAppDispatch()
     const [totalRevenue, setTotalRevenue] = useState(0)
 
@@ -18,8 +19,14 @@ export default function Charts() {
         if(token) {
             const fetch = async() => {
                 try {
-                    const res = await privateOrdersApiRequest.getTotalRevenue(token, dispatch)
-                    setTotalRevenue(res.payload)
+                    const res1 = privateOrdersApiRequest.getTotalRevenue(token, dispatch)
+                    const res2 = privateOrdersApiRequest.getOrders(token, dispatch)
+
+                    const response = await Promise.all([res1, res2])
+                    const totalRevenue = response[0].payload
+                    const totalOrders = response[1].payload.total
+                    setTotalRevenue(totalRevenue)
+                    setTotalOrders(totalOrders)
                 } catch (error) {
                     console.log(error)
                 }
@@ -29,73 +36,55 @@ export default function Charts() {
     },[token, dispatch])
 
     return (
-        <div>
+        <div className='charts-wrapper'>
           <div className='content-header'>
             <h2>Thống kê</h2>
           </div>
-          <div className="charts-wrapper">
-            <div className='chart grid-3'>
-              <div className='card-total'>
-                <div className='chart-item row'>
-                  <div>
-                    <span className='icon-bg primary-bg'>$</span>
-                  </div>
-                  <div className='card-content'>
-                    <h3>Doanh thu</h3>
-                    <span>{USDollar.format(totalRevenue)}</span>
-                  </div>
-                </div>
-              </div>
-              <div className='card-total'>
-                <div className='chart-item row'>
-                  <div>
-                    <span className='icon-bg success-bg'><FaBoxOpen style={{ color: '#0f5132' }} /></span>
-                  </div>
-                  <div className='card-content'>
-                    <h3>Đơn hàng</h3>
-                    {/* <span>{orderTotal}</span> */}
-                    <span>0</span>
+            <div className='chart'>
+              <div className='row'>
+                <div className='card-total col-lg-4 col-12'>
+                  <div className='chart-item'>
+                    <div>
+                      <span className='icon-bg primary-bg'>$</span>
+                    </div>
+                    <div className='card-content'>
+                      <h3>Doanh thu</h3>
+                      <span>{USDollar.format(totalRevenue)}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className='card-total'>
-                <div className='chart-item row'>
-                  <div>
-                    <span className='icon-bg warning-bg'><IoShirt style={{ color: '#664d03' }} /></span>
+                <div className='card-total col-lg-4 col-12'>
+                  <div className='chart-item'>
+                    <div>
+                      <span className='icon-bg success-bg'><FaBoxOpen style={{ color: '#0f5132' }} /></span>
+                    </div>
+                    <div className='card-content'>
+                      <h3>Đơn hàng</h3>
+                      <span>{totalOrders}</span>
+                    </div>
                   </div>
-                  <div className='card-content'>
-                    <h3>Sản phẩm</h3>
-                    <span>{totalProduct}</span>
+                </div>
+                <div className='card-total col-lg-4 col-12'>
+                  <div className='chart-item'>
+                    <div>
+                      <span className='icon-bg warning-bg'><IoShirt style={{ color: '#664d03' }} /></span>
+                    </div>
+                    <div className='card-content'>
+                      <h3>Sản phẩm</h3>
+                      <span>{totalProduct}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
     
-            <div className='chart grid-2'>
-              <div className='card-chart'>
-                <div className='card-chart-body'>
-                  <h3 className='cart-title'>Doanh thu</h3>
-                  <div>
-                    <Iframe
-                      url="https://charts.mongodb.com/charts-ecommerce-website-nunye/embed/charts?id=64492b72-c6f2-4fa9-8417-76ca9cf2fbcc&maxDataAge=3600&theme=light&autoRefresh=true"
-                      width="100%"
-                      height="380px"
-                      styles={{ background: '#FFFFFF', border: 'none', borderRadius: '2px', boxShadow: '0 2px 10px 0 rgba(70, 76, 79, .2)' }}
-                      id=""
-                      className=""
-                      display="block"
-                      position="relative"
-                    />
-                  </div>
-    
-                </div>
-              </div>
-              <div className='card-chart'>
+            <div className='chart'>
+              <div className='row'>
+                <div className='card-chart col-lg-6 col-12'>
                   <div className='card-chart-body'>
-                    <h3 className='cart-title'>Sản phẩm</h3>
                     <div>
                       <Iframe
-                        url="https://charts.mongodb.com/charts-ecommerce-website-nunye/embed/charts?id=644933da-dfe4-4e4c-89c2-3326d5647e50&maxDataAge=3600&theme=light&autoRefresh=true"
+                        url="https://charts.mongodb.com/charts-nestjs-app-mvmdqoj/embed/charts?id=d546779e-f2fd-4855-a12e-0820ac9220cb&maxDataAge=1800&theme=light&autoRefresh=true"
                         width="100%"
                         height="380px"
                         styles={{ background: '#FFFFFF', border: 'none', borderRadius: '2px', boxShadow: '0 2px 10px 0 rgba(70, 76, 79, .2)' }}
@@ -105,30 +94,46 @@ export default function Charts() {
                         position="relative"
                       />
                     </div>
-    
                   </div>
+                </div>
+                <div className='card-chart col-lg-6 col-12'>
+                    <div className='card-chart-body'>
+                      <div>
+                        <Iframe
+                          url="https://charts.mongodb.com/charts-nestjs-app-mvmdqoj/embed/charts?id=c920fbea-f5f2-412f-a874-baf4b3a06511&maxDataAge=1800&theme=light&autoRefresh=true"
+                          width="100%"
+                          height="380px"
+                          styles={{ background: '#FFFFFF', border: 'none', borderRadius: '2px', boxShadow: '0 2px 10px 0 rgba(70, 76, 79, .2)' }}
+                          id=""
+                          className=""
+                          display="block"
+                          position="relative"
+                        />
+                      </div>
+                    </div>
+                </div>
               </div>
             </div>
-            <div className='chart grid-1'>
-              <div className='card-chart'>
-                <div className='card-chart-body'>
-                  <h3 className='cart-title'>Đơn hàng</h3>
-                  <div>
-                    <Iframe
-                      url="https://charts.mongodb.com/charts-ecommerce-website-nunye/embed/charts?id=64492f3c-b3e2-4fcf-8ea1-4464f214e4ed&maxDataAge=3600&theme=light&autoRefresh=true"
-                      width="100%"
-                      height="380px"
-                      styles={{ background: '#FFFFFF', border: 'none', borderRadius: '2px', boxShadow: '0 2px 10px 0 rgba(70, 76, 79, .2)' }}
-                      id=""
-                      className=""
-                      display="block"
-                      position="relative"
-                    />
+            <div className='chart'>
+              <div className='row'>
+                <div className='card-chart'>
+                  <div className='card-chart-body'>
+                    <div>
+                      <Iframe
+                        url="https://charts.mongodb.com/charts-nestjs-app-mvmdqoj/embed/charts?id=2ddc2534-5c4f-40c9-b405-524e454395ae&maxDataAge=1800&theme=light&autoRefresh=true"
+                        width="100%"
+                        height="380px"
+                        styles={{ background: '#FFFFFF', border: 'none', borderRadius: '2px', boxShadow: '0 2px 10px 0 rgba(70, 76, 79, .2)' }}
+                        id=""
+                        className=""
+                        display="block"
+                        position="relative"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
       )    
 }

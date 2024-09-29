@@ -16,6 +16,7 @@ import { userApiRequest } from '../api-request/user.api';
 
 export default function NavMobile({ token }: { token: string | undefined }) {
     const cart = useAppSelector(state => state.cart)
+    const authToken = useAppSelector(state => state.auth).token
     const dispatch = useAppDispatch()
     const [open, setOpen] = useState(false);
 
@@ -23,10 +24,10 @@ export default function NavMobile({ token }: { token: string | undefined }) {
         e: React.MouseEvent<E, MouseEvent>
     ) => {
         e.preventDefault()
-        if (token) {
+        if (authToken) {
             dispatch(setNotify({ loading: true }))
             try {
-                await userApiRequest.logOut(token, dispatch)
+                await userApiRequest.logOut(authToken, dispatch)
                 dispatch(setNotify({ loading: false }))
             } catch (error) {
                 dispatch(setNotify({ loading: false }))

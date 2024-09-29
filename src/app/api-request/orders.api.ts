@@ -64,7 +64,7 @@ export const ordersApiRequest = {
         const result = await checkTokenExp(token, dispatch)
         accessToken = result ? result  : token
 
-        return http.get<Order>(`/order/${id}`, { token: accessToken })
+        return http.get<Order>(`/order/my/${id}`, { token: accessToken })
     },
     cancelOrder: async(token: string, dispatch: any, id: string) => {
         let accessToken = '';
