@@ -1,5 +1,6 @@
 // Define the initial state using that type
 
+import { UpdateOrder } from "@/app/admin/api-request/orders.api";
 import { Order } from "@/app/types/schema/order";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -15,7 +16,11 @@ interface UpdateOrderStatus {
     id: string,
     status: string,
 }
- 
+
+interface UpdateOrderDetail extends UpdateOrder {
+    id: string
+}
+
 export const OrderDetailSlice = createSlice({
   name: "orderdetail",
   // `createSlice` will infer the state type from the `initialState` argument
@@ -27,16 +32,22 @@ export const OrderDetailSlice = createSlice({
     },
     updateStatus: (state, action: PayloadAction<UpdateOrderStatus>) => {
         const order = state.data_cached.find(data => data._id === action.payload.id)
-
         if(order) {
             order.status = action.payload.status;
         }
-    }
+    },
+    updateOrder:  (state, action: PayloadAction<UpdateOrderDetail>) => {
+      const order = state.data_cached.find(data => data._id === action.payload.id)
+      const { id, ...update } = action.payload
+      if(order) {
+          Object.assign(order, update)
+      }
+  },
   }
 });
 
 export const { 
-    getOrder, updateStatus
+    getOrder, updateStatus, updateOrder
 } = OrderDetailSlice.actions;
 
 export default OrderDetailSlice.reducer;

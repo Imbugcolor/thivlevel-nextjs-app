@@ -72,5 +72,5 @@ export const ordersApiRequest = {
         accessToken = result ? result  : token
 
         return http.patch<Order>(`/order/cancel-order/${id}`, {}, { token: accessToken })
-    }
+    },
 }

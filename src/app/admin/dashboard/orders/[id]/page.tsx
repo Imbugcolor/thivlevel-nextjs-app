@@ -1,17 +1,19 @@
 'use client'
 import "./orderdetail.css"
-import { privateOrdersApiRequest } from '@/app/admin/api-request/orders.api';
+import { privateOrdersApiRequest, UpdateOrder } from '@/app/admin/api-request/orders.api';
 import LocationUpdate from '@/app/components/profile/LocationUpdate';
 import { AddressProfile } from '@/app/types/profile.address';
 import { Order } from '@/app/types/schema/order';
-import { getOrder } from '@/lib/features/orderDetailSlice';
+import { getOrder, updateOrder, updateStatus } from '@/lib/features/orderDetailSlice';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import moment from 'moment';
 import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
-import { FaEdit } from 'react-icons/fa';
+import { CiEdit } from "react-icons/ci";
 import CodLogo from '../../../../../images/cod-logo.webp'
 import Visa from '../../../../../images/visa.png'
+import { HttpError } from "@/lib/utils/http";
+import { setNotify } from "@/lib/features/notifySlice";
 
 export default function OrderDetail({ params }: { params: { id: string } }) {
     const token = useAppSelector(state => state.auth).token
@@ -19,11 +21,67 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
     const [loading, setLoading] = useState(false)
     const [orderDetail, setOrderDetail] = useState<Order>()
     const [status, setStatus] = useState('')
+    const [editName, setEditName] = useState(false)
+    const [name, setName] = useState('')
+    const [editPhone, setEditPhone] = useState(false)
+    const [phone, setPhone] = useState('')
     const dispatch = useAppDispatch()
 
     const [address, setAddress] = useState<AddressProfile | string>('')
     const addressRef = useRef<HTMLInputElement>(null)
+    const nameInputRef = useRef<HTMLInputElement>(null)
+    const phoneInputRef = useRef<HTMLInputElement>(null)
 
+    useEffect(() => {
+        if (editName && nameInputRef.current) {
+            nameInputRef.current.focus();
+        }
+    }, [editName]);
+
+    useEffect(() => {
+        if (editPhone && phoneInputRef.current) {
+            phoneInputRef.current.focus();
+        }
+    },[editPhone])
+
+    const handleChangeOrderName = () => {
+        setEditName(true)
+        setName(orderDetail?.name || '')
+    }
+
+    const cancelChangeName = () => {
+        setEditName(false)
+        setName(orderDetail?.name || '')
+    }
+
+    const saveChangeOrder = async(payload: UpdateOrder) => {
+        if(!token) return;
+        try {
+            await privateOrdersApiRequest.updateOrder(token, dispatch, params.id, payload)
+            dispatch(updateOrder({ id: params.id, ...payload }))
+        } catch (error) {
+            if (error instanceof HttpError) {
+                // Handle the specific HttpError
+                console.log("Error message:", error.message);
+                // Example: show error message to the user
+                dispatch(setNotify({ error: error.message }))
+            } else {
+                // Handle other types of errors
+                console.log("An unexpected error occurred:", error);
+                dispatch(setNotify({ error: "An unexpected error occurred" }))
+            }
+        }
+    }
+
+    const saveChangeName = async() => {
+        await saveChangeOrder({ name })
+        setEditName(false)
+    }
+
+    const saveChangePhone = async() => {
+        await saveChangeOrder({ phone })
+        setEditPhone(false)
+    }
 
     const handleChangeAddress = () => {
         if (loading) return;
@@ -32,7 +90,13 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
     }
 
     const handleChangePhone = () => {
+        setEditPhone(true)
+        setPhone(orderDetail?.phone || '')
+    }
 
+    const cancelChangePhone = () => {
+        setEditPhone(false)
+        setPhone(orderDetail?.phone || '')
     }
 
     useEffect(() => {
@@ -58,8 +122,28 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
         }
     },[token, params.id, dispatch, order.data_cached])
 
-    const handleSaveChangeStatus = () => {
+    const handleSaveChangeStatus = async() => {
+        if(!token) return;
+        try {
+            await privateOrdersApiRequest.updateStatus(token, dispatch, params.id, { status })
+            dispatch(updateStatus({ id: params.id, status }))
+        } catch (error) {
+            if (error instanceof HttpError) {
+                // Handle the specific HttpError
+                console.log("Error message:", error.message);
+                // Example: show error message to the user
+                dispatch(setNotify({ error: error.message }))
+            } else {
+                // Handle other types of errors
+                console.log("An unexpected error occurred:", error);
+                dispatch(setNotify({ error: "An unexpected error occurred" }))
+            }
+        }
+    }
 
+    const saveAddress = async(data: AddressProfile) => {
+        setAddress(data)
+        await saveChangeOrder({ address: data })
     }
   return (
     <div className='order-detail'>
@@ -75,47 +159,80 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                                 <p>TRẠNG THÁI: <span>{orderDetail?.status}</span></p>
                                 <p>THANH TOÁN: <span>{orderDetail?.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</span></p>                           
                             </div>
-                            <div className='col-lg-4 change-order-status'>
-                                <select name="status" value={status} onChange={(e) => setStatus(e.target.value)} style={{ borderRight: 'none' }}>
+                            {
+                                (orderDetail?.status !== 'Completed' && orderDetail?.status !== 'Canceled') ?
+                                <div className='col-lg-4 change-order-status'>
+                                    <select name="status" value={status} onChange={(e) => setStatus(e.target.value)} style={{ borderRight: 'none' }}>
 
-                                    <option value="Pending">
-                                        Đang chờ
-                                    </option>
+                                        <option value="Pending">
+                                            Đang chờ
+                                        </option>
 
-                                    <option value="Processing">
-                                        Đang xử lý
-                                    </option>
+                                        <option value="Processing">
+                                            Đang xử lý
+                                        </option>
 
-                                    <option value="Shipping">
-                                        Đang giao
-                                    </option>
+                                        <option value="Shipping">
+                                            Đang giao
+                                        </option>
 
-                                    <option value="Delivered">
-                                        Đã giao
-                                    </option>
+                                        <option value="Delivered">
+                                            Đã giao
+                                        </option>
 
-                                    <option value="Cancel">
-                                        Hủy
-                                    </option>
+                                        <option value="Completed">
+                                            Đã hoàn thành
+                                        </option>
 
-                                </select>
+                                        <option value="Canceled">
+                                            Hủy
+                                        </option>
 
-                                <button type='button' className='save-status' onClick={handleSaveChangeStatus}>Lưu</button>
-                            </div>
+                                    </select>
+
+                                    <button 
+                                        type='button' 
+                                        className={`save-status ${status === orderDetail?.status && 'disable'}`} 
+                                        onClick={handleSaveChangeStatus}
+                                        disabled={status === orderDetail?.status}
+                                    >Lưu</button>
+                                </div> : 
+                                <div className='col-lg-4'></div>
+                            }
                             <div className='col-lg-4 order-name-address'>
-                                <h1>{orderDetail?.name}</h1>
+                                <div className="order-name d-flex">
+                                    {
+                                        editName ? <div>
+                                            <input 
+                                                type="text" 
+                                                name='name' 
+                                                value={name} 
+                                                ref={nameInputRef}
+                                                onChange={(e) => setName(e.target.value)}
+                                            />
+                                            <div className="edit-order my-1">
+                                                <button type="button" className="save-order" onClick={saveChangeName}>Lưu</button>
+                                                <button type="button" className="cancel-edit" onClick={cancelChangeName}>Hủy</button>
+                                            </div>
+                                        </div>:
+                                        <>
+                                            <h1 className="mr-2" >{orderDetail?.name}</h1>
+                                            <a href="#!" onClick={handleChangeOrderName}>
+                                                <CiEdit style={{ color: '#9e9e9e', cursor: 'pointer' }} />
+                                            </a>
+                                        </>
+                                    }
+                                </div>
                                 <p>
                                     {(orderDetail?.address?.detailAddress || '')} {orderDetail?.address?.ward?.label}, 
                                     {orderDetail?.address?.district?.label}, {orderDetail?.address?.city?.label}
                                 </p>
                                 <a href="#!"
                                     onClick={handleChangeAddress}>
-                                    <FaEdit style={{ color: '#9e9e9e', cursor: 'pointer' }} />
+                                    <CiEdit style={{ color: '#9e9e9e', cursor: 'pointer' }} />
                                 </a>
                                 <div className="address-form text-start" ref={addressRef}>
-                                    <LocationUpdate element={"address-form"} onSave={setAddress} initAddress={address} />
-                                </div>
-                                <div className="address-form" ref={addressRef}>
+                                    <LocationUpdate element={"address-form"} onSave={saveAddress} initAddress={address} />
                                 </div>
                             </div>
                         </div>
@@ -124,13 +241,23 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                         <div className="row">
                             <div className='col-lg-3 col-md-4 col-sm-6 date-order'>
                                 <label>NGÀY TẠO</label>
-                                <p>{new Date(orderDetail?.createdAt || '').toLocaleDateString()}</p>
-                                <span>{moment(orderDetail?.createdAt).format('LT')}</span>
+                                {
+                                    orderDetail &&
+                                    <>
+                                        <p>{new Date(orderDetail.createdAt).toLocaleDateString()}</p>
+                                        <span>{moment(orderDetail.createdAt).format('LT')}</span>
+                                    </>
+                                }
                             </div>
                             <div className='col-lg-3 col-md-4 col-sm-6 date-order'>
                                 <label>CẬP NHẬT LẦN CUỐI:</label>
-                                <p>{new Date(orderDetail?.updatedAt || '').toLocaleDateString()}</p>
-                                <span>{moment(orderDetail?.updatedAt).format('LT')}</span>
+                                {
+                                    orderDetail && 
+                                    <>
+                                        <p>{new Date(orderDetail.updatedAt).toLocaleDateString()}</p>
+                                        <span>{moment(orderDetail.updatedAt).format('LT')}</span>
+                                    </>
+                                }
                             </div>
                             <div className='col-lg-3 col-md-4 col-sm-6 id-order'>
                                 <label>EMAIL</label>
@@ -138,11 +265,28 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                             </div>
                             <div className='col-lg-3 col-md-4 col-sm-6 phone-number-order'>
                                 <label>SỐ ĐIỆN THOẠI</label>
-                                    <div style={{ textAlign: 'right' }}>
-                                    <p>+84 {orderDetail?.phone ? orderDetail?.phone : 'NO'}</p>
-                                    <a href="#!" onClick={() => handleChangePhone()}>
-                                        <FaEdit style={{ color: '#9e9e9e', cursor: 'pointer' }} />
-                                    </a>
+                                <div className="order-phone">
+                                    {
+                                        editPhone ? <div>
+                                        <input 
+                                            type="text" 
+                                            name='phone' 
+                                            value={phone} 
+                                            ref={phoneInputRef}
+                                            placeholder="1234567890"
+                                            onChange={(e) => setPhone(e.target.value)}
+                                        />
+                                        <div className="edit-order my-1">
+                                            <button type="button" className="save-order" onClick={saveChangePhone}>Lưu</button>
+                                            <button type="button" className="cancel-edit" onClick={cancelChangePhone}>Hủy</button>
+                                        </div>
+                                    </div> : <>
+                                        <p>+84 {orderDetail?.phone ? orderDetail?.phone : ''}</p>
+                                        <a href="#!" onClick={() => handleChangePhone()}>
+                                            <CiEdit style={{ color: '#9e9e9e', cursor: 'pointer' }} />
+                                        </a>
+                                    </>
+                                    }
                                 </div>
                             </div>  
                         </div>
@@ -179,9 +323,9 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <div className='table-product-column' style={{justifyContent: 'center'}}>
+                                                        <div className='table-product-column'>
                                                             <span>{item.variantId.size} - </span>
-                                                            <div style={{ backgroundColor: `${item.variantId.color}`, width: '15px', height: '15px', border: '1px solid #ccc' }}></div>
+                                                            <span>{item.variantId.color}</span>
                                                         </div>
                                                     </td>
                                                     <td className='table-quantity'>{item.quantity}</td>

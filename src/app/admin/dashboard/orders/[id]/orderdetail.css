@@ -20,6 +20,21 @@
     font-size: 15px;
 }
 
+.edit-order button {
+    padding: 5px 15px;
+    border-radius: 5px;
+    margin-right: 10px;
+    color: #fff;
+}
+
+.edit-order .save-order {
+    background-color: #51b1e1;
+}
+
+.edit-order .cancel-edit {
+    background-color: #f05252;
+}
+
 .order-detail-header select, 
 .order-detail-header input {
     border: 1px solid #ccc;
@@ -29,8 +44,8 @@
 
 }
 .order-detail-header .save-status {
-    background-color: #555;
-    border: 1px solid #555;
+    background-color: #000;
+    border: 1px solid #000;
     color: #fff;
     height: 40px;
     width: 55px;
@@ -38,19 +53,12 @@
     border-left: none;
     transition: 0.3;
 }
-
-.order-detail-header .save-status:hover {
-    opacity: 0.7;
-    transition: 0.3;
+.order-detail-header .save-status.disable {
+    background-color: #ccc;
+    border: 1px solid #ccc;
 }
-
-.order-detail-wrapper .order-name-address {
-    text-align: end;
-    width: 300px;
-}
-
 .order-detail-wrapper .order-detail-body{
-    padding: 35px 0;
+    padding: 35px 10px;
     background-color: #f9fafb;
 }
 
