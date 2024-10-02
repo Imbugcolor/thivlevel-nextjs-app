@@ -46,7 +46,7 @@ header .logo {
 }
 
 .header__top .search__bar_header, .search__bar_mobile {
-    max-width: 800px;
+    max-width: 740px;
     width: 100%;
 }
 
@@ -212,16 +212,14 @@ header .header-nav .login__nav_icon span {
     display: flex;
 }
 
-header .header-nav .login__nav_icon {
-    margin-right: 30px;
-}
-
 header .header-nav .login_sign_up_nav {
     text-align: center;
     line-height: 25px;
     background: #d93938;
     border-radius: 20px;
     padding: 8px 20px;
+    height: 40px;
+    margin-left: 20px;
 }
 
 .header-nav .login_sign_up_nav span {

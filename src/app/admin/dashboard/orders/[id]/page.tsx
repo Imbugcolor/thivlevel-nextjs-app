@@ -124,6 +124,8 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
 
     const handleSaveChangeStatus = async() => {
         if(!token) return;
+        // if (status === 'Completed') {
+        // }
         try {
             await privateOrdersApiRequest.updateStatus(token, dispatch, params.id, { status })
             dispatch(updateStatus({ id: params.id, status }))

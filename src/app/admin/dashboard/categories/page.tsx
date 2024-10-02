@@ -7,6 +7,8 @@ import { HttpError } from '@/lib/utils/http'
 import React, { useState } from 'react'
 import { privateCategoriesRequest } from '../../api-request/categories.api'
 import { createCategory, deleteCategory, updateCategory } from "@/lib/features/categorySlice"
+import { HiOutlineTrash } from "react-icons/hi2";
+import { CiEdit } from "react-icons/ci";
 
 export default function Categories() {
     const token = useAppSelector(state => state.auth).token
@@ -90,6 +92,7 @@ export default function Categories() {
                 <div className="categories">
                     <form onSubmit={handleSubmit}>
                         <input type="text" name="category" value={category} required
+                            placeholder="Tên danh mục..."
                             onChange={e => setCategory(e.target.value)}
                         />
 
@@ -110,8 +113,8 @@ export default function Categories() {
                                 <div className="row" key={category._id}>
                                     <p>{category.name}</p>
                                     <div>
-                                        <button className="update__cat_btn" onClick={() => editCategory(category)}>Sửa</button>
-                                        <button className="remove__cat_btn" onClick={() => handledeleteCategory(category)}>Xóa</button>
+                                        <button className="update__cat_btn category-btn" onClick={() => editCategory(category)}><CiEdit /></button>
+                                        <button className="remove__cat_btn category-btn" onClick={() => handledeleteCategory(category)}><HiOutlineTrash /></button>
                                     </div>
                                 </div>
                             ))

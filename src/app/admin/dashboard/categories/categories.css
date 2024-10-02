@@ -32,27 +32,31 @@
 }
 
 .categories button {
-    width: 70px;
+    width: 50px;
     color: white;
     margin-left: 10px;
     font-size: 16px;
     font-weight: 300;
+    border: 1px solid #000;
+    color: #000;
+    border-radius: 5px;
+    transition: 0.5s;
 }
 
 .categories .create__cat_btn {
     background-color: #000;
+    color: #fff;
+}
+
+.category-btn:hover {
+    background-color: #000;
+    color: #fff;
+    transition: 0.5s;
 }
 
 .categories .cancel__update_btn {
     background-color: #757575;
-}
-
-.categories .update__cat_btn {
-    background-color: #2778c4;
-}
-
-.categories .remove__cat_btn {
-    background-color: #d93938;
+    color: #fff;
 }
 
 .categories .row {

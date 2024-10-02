@@ -34,6 +34,17 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/', request.url))
   }
 
+  // Admin đăng nhập thì chuyển qua trang dashboard
+  if (pathname === '/' && token) {
+    const decode: JwtPayload = jwtDecode(token);
+    // TRƯỜNG HỢP LÀ ADMIN 
+    if (decode.role.some(rl => rl === 'admin')) {
+      return NextResponse.redirect(new URL('/admin/dashboard/charts', request.url))
+    }
+    // TRƯỜNG HỢP NGƯỜI DÙNG 
+    return NextResponse.next()
+  }
+
   // Không cho USER truy cập vào ADMIN Path
   if (adminPaths.some((path) => pathname.startsWith(path)) && token) {
     const decode: JwtPayload = jwtDecode(token);
@@ -58,5 +69,5 @@ export function middleware(request: NextRequest) {
 // See "Matching Paths" below to learn more
 // matcher: ['/auth', '/register', '/products/:path*']
 export const config = {
-  matcher: ['/auth/:path*', '/user/:path*', '/cart/:path*', '/admin/auth','/admin/profile', '/admin/dashboard/:path*']
+  matcher: ['/', '/products', '/product/:path*', '/about/:path*', '/auth/:path*', '/user/:path*', '/cart/:path*', '/admin/auth','/admin/profile', '/admin/dashboard/:path*']
 }

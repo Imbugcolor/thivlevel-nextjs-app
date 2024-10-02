@@ -7,7 +7,7 @@ import Logo from '../../images/thivlevel-logo-4.png'
 import { cookies } from 'next/headers'
 import UserMenu from './UserMenu'
 import NavMobile from './NavMobile'
-import { CiUser } from 'react-icons/ci'
+import { FaUserCircle } from "react-icons/fa";
 
 export default function Header() {
     const cookieStore = cookies()
@@ -31,7 +31,7 @@ export default function Header() {
                         token ? <UserMenu /> :
                             <li>
                                 <div className='login__nav_icon'>
-                                    <Link href="/auth"><span><CiUser /></span></Link>
+                                    <Link href="/auth"><span><FaUserCircle /></span></Link>
                                 </div>
                                 <div className='login_sign_up_nav'>
                                     <span><Link href="/auth">Đăng nhập</Link></span>

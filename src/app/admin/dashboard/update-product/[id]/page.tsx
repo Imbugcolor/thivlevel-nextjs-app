@@ -332,6 +332,18 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
 
             dispatch(updateProduct(res.payload))
             dispatch(setNotify({ success: 'Cập nhật sản phẩm thành công' }))
+            // After product creation, trigger revalidation of the home page
+            const revalidateRes = await fetch('/api/revalidate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ path: '/' })
+            });
+  
+            if (!revalidateRes.ok) {
+                dispatch(setNotify({ error: 'Failed to revalidate homepage'}));
+            } 
         } catch (error) {
             if (error instanceof HttpError) {
                 // Handle the specific HttpError
@@ -358,40 +370,40 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
                     <form onSubmit={handleSubmit}>
                         <div>
                             <div className="row">
-                                <label htmlFor="product_id">Mã sản phẩm</label>
+                                <label className="p-0" htmlFor="product_id">Mã sản phẩm</label>
                                 <input type="text" name="product_sku" id="product_sku"
                                     value={product.product_sku} onChange={handleChangeInput} />
                                 <span className='validate-msg-product-create'>{validation.product_sku}</span>
                             </div>
 
                             <div className="row">
-                                <label htmlFor="title">Tên sản phẩm</label>
+                                <label className="p-0" htmlFor="title">Tên sản phẩm</label>
                                 <input type="text" name="title" id="title"
                                     value={product.title} onChange={handleChangeInput} />
                                 <span className='validate-msg-product-create'>{validation.title}</span>
                             </div>
 
                             <div className="row">
-                                <label htmlFor="price">Giá</label>
+                                <label className="p-0" htmlFor="price">Giá</label>
                                 <input type="number" name="price" id="price"
                                     value={product.price} onChange={handleChangeInput} />
                                 <span className='validate-msg-product-create'>{validation.price}</span>
                             </div>
 
                             <div className="row">
-                                <label htmlFor="description">Mô tả</label>
+                                <label className="p-0" htmlFor="description">Mô tả</label>
                                 <textarea name="description" id="description" required
                                     value={product.description} rows={4} onChange={handleChangeInput} />
                             </div>
 
                             <div className="row">
-                                <label htmlFor="content">Nội dung</label>
+                                <label className="p-0" htmlFor="content">Nội dung</label>
                                 <textarea name="content" id="content" required
                                     value={product.content} rows={5} onChange={handleChangeInput} />
                             </div>
 
                             <div className="row">
-                                <label htmlFor="categories">Danh mục</label>
+                                <label className="p-0" htmlFor="categories">Danh mục</label>
                                 <select name="category" value={category} onChange={handleChangeCategory}>
                                     <option value="">Chọn danh mục cho sản phẩm</option>
                                     {
@@ -407,7 +419,7 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
                         </div>
 
                         <div className="upload">
-                            <label htmlFor="">Hình ảnh sản phẩm</label>
+                            <label className="p-0" htmlFor="">Hình ảnh sản phẩm</label>
                             <input
                                 type="file" name="file" id="file_up"
                                 ref={fileUpRef}
@@ -425,10 +437,10 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
                             <ImageList images={images} deleteImage={deleteImage} />
 
                             <div className="variant">
-                                <label htmlFor="">Biến thể: </label>
+                                <label className="p-0" htmlFor="">Biến thể: </label>
                                 <div className="variant-options">
                                     <div className="color-options">
-                                        <label htmlFor="color">Màu sắc: </label>
+                                        <label className="p-0" htmlFor="color">Màu sắc: </label>
                                         {
                                             colors.length > 0 && colors.map((color, idx) => (
                                                 <div key={idx} className="color-input">
@@ -447,7 +459,7 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
                                         <span className='validate-msg-product-create'>{validation.color}</span>
                                     </div>
                                     <div className="sizes-options">
-                                        <label htmlFor="color">Kích thước: </label>
+                                        <label className="p-0" htmlFor="color">Kích thước: </label>
                                         {
                                             sizes.length > 0 && sizes.map((size, idx) => (
                                                 <div key={idx} className="size-input">
@@ -468,7 +480,7 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
                                 </div>
 
                                 <div className="variant-options">
-                                    <label htmlFor="">Danh sách các biến thể: </label>
+                                    <label className="p-0" htmlFor="">Danh sách các biến thể: </label>
                                     <table className="variants">
                                         <thead className="table-header">
                                             <tr>
@@ -514,7 +526,7 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
                                     </table>
                                 </div>
                             </div>
-                            <label htmlFor="">Ẩn/hiện</label>
+                            <label className="p-0" htmlFor="">Ẩn/hiện</label>
                             <div className='publish_product'>
                                 <div className="publish-toggle"
                                     onClick={() => setPublish(!publish)}>

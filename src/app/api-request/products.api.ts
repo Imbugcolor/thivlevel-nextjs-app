@@ -26,6 +26,6 @@ export const productsApiRequest = {
     },
     getRecommendList: (limit: number) => http.get<ProductDataResponse>(`/products?limit=${limit}&page=1&sort=-rating`),
     getBestSeller: (limit: number) => http.get<ProductDataResponse>(`/products?limit=${limit}&page=1&sort=-sold`),
-    getNewArrival: (limit: number) => http.get<ProductDataResponse>(`/products?limit=${limit}&page=1`),
+    getNewArrival: (limit: number) => http.get<ProductDataResponse>(`/products?limit=${limit}&page=1&sort=-createdAt`),
     getProduct: (id: string) => http.get<ProductDetailDataResponse>(`/products/${id}`),
 }

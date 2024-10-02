@@ -56,31 +56,32 @@ export default function Filter() {
     }
 
     return (
-        <div className="filter_menu product row">
-            <div className='filter__search col l-4'>
-                {
-                    <div className='remove__filter_wrapper'>
-                        <button onClick={handleRemoveFilter}><FcClearFilters /></button>
+        <div className="filter_menu product">
+            <div className='row'>
+                <div className='py-2 col-lg-6 col-sm-12'>
+                    <div className='search-wrapper d-flex align-items-center'>
+                        {
+                            <div className='remove__filter_wrapper'>
+                                <button onClick={handleRemoveFilter}><FcClearFilters /></button>
+                            </div>
+                        }
+                        <div className="search">
+                            <input className="search-input-bd-none" type="text" placeholder="Nhập sản phẩm bạn muốn tìm kiếm ..."
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter")
+                                        handleSearch();
+                                }}
+                            />
+                            <button className="search-btn" onClick={handleSearch}>
+                                <GoSearch />
+                            </button>
+                        </div>
                     </div>
-                }
-                <div className="search">
-
-                    <input className="search-input-bd-none" type="text" placeholder="Nhập sản phẩm bạn muốn tìm kiếm ..."
-                        value={searchInput}
-                        onChange={(e) => setSearchInput(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter")
-                                handleSearch();
-                        }}
-                    />
-                    <button className="search-btn" onClick={handleSearch}>
-                        <GoSearch />
-                    </button>
                 </div>
-            </div>
-            <div className="filter__category col l-4">
-                <div className="category">
-                    <div>
+                <div className="py-2 col-lg-3 col-sm-6">
+                    <div className="category">
                         <select value={filter.category} onChange={handleFilterCategories}>
                             <option value="">Tất cả</option>
                             {
@@ -91,10 +92,8 @@ export default function Filter() {
                         </select>
                     </div>
                 </div>
-            </div>
-            <div className="filter__sort col l-4">
-                <div className="sort">
-                    <div>
+                <div className="py-2 col-lg-3 col-sm-6">
+                    <div className="sort">
                         <select value={filter.sort} onChange={handleSortProduct}>
                             <option value="">Sắp xếp: Tự động</option>
                             <option value="sort=-createdAt">Mới nhất</option>
