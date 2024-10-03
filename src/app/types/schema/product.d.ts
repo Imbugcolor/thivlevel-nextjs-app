@@ -10,9 +10,11 @@ interface Product {
     sold?: number,
     rating?: number,
     numReviews?: number,
-    isPublished: boolean,
     category?: Category,
     reviews?: Review[],
+    isPublished: boolean,
+    isDeleted: boolean,
     createdAt?: string,
     updatedAt?: string,
+    deletedAt?: string,
 }

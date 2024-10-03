@@ -116,6 +116,11 @@ table {
   list-style: none;
 }
 
+/* MODAL */
+.modal {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 /* QUICK VIEW MODAL */
 .product-view-detail-box {
   height: 100vh;

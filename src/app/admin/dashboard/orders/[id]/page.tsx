@@ -14,6 +14,7 @@ import CodLogo from '../../../../../images/cod-logo.webp'
 import Visa from '../../../../../images/visa.png'
 import { HttpError } from "@/lib/utils/http";
 import { setNotify } from "@/lib/features/notifySlice";
+import Confirm from "@/app/components/modals/Confirm";
 
 export default function OrderDetail({ params }: { params: { id: string } }) {
     const token = useAppSelector(state => state.auth).token
@@ -25,6 +26,7 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
     const [name, setName] = useState('')
     const [editPhone, setEditPhone] = useState(false)
     const [phone, setPhone] = useState('')
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const dispatch = useAppDispatch()
 
     const [address, setAddress] = useState<AddressProfile | string>('')
@@ -42,7 +44,7 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
         if (editPhone && phoneInputRef.current) {
             phoneInputRef.current.focus();
         }
-    },[editPhone])
+    }, [editPhone])
 
     const handleChangeOrderName = () => {
         setEditName(true)
@@ -54,8 +56,8 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
         setName(orderDetail?.name || '')
     }
 
-    const saveChangeOrder = async(payload: UpdateOrder) => {
-        if(!token) return;
+    const saveChangeOrder = async (payload: UpdateOrder) => {
+        if (!token) return;
         try {
             await privateOrdersApiRequest.updateOrder(token, dispatch, params.id, payload)
             dispatch(updateOrder({ id: params.id, ...payload }))
@@ -73,20 +75,20 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
         }
     }
 
-    const saveChangeName = async() => {
+    const saveChangeName = async () => {
         await saveChangeOrder({ name })
         setEditName(false)
     }
 
-    const saveChangePhone = async() => {
+    const saveChangePhone = async () => {
         await saveChangeOrder({ phone })
         setEditPhone(false)
     }
 
     const handleChangeAddress = () => {
         if (loading) return;
-        if (addressRef.current) 
-        addressRef.current.classList.add('active')
+        if (addressRef.current)
+            addressRef.current.classList.add('active')
     }
 
     const handleChangePhone = () => {
@@ -100,10 +102,10 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
     }
 
     useEffect(() => {
-        if(!params.id) return;
-        if(token) {
-            const fetchData = async() => {
-                if(order.data_cached.every(item => item._id !== params.id)){
+        if (!params.id) return;
+        if (token) {
+            const fetchData = async () => {
+                if (order.data_cached.every(item => item._id !== params.id)) {
                     setLoading(true)
                     const res = await privateOrdersApiRequest.getOrder(token, dispatch, params.id)
                     dispatch(getOrder(res.payload))
@@ -120,15 +122,22 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
             }
             fetchData()
         }
-    },[token, params.id, dispatch, order.data_cached])
+    }, [token, params.id, dispatch, order.data_cached])
 
-    const handleSaveChangeStatus = async() => {
-        if(!token) return;
-        // if (status === 'Completed') {
-        // }
+    const handleCloseModal = () => {
+        setIsModalOpen(false); // Close the modal on cancel or close
+    };
+    
+    const showModal = () => {
+        setIsModalOpen(true); // Show the modal
+    };
+
+    const updateOrderStatus = async () => {
+        if (!token) return;
         try {
             await privateOrdersApiRequest.updateStatus(token, dispatch, params.id, { status })
             dispatch(updateStatus({ id: params.id, status }))
+            if (isModalOpen) setIsModalOpen(false);
         } catch (error) {
             if (error instanceof HttpError) {
                 // Handle the specific HttpError
@@ -143,12 +152,20 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
         }
     }
 
-    const saveAddress = async(data: AddressProfile) => {
+    const handleSaveChangeStatus = async () => {
+        if (status === 'Completed') {
+            showModal()
+        } else {
+            await updateOrderStatus()
+        }
+    }
+
+    const saveAddress = async (data: AddressProfile) => {
         setAddress(data)
         await saveChangeOrder({ address: data })
     }
-  return (
-    <div className='order-detail'>
+    return (
+        <div className='order-detail'>
             <div className='content-header'>
                 <h2>Chi tiết đơn hàng</h2>
             </div>
@@ -157,58 +174,58 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                     <div className='order-detail-header'>
                         <div className="row">
                             <div className='col-lg-4 order-id-status'>
-                                <h1>ĐƠN HÀNG <span style={{ textTransform: 'uppercase', fontWeight: '500'}}>{'#' + orderDetail?._id}</span></h1>
+                                <h1>ĐƠN HÀNG <span style={{ textTransform: 'uppercase', fontWeight: '500' }}>{'#' + orderDetail?._id}</span></h1>
                                 <p>TRẠNG THÁI: <span>{orderDetail?.status}</span></p>
-                                <p>THANH TOÁN: <span>{orderDetail?.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</span></p>                           
+                                <p>THANH TOÁN: <span>{orderDetail?.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</span></p>
                             </div>
                             {
                                 (orderDetail?.status !== 'Completed' && orderDetail?.status !== 'Canceled') ?
-                                <div className='col-lg-4 change-order-status'>
-                                    <select name="status" value={status} onChange={(e) => setStatus(e.target.value)} style={{ borderRight: 'none' }}>
+                                    <div className='col-lg-4 change-order-status'>
+                                        <select name="status" value={status} onChange={(e) => setStatus(e.target.value)} style={{ borderRight: 'none' }}>
 
-                                        <option value="Pending">
-                                            Đang chờ
-                                        </option>
+                                            <option value="Pending">
+                                                Đang chờ
+                                            </option>
 
-                                        <option value="Processing">
-                                            Đang xử lý
-                                        </option>
+                                            <option value="Processing">
+                                                Đang xử lý
+                                            </option>
 
-                                        <option value="Shipping">
-                                            Đang giao
-                                        </option>
+                                            <option value="Shipping">
+                                                Đang giao
+                                            </option>
 
-                                        <option value="Delivered">
-                                            Đã giao
-                                        </option>
+                                            <option value="Delivered">
+                                                Đã giao
+                                            </option>
 
-                                        <option value="Completed">
-                                            Đã hoàn thành
-                                        </option>
+                                            <option value="Completed">
+                                                Đã hoàn thành
+                                            </option>
 
-                                        <option value="Canceled">
-                                            Hủy
-                                        </option>
+                                            <option value="Canceled">
+                                                Hủy
+                                            </option>
 
-                                    </select>
+                                        </select>
 
-                                    <button 
-                                        type='button' 
-                                        className={`save-status ${status === orderDetail?.status && 'disable'}`} 
-                                        onClick={handleSaveChangeStatus}
-                                        disabled={status === orderDetail?.status}
-                                    >Lưu</button>
-                                </div> : 
-                                <div className='col-lg-4'></div>
+                                        <button
+                                            type='button'
+                                            className={`save-status ${status === orderDetail?.status && 'disable'}`}
+                                            onClick={handleSaveChangeStatus}
+                                            disabled={status === orderDetail?.status}
+                                        >Lưu</button>
+                                    </div> :
+                                    <div className='col-lg-4'></div>
                             }
                             <div className='col-lg-4 order-name-address'>
                                 <div className="order-name d-flex">
                                     {
                                         editName ? <div>
-                                            <input 
-                                                type="text" 
-                                                name='name' 
-                                                value={name} 
+                                            <input
+                                                type="text"
+                                                name='name'
+                                                value={name}
                                                 ref={nameInputRef}
                                                 onChange={(e) => setName(e.target.value)}
                                             />
@@ -216,17 +233,17 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                                                 <button type="button" className="save-order" onClick={saveChangeName}>Lưu</button>
                                                 <button type="button" className="cancel-edit" onClick={cancelChangeName}>Hủy</button>
                                             </div>
-                                        </div>:
-                                        <>
-                                            <h1 className="mr-2" >{orderDetail?.name}</h1>
-                                            <a href="#!" onClick={handleChangeOrderName}>
-                                                <CiEdit style={{ color: '#9e9e9e', cursor: 'pointer' }} />
-                                            </a>
-                                        </>
+                                        </div> :
+                                            <>
+                                                <h1 className="mr-2" >{orderDetail?.name}</h1>
+                                                <a href="#!" onClick={handleChangeOrderName}>
+                                                    <CiEdit style={{ color: '#9e9e9e', cursor: 'pointer' }} />
+                                                </a>
+                                            </>
                                     }
                                 </div>
                                 <p>
-                                    {(orderDetail?.address?.detailAddress || '')} {orderDetail?.address?.ward?.label}, 
+                                    {(orderDetail?.address?.detailAddress || '')} {orderDetail?.address?.ward?.label},
                                     {orderDetail?.address?.district?.label}, {orderDetail?.address?.city?.label}
                                 </p>
                                 <a href="#!"
@@ -254,7 +271,7 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                             <div className='col-lg-3 col-md-4 col-sm-6 date-order'>
                                 <label>CẬP NHẬT LẦN CUỐI:</label>
                                 {
-                                    orderDetail && 
+                                    orderDetail &&
                                     <>
                                         <p>{new Date(orderDetail.updatedAt).toLocaleDateString()}</p>
                                         <span>{moment(orderDetail.updatedAt).format('LT')}</span>
@@ -270,27 +287,27 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                                 <div className="order-phone">
                                     {
                                         editPhone ? <div>
-                                        <input 
-                                            type="text" 
-                                            name='phone' 
-                                            value={phone} 
-                                            ref={phoneInputRef}
-                                            placeholder="1234567890"
-                                            onChange={(e) => setPhone(e.target.value)}
-                                        />
-                                        <div className="edit-order my-1">
-                                            <button type="button" className="save-order" onClick={saveChangePhone}>Lưu</button>
-                                            <button type="button" className="cancel-edit" onClick={cancelChangePhone}>Hủy</button>
-                                        </div>
-                                    </div> : <>
-                                        <p>+84 {orderDetail?.phone ? orderDetail?.phone : ''}</p>
-                                        <a href="#!" onClick={() => handleChangePhone()}>
-                                            <CiEdit style={{ color: '#9e9e9e', cursor: 'pointer' }} />
-                                        </a>
-                                    </>
+                                            <input
+                                                type="text"
+                                                name='phone'
+                                                value={phone}
+                                                ref={phoneInputRef}
+                                                placeholder="1234567890"
+                                                onChange={(e) => setPhone(e.target.value)}
+                                            />
+                                            <div className="edit-order my-1">
+                                                <button type="button" className="save-order" onClick={saveChangePhone}>Lưu</button>
+                                                <button type="button" className="cancel-edit" onClick={cancelChangePhone}>Hủy</button>
+                                            </div>
+                                        </div> : <>
+                                            <p>+84 {orderDetail?.phone ? orderDetail?.phone : ''}</p>
+                                            <a href="#!" onClick={() => handleChangePhone()}>
+                                                <CiEdit style={{ color: '#9e9e9e', cursor: 'pointer' }} />
+                                            </a>
+                                        </>
                                     }
                                 </div>
-                            </div>  
+                            </div>
                         </div>
                     </div>
                     <div className='list-product-order'>
@@ -314,14 +331,14 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                                                     <td>{index + 1}</td>
                                                     <td>
                                                         <div className='table-product-column'>
-                                                            <Image 
-                                                                className='table-thumbnail-product' 
+                                                            <Image
+                                                                className='table-thumbnail-product'
                                                                 src={item?.productId.images[0].url} alt='hinh'
                                                                 width={500}
                                                                 height={500}
                                                                 priority
                                                             />
-                                                            <span style={{ marginLeft: 5}} >{item.productId.title}</span>
+                                                            <span style={{ marginLeft: 5 }} >{item.productId.title}</span>
                                                         </div>
                                                     </td>
                                                     <td>
@@ -345,19 +362,19 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                         <div className="row">
                             <div className='col-lg-3 col-md-4 col-sm-6 method'>
                                 <label>PHƯƠNG THỨC THANH TOÁN</label>
-                                <div className='payment__detail_' style={{ display: 'flex', alignItems: 'center'}}>
+                                <div className='payment__detail_' style={{ display: 'flex', alignItems: 'center' }}>
                                     <Image src={
-                                        orderDetail?.method === 'COD' ? CodLogo : Visa 
-                                    } alt='card-brand' style={{ width: '45px', height: 'auto' }}/>
+                                        orderDetail?.method === 'COD' ? CodLogo : Visa
+                                    } alt='card-brand' style={{ width: '45px', height: 'auto' }} />
                                     <span>
-                                    {
-                                        orderDetail?.method === 'CARD' && orderDetail?.isPaid === true ? 
-                                        `Đã thanh toán: ${new Date(orderDetail?.createdAt).toLocaleDateString() + ' ' + moment(orderDetail?.createdAt).format('LT')}` :
-                                
-                                        orderDetail?.method === 'COD' && orderDetail?.isPaid === true ? 
-                                        `Đã thanh toán: ${new Date(orderDetail?.updatedAt).toLocaleDateString() + ' ' + moment(orderDetail?.updatedAt).format('LT')}` :
-                                        'Chưa thanh toán'
-                                    }
+                                        {
+                                            orderDetail?.method === 'CARD' && orderDetail?.isPaid === true ?
+                                                `Đã thanh toán: ${new Date(orderDetail?.createdAt).toLocaleDateString() + ' ' + moment(orderDetail?.createdAt).format('LT')}` :
+
+                                                orderDetail?.method === 'COD' && orderDetail?.isPaid === true ?
+                                                    `Đã thanh toán: ${new Date(orderDetail?.updatedAt).toLocaleDateString() + ' ' + moment(orderDetail?.updatedAt).format('LT')}` :
+                                                    'Chưa thanh toán'
+                                        }
                                     </span>
                                 </div>
                                 {orderDetail?.paymentId ? <span>MÃ THANH TOÁN: {orderDetail?.paymentId}</span> : ''}
@@ -378,6 +395,13 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                     </div>
                 </div>
             </div>
+            <Confirm
+                show={isModalOpen}
+                title="Xác nhận hoàn thành"
+                message="Xác nhận đơn hàng đã thanh toán?"
+                onClose={handleCloseModal}
+                onConfirm={updateOrderStatus}
+            />
         </div>
-  )
+    )
 }

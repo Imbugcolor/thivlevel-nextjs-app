@@ -90,7 +90,13 @@ export const ProductSlice = createSlice({
         // Apply the updates to the found todo
         product.isPublished = isPublised
       }
-    }
+    },
+    deleteProductAction: (state, action: PayloadAction<string>) => {
+      const product = state.data.filter((product) => product._id !== action.payload);
+  
+      state.data = product;
+      state.total = state.total - 1;
+    },
   },
 });
 
@@ -99,7 +105,7 @@ export const {
   sortProducts, filterCategory, 
   filterPrice, filterSizes, 
   removeAllFilter, changePage,
-  updatePublish
+  updatePublish, deleteProductAction
 } = ProductSlice.actions;
 
 export default ProductSlice.reducer;

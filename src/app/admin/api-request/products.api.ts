@@ -57,6 +57,14 @@ export const privateProductApiRequest = {
         }
         return http.patch<Product>(`/products/${id}`, body, {token: accessToken})
     },
+    delete: async(token: string, dispatch: any, id: string) => {
+      let accessToken = "";
+      if (token) {
+        const result = await checkTokenExp(token, dispatch);
+        accessToken = result ? result : token;
+      }
+      return http.patch<Product>(`/products/${id}/delete`, {}, {token: accessToken})
+    },
     publish: async(token: string, dispatch: any, id: string, body: PublishProduct) => {
       let accessToken = "";
       if (token) {

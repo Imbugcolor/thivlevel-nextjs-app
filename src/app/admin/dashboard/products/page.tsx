@@ -9,11 +9,12 @@ import { FaEdit, FaEye, FaSpinner } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
 import Filter from '../../(component)/products/Filter'
 import Paginator from '@/app/components/Paginator'
-import { getProducts, ProductState, updatePublish } from '@/lib/features/productSlice'
+import { deleteProductAction, getProducts, ProductState, updatePublish } from '@/lib/features/productSlice'
 import { privateProductApiRequest } from '../../api-request/products.api'
 import { NUM_PER_PAGE } from '@/config'
 import { HttpError } from '@/lib/utils/http'
 import { setNotify } from '@/lib/features/notifySlice'
+import Confirm from '@/app/components/modals/Confirm'
 
 export default function ProductManager() {
     const products = useAppSelector(state => state.producs)
@@ -22,32 +23,78 @@ export default function ProductManager() {
 
     const [deleting, setDeleting] = useState<Product | null>()
     const [toogling, setToogling] = useState(false)
-    const uploadRef = useRef<HTMLInputElement>(null)
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [deleteProductSelected, setDeleteProductSelected] = useState<string | null>(null)
 
-    const handlePublishProduct = async(product: Product) => {
-        if(!token || toogling) return;
+    const handlePublishProduct = async (product: Product) => {
+        if (!token || toogling) return;
         try {
             const body = { publish: !product.isPublished }
-            dispatch(updatePublish({ id: product._id, isPublised: !product.isPublished}))
+            dispatch(updatePublish({ id: product._id, isPublised: !product.isPublished }))
             await privateProductApiRequest.publish(token, dispatch, product._id, body)
+
+            // After product creation, trigger revalidation of the home page
+            const revalidateRes = await fetch('/api/revalidate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ path: '/' })
+            });
+
+            if (!revalidateRes.ok) {
+                dispatch(setNotify({ error: 'Failed to revalidate homepage' }));
+            }
         } catch (error) {
             if (error instanceof HttpError) {
                 // Handle the specific HttpError
                 console.log("Error message:", error.message);
                 // Example: show error message to the user
-                dispatch(updatePublish({ id: product._id, isPublised: product.isPublished}))
+                dispatch(updatePublish({ id: product._id, isPublised: product.isPublished }))
                 dispatch(setNotify({ error: error.message }))
             } else {
                 // Handle other types of errors
                 console.log("An unexpected error occurred:", error);
-                dispatch(updatePublish({ id: product._id, isPublised: product.isPublished}))
+                dispatch(updatePublish({ id: product._id, isPublised: product.isPublished }))
                 dispatch(setNotify({ error: "An unexpected error occurred" }))
             }
         }
     }
 
-    const deleteProduct = (id: string) => {
+    const handleDeleteProduct = (id: string) => {
+        setDeleteProductSelected(id)
+        setIsModalOpen(true)
+    }
 
+    const deleteProduct = async () => {
+        if (!token || !deleteProductSelected) return;
+        try {
+            await privateProductApiRequest.delete(token, dispatch, deleteProductSelected)
+            dispatch(deleteProductAction(deleteProductSelected))
+            // After product creation, trigger revalidation of the home page
+            const revalidateRes = await fetch('/api/revalidate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ path: '/' })
+            });
+
+            if (!revalidateRes.ok) {
+                dispatch(setNotify({ error: 'Failed to revalidate homepage' }));
+            }
+        } catch (error) {
+            if (error instanceof HttpError) {
+                // Handle the specific HttpError
+                console.log("Error message:", error.message);
+                // Example: show error message to the user
+                dispatch(setNotify({ error: error.message }))
+            } else {
+                // Handle other types of errors
+                console.log("An unexpected error occurred:", error);
+                dispatch(setNotify({ error: "An unexpected error occurred" }))
+            }
+        }
     }
 
     const handleViewDetail = (product: Product) => {
@@ -57,9 +104,9 @@ export default function ProductManager() {
     const handleChangePage = async (num: number) => {
         const productsData = await privateProductApiRequest.get(NUM_PER_PAGE, num, products.filter)
         dispatch(getProducts({
-          data: productsData.payload.data,
-          total: productsData.payload.total,
-          page: Number(productsData.payload.page)
+            data: productsData.payload.data,
+            total: productsData.payload.total,
+            page: Number(productsData.payload.page)
         }))
     }
 
@@ -157,7 +204,7 @@ export default function ProductManager() {
                                                     </Link>
                                                 </div>
                                                 <div className="delete-product">
-                                                    <Link href="#!" onClick={() => deleteProduct(product._id)}>
+                                                    <Link href="#!" onClick={() => handleDeleteProduct(product._id)}>
                                                         {
                                                             product._id === deleting?._id ?
                                                                 <FaSpinner className="fa-spin" style={{ color: '#9e9e9e' }} /> :
@@ -186,6 +233,13 @@ export default function ProductManager() {
                     callback={handleChangePage}
                 />
             </div>
+            <Confirm
+                show={isModalOpen}
+                title="Chắc chắn xóa sản phẩm chứ?"
+                message="Sản phẩm sẽ được đẩy vào danh sách bị xóa."
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={deleteProduct}
+            />
         </div>
     )
 }

@@ -54,7 +54,7 @@ export default function SearchBar() {
                     Hủy
                 </div>
                 {
-                    wordEntered && search.length > 0 &&
+                    wordEntered && search.length > 0 && !moveOut &&
                     <ul className="list_item_suggest">
                         <li className='key_search_msg'>
                             <GoSearch /> kết quả cho &apos;{wordEntered}&apos;

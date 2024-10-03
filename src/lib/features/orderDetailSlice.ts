@@ -34,6 +34,9 @@ export const OrderDetailSlice = createSlice({
         const order = state.data_cached.find(data => data._id === action.payload.id)
         if(order) {
             order.status = action.payload.status;
+            if (action.payload.status === 'Completed') {
+              order.isPaid = true;
+            }
         }
     },
     updateOrder:  (state, action: PayloadAction<UpdateOrderDetail>) => {
