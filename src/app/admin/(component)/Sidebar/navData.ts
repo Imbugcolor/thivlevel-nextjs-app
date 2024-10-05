@@ -11,6 +11,7 @@ interface NavLinks {
     users: string
     products: string
     createProduct: string
+    deletedProducts: string
     categories: string
     orders: string
 }
@@ -28,6 +29,7 @@ export const navLinks: NavLinks = {
     users: '/admin/dashboard/users',
     products: '/admin/dashboard/products',
     createProduct: '/admin/dashboard/create-product',
+    deletedProducts: '/admin/dashboard/products/deleted',
     categories: '/admin/dashboard/categories',
     orders: '/admin/dashboard/orders'
 }

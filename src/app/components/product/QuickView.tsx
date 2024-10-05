@@ -18,6 +18,7 @@ import { clearProductView } from "@/lib/features/quickviewSlice"
 
 export default function QuickView() {
     const token = useAppSelector(state => state.auth).token
+    const roles = useAppSelector(state => state.auth).user?.role
     const product = useAppSelector(state => state.quickview).product
     const dispatch = useAppDispatch()
     const router = useRouter()
@@ -172,6 +173,7 @@ export default function QuickView() {
 
     const handleAddCart = async () => {
         if (!token) {
+            handleCloseView()
             return router.replace(`/auth`)
         }
 
@@ -195,7 +197,7 @@ export default function QuickView() {
         }
     }
 
-    const handleCloseView = () => {
+    function handleCloseView() {
         dispatch(clearProductView())
         setQuantity(1)
         setSelectedColor('')
@@ -354,20 +356,23 @@ export default function QuickView() {
                         </div>
                     </div>
 
-                    <div className="cart-btns">
+                    {
+                        roles && roles.includes('admin') ? null :
+                        <div className="cart-btns">
+                        
+                            <button className="add-cart"
+                                onClick={handleAddCart}
+                                disabled={addCartLoading}
+                                style={{ opacity: addCartLoading ? 0.7 : 1 }}
+                            >
+                                Thêm vào giỏ hàng
+                            </button>
 
-                        <button className="add-cart"
-                            onClick={handleAddCart}
-                            disabled={addCartLoading}
-                            style={{ opacity: addCartLoading ? 0.7 : 1 }}
-                        >
-                            Thêm vào giỏ hàng
-                        </button>
-
-                        <Link className="view-detail" href={`/product/${product._id}`} onClick={handleCloseView}>
-                            Xem chi tiết
-                        </Link>
-                    </div>
+                            <Link className="view-detail" href={`/product/${product._id}`} onClick={handleCloseView}>
+                                Xem chi tiết
+                            </Link>
+                        </div>
+                    }
                 </div>
             </section>
             <div className="view-close" onClick={handleCloseView}>

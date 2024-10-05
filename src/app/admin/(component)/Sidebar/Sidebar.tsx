@@ -68,6 +68,11 @@ export default function SideBar() {
                   Tạo sản phẩm
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link href={navLinks.deletedProducts} className={`nav-link ${pathname === navLinks.deletedProducts && 'active'}`}>
+                  Danh sách đã xóa
+                </Link>
+              </li>
             </ul>
           </div>
         </li>

@@ -1,58 +1,32 @@
-import '../styles/productfilter.css'
+import '../../styles/productfilter.css'
 import { InputChange } from '@/app/types/html-elements'
-import { NUM_PER_PAGE } from '@/config'
-import { filterCategory, getProducts, ProductState, removeAllFilter, searchProducts, sortProducts } from '@/lib/features/productSlice'
+import { filterCategory, removeAllFilter, searchProducts, sortProducts } from '@/lib/features/deletedProductsSlice'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import React, { useState } from 'react'
 import { FcClearFilters } from 'react-icons/fc'
 import { GoSearch } from 'react-icons/go'
-import { privateProductApiRequest } from '../../api-request/products.api'
 
-export default function Filter() {
+export default function FilterDeleted() {
     const categories = useAppSelector(state => state.categories).data
     const dispatch = useAppDispatch()
-    const products = useAppSelector(state => state.producs)
+    const products = useAppSelector(state => state.deletedProducts)
     const [searchInput, setSearchInput] = useState(products.filter.search)
 
     const handleRemoveFilter = async () => {
         setSearchInput('')
         dispatch(removeAllFilter())
-        const productsData = await privateProductApiRequest.get(NUM_PER_PAGE, 1)
-        dispatch(getProducts({
-            data: productsData.payload.data,
-            total: productsData.payload.total,
-            page: Number(productsData.payload.page)
-        }))
     }
 
     const handleSearch = async () => {
         dispatch(searchProducts(searchInput))
-        const productsData = await privateProductApiRequest.get(NUM_PER_PAGE, 1, { ...products.filter, search: searchInput })
-        dispatch(getProducts({
-            data: productsData.payload.data,
-            total: productsData.payload.total,
-            page: Number(productsData.payload.page)
-        }))
     }
 
     const handleSortProduct = async (e: InputChange) => {
         dispatch(sortProducts(e.target.value))
-        const productsData = await privateProductApiRequest.get(NUM_PER_PAGE, 1, { ...products.filter, sort: e.target.value })
-        dispatch(getProducts({
-            data: productsData.payload.data,
-            total: productsData.payload.total,
-            page: Number(productsData.payload.page)
-        }))
     }
 
     const handleFilterCategories = async (e: InputChange) => {
         dispatch(filterCategory(e.target.value))
-        const productsData = await privateProductApiRequest.get(NUM_PER_PAGE, 1, { ...products.filter, category: e.target.value })
-        dispatch(getProducts({
-            data: productsData.payload.data,
-            total: productsData.payload.total,
-            page: Number(productsData.payload.page)
-        }))
     }
 
     return (

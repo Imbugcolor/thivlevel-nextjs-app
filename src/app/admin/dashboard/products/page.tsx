@@ -15,6 +15,7 @@ import { NUM_PER_PAGE } from '@/config'
 import { HttpError } from '@/lib/utils/http'
 import { setNotify } from '@/lib/features/notifySlice'
 import Confirm from '@/app/components/modals/Confirm'
+import { setProductView } from '@/lib/features/quickviewSlice'
 
 export default function ProductManager() {
     const products = useAppSelector(state => state.producs)
@@ -71,6 +72,8 @@ export default function ProductManager() {
         try {
             await privateProductApiRequest.delete(token, dispatch, deleteProductSelected)
             dispatch(deleteProductAction(deleteProductSelected))
+            setDeleteProductSelected(null)
+            setIsModalOpen(false)
             // After product creation, trigger revalidation of the home page
             const revalidateRes = await fetch('/api/revalidate', {
                 method: 'POST',
@@ -97,10 +100,6 @@ export default function ProductManager() {
         }
     }
 
-    const handleViewDetail = (product: Product) => {
-
-    }
-
     const handleChangePage = async (num: number) => {
         const productsData = await privateProductApiRequest.get(NUM_PER_PAGE, num, products.filter)
         dispatch(getProducts({
@@ -116,22 +115,6 @@ export default function ProductManager() {
                 <h2>Danh sách sản phẩm</h2>
             </div>
             <div className="products-list-container">
-                {/* <div className="products-list-actions">
-                    <div className="create__product">
-                        <Link href='/admin/dashboard/create-product'>+ Thêm sản phẩm</Link>
-                    </div>
-                    <div className="file-wrapper">
-                        <div className="file__upload">
-                            <input type="file" accept="text/csv, .csv, application/vnd.ms-excel" style={{ display: 'none' }} ref={uploadRef} />
-                            <div className="" onClick={() => uploadRef?.current?.click()}>Drop CSV file</div>
-                        </div>
-                        <div className="btn__item">
-                            <button className="btn__item-upload">Upload</button>
-                            <button className="btn__item-download">Download</button>
-                        </div>
-                    </div>
-                </div> */}
-
                 <div className="products-list-filter">
                     <Filter />
                 </div>
@@ -181,7 +164,7 @@ export default function ProductManager() {
                                         }</td>
                                         <td>
                                             <div className="product-view-detail">
-                                                <a href="#!" onClick={() => handleViewDetail(product)}>
+                                                <a href="#!" onClick={() => dispatch(setProductView(product))}>
                                                     <FaEye style={{ color: '#9e9e9e' }} />
                                                 </a>
                                             </div>
