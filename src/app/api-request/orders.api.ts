@@ -4,27 +4,26 @@ import { http } from "@/lib/utils/http";
 import { PaypalDataResponse } from "./paypal.api";
 import { OrdersDataResponse } from "../types/responses/order.response";
 import { Order } from "../types/schema/order";
-
 export interface CreateCheckoutSessionRequest {
     name: string,
     phone: string,
     address: AddressFullObject
 }
-
 export interface CreateStripeCheckoutRequest extends CreateCheckoutSessionRequest {}
-
+export interface CreateVnpayCheckoutRequest extends CreateCheckoutSessionRequest {}
+export interface CreateCodOrderRequest extends CreateCheckoutSessionRequest {}
 export interface CreatePaypalCheckoutRequest extends CreateCheckoutSessionRequest{
     socketId: string,
     userId: string,
 }
-
 interface StripeCheckoutSessionResponse {
     url: string,
     status: number
 }
-
+interface VnpayCheckoutSessionResponse {
+    paymentUrl: string
+}
 interface PaypalCheckoutSessionResponse extends PaypalDataResponse {}
-
 interface FilterOrdersOptions {
     search: string,
     sort: string,
@@ -45,6 +44,20 @@ export const ordersApiRequest = {
         accessToken = result ? result  : token
 
         return http.post<PaypalCheckoutSessionResponse>('/order/create-paypal-checkout-session', body, { token: accessToken })
+    },
+    createVnpayCheckoutSession: async(token: string, dispatch: any, body: CreateVnpayCheckoutRequest) => {
+        let accessToken = '';
+        const result = await checkTokenExp(token, dispatch)
+        accessToken = result ? result  : token
+
+        return http.post<VnpayCheckoutSessionResponse>('/order/create-vnpay-checkout', body, { token: accessToken })
+    },
+    createCodOrder:  async(token: string, dispatch: any, body: CreateCodOrderRequest) => {
+        let accessToken = '';
+        const result = await checkTokenExp(token, dispatch)
+        accessToken = result ? result  : token
+
+        return http.post<VnpayCheckoutSessionResponse>('/order/create-cod-order', body, { token: accessToken })
     },
     getList: async(token: string, dispatch: any, limit?: number, page?: number, filterOptions?: FilterOrdersOptions) => {
         let accessToken = '';

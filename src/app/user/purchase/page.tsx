@@ -26,7 +26,7 @@ export default function Purchase() {
     const [page, setPage] = useState(1)
     const [searchString, setSearchString] = useState('')
     const [searchInput, setSearchInput] = useState('')
-    const [sortInput, setSortInput] = useState('')
+    const [sortInput, setSortInput] = useState('sort=-createdAt')
     const [statusInput, setStatusInput] = useState('')
 
     useEffect(() => {

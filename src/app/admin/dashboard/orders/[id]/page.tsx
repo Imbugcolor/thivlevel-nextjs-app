@@ -11,7 +11,9 @@ import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
 import { CiEdit } from "react-icons/ci";
 import CodLogo from '../../../../../images/cod-logo.webp'
-import Visa from '../../../../../images/visa.png'
+import StripeLogo from '../../../../../images/stripe-buttons.png'
+import PaypalLogo from '../../../../../images/paypal-buttons.png'
+import VnpayLogo from '../../../../../images/vnpay-logo-vertical.png'
 import { HttpError } from "@/lib/utils/http";
 import { setNotify } from "@/lib/features/notifySlice";
 import Confirm from "@/app/components/modals/Confirm";
@@ -105,19 +107,32 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
         if (!params.id) return;
         if (token) {
             const fetchData = async () => {
-                if (order.data_cached.every(item => item._id !== params.id)) {
-                    setLoading(true)
-                    const res = await privateOrdersApiRequest.getOrder(token, dispatch, params.id)
-                    dispatch(getOrder(res.payload))
-                    setOrderDetail(res.payload)
-                    setStatus(res.payload.status)
-                    setAddress(res.payload.address)
-                    setLoading(false)
-                } else {
-                    const order_cached = order.data_cached.find(data => data._id === params.id)
-                    setOrderDetail(order_cached)
-                    setStatus(order_cached?.status || '')
-                    setAddress(order_cached?.address || '')
+                try {
+                    if (order.data_cached.every(item => item._id !== params.id)) {
+                        setLoading(true)
+                        const res = await privateOrdersApiRequest.getOrder(token, dispatch, params.id)
+                        dispatch(getOrder(res.payload))
+                        setOrderDetail(res.payload)
+                        setStatus(res.payload.status)
+                        setAddress(res.payload.address)
+                        setLoading(false)
+                    } else {
+                        const order_cached = order.data_cached.find(data => data._id === params.id)
+                        setOrderDetail(order_cached)
+                        setStatus(order_cached?.status || '')
+                        setAddress(order_cached?.address || '')
+                    }
+                } catch (error) {
+                    if (error instanceof HttpError) {
+                        // Handle the specific HttpError
+                        console.log("Error message:", error.message);
+                        // Example: show error message to the user
+                        dispatch(setNotify({ error: error.message }))
+                    } else {
+                        // Handle other types of errors
+                        console.log("An unexpected error occurred:", error);
+                        dispatch(setNotify({ error: "An unexpected error occurred" }))
+                    }
                 }
             }
             fetchData()
@@ -127,7 +142,7 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
     const handleCloseModal = () => {
         setIsModalOpen(false); // Close the modal on cancel or close
     };
-    
+
     const showModal = () => {
         setIsModalOpen(true); // Show the modal
     };
@@ -363,17 +378,35 @@ export default function OrderDetail({ params }: { params: { id: string } }) {
                             <div className='col-lg-3 col-md-4 col-sm-6 method'>
                                 <label>PHƯƠNG THỨC THANH TOÁN</label>
                                 <div className='payment__detail_' style={{ display: 'flex', alignItems: 'center' }}>
-                                    <Image src={
-                                        orderDetail?.method === 'COD' ? CodLogo : Visa
-                                    } alt='card-brand' style={{ width: '45px', height: 'auto' }} />
+                                    {
+                                        orderDetail &&
+                                        <>
+                                            {
+                                                orderDetail.method === 'COD' &&
+                                                <Image src={CodLogo} alt='card-brand' style={{ width: '45px', height: 'auto' }} />
+                                            }
+                                            {
+                                                orderDetail.method === 'STRIPE_CREDIT_CARD' &&
+                                                <Image src={StripeLogo} alt='card-brand' style={{ width: '45px', height: 'auto' }} />
+                                            }
+                                            {
+                                                orderDetail.method === 'PAYPAL_CREDIT_CARD' &&
+                                                <Image src={PaypalLogo} alt='card-brand' style={{ width: '45px', height: 'auto' }} />
+                                            }
+                                            {
+                                                orderDetail.method === 'VNPAY' &&
+                                                <Image src={VnpayLogo} alt='card-brand' style={{ width: '45px', height: 'auto' }} />
+                                            }
+                                        </>
+                                    }
                                     <span>
                                         {
-                                            orderDetail?.method === 'CARD' && orderDetail?.isPaid === true ?
-                                                `Đã thanh toán: ${new Date(orderDetail?.createdAt).toLocaleDateString() + ' ' + moment(orderDetail?.createdAt).format('LT')}` :
-
-                                                orderDetail?.method === 'COD' && orderDetail?.isPaid === true ?
-                                                    `Đã thanh toán: ${new Date(orderDetail?.updatedAt).toLocaleDateString() + ' ' + moment(orderDetail?.updatedAt).format('LT')}` :
-                                                    'Chưa thanh toán'
+                                            orderDetail?.method !== 'COD' && orderDetail?.isPaid === true &&
+                                            `Đã thanh toán: ${new Date(orderDetail?.createdAt).toLocaleDateString() + ' ' + moment(orderDetail?.createdAt).format('LT')}`
+                                        }
+                                        {
+                                            orderDetail?.method === 'COD' && orderDetail?.isPaid === true &&
+                                            `Đã thanh toán`
                                         }
                                     </span>
                                 </div>

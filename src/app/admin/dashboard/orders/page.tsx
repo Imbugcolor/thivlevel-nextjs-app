@@ -72,7 +72,7 @@ export default function Orders() {
                     <div className="row">
                         <div className='py-2 col-lg-6 col-sm-12 search-order-by'>
                             <input className="search-order-input" value={searchInput} type="text" placeholder="Tìm kiếm bằng mã đơn/ tên/ emai/ sđt"
-                                onChange={(e) => setSearchInput(e.target.value)} 
+                                onChange={(e) => setSearchInput(e.target.value)}
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter")
                                         search();
@@ -159,15 +159,17 @@ export default function Orders() {
                                             </div>
                                         </td>
                                         <td>{order.phone ? order.phone : ''}</td>
-                                        <td>{order.method === 'CARD' ?
-                                            <span style={{ backgroundColor: '#57a7af', display: 'flex', alignItems: 'center' }} className="method-span">
-                                                <MdPayment style={{ color: '#fff', paddingRight: '3px' }} />
-                                                Online
-                                            </span> :
+                                        <td>{
+                                            order.method === 'COD' ?
                                             <span style={{ backgroundColor: 'coral', display: 'flex', alignItems: 'center' }} className="method-span">
                                                 <BsTruck style={{ color: '#fff', paddingRight: '3px' }} />
                                                 COD
-                                            </span>}
+                                            </span> :
+                                            <span style={{ backgroundColor: '#57a7af', display: 'flex', alignItems: 'center' }} className="method-span">
+                                                <MdPayment style={{ color: '#fff', paddingRight: '3px' }} />
+                                                Online
+                                            </span>
+                                            }
                                         </td>
                                         <td>${order.total}</td>
                                         <td>{order.status}</td>

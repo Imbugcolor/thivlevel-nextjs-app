@@ -9,7 +9,9 @@ import moment from 'moment';
 import Image from 'next/image';
 import { IoTrashBin } from 'react-icons/io5';
 import CodLogo from '../../../../images/cod-logo.webp'
-import Visa from '../../../../images/visa.png'
+import StripeLogo from '../../../../images/stripe-buttons.png'
+import PaypalLogo from '../../../../images/paypal-buttons.png'
+import VnpayLogo from '../../../../images/vnpay-logo-vertical.png'
 import { setNotify } from "@/lib/features/notifySlice";
 import { HttpError } from "@/lib/utils/http";
 import { setItemReview } from "@/lib/features/reviewSlice";
@@ -188,25 +190,42 @@ export default function PurchaseDetail({ params }: { params: { id: string } }) {
                         <div className='box-detail_infor'>
                             <span>
                                 {
-                                    purchaseDetail?.method === 'CARD' ? 'Online' : 'Thanh toán khi nhận hàng'
+                                    purchaseDetail && purchaseDetail.method !== 'COD' ? 'Online' : 'Thanh toán khi nhận hàng'
                                 }
                             </span>
                             
                             <div className='payment__detail_'>
-                                <Image src={
-                                    purchaseDetail?.method === 'COD' ? CodLogo : Visa 
-                                } alt='card-brand' style={{ width: '45px', height: 'auto' }}/>
-                                <span>
                                 {
-                                    purchaseDetail?.method === 'CARD' && purchaseDetail?.isPaid === true ? 
-                                    `Đã thanh toán: ${new Date(purchaseDetail?.createdAt).toLocaleDateString() + ' ' + moment(purchaseDetail?.createdAt).format('LT')}` :
-                                    purchaseDetail?.method === 'PAYPAL_CREDIT_CARD' && purchaseDetail?.isPaid === true ? 
-                                    `Đã thanh toán: ${new Date(purchaseDetail?.createdAt).toLocaleDateString() + ' ' + moment(purchaseDetail?.createdAt).format('LT')}` :
-                                    purchaseDetail?.method === 'COD' && purchaseDetail?.isPaid === true ? 
-                                    `Đã thanh toán: ${new Date(purchaseDetail?.updatedAt).toLocaleDateString() + ' ' + moment(purchaseDetail?.updatedAt).format('LT')}` :
-                                    'Chưa thanh toán'
+                                    purchaseDetail &&
+                                    <>
+                                    {
+                                        purchaseDetail.method === 'COD' &&
+                                        <Image src={CodLogo} alt='card-brand' style={{ width: '45px', height: 'auto' }}/>
+                                    }
+                                    {
+                                        purchaseDetail.method === 'STRIPE_CREDIT_CARD' &&
+                                        <Image src={StripeLogo} alt='card-brand' style={{ width: '45px', height: 'auto' }}/>
+                                    }
+                                    {
+                                        purchaseDetail.method === 'PAYPAL_CREDIT_CARD' &&
+                                        <Image src={PaypalLogo} alt='card-brand' style={{ width: '45px', height: 'auto' }}/>
+                                    }
+                                    {
+                                        purchaseDetail.method === 'VNPAY' &&
+                                        <Image src={VnpayLogo} alt='card-brand' style={{ width: '45px', height: 'auto' }}/>
+                                    }
+                                    </>
                                 }
-                            </span>
+                                <span>
+                                    {
+                                        purchaseDetail?.method !== 'COD' && purchaseDetail?.isPaid === true &&
+                                        `Đã thanh toán: ${new Date(purchaseDetail?.createdAt).toLocaleDateString() + ' ' + moment(purchaseDetail?.createdAt).format('LT')}`
+                                    }
+                                    {
+                                        purchaseDetail?.method === 'COD' && purchaseDetail?.isPaid === true && 
+                                        `Đã thanh toán`
+                                    }
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -227,6 +246,9 @@ export default function PurchaseDetail({ params }: { params: { id: string } }) {
                                 </span>  :  purchaseDetail?.status === 'Delivered' ?
                                 <span style={{color: '#0d9b25', padding: '10px', fontSize: '14px', fontWeight: '500', border: '1px solid'}}>
                                     Đã giao hàng
+                                </span> : purchaseDetail?.status === 'Completed' ?
+                                <span style={{color: '#0d9b25', padding: '10px', fontSize: '14px', fontWeight: '500', border: '1px solid'}}>
+                                    Đã hoàn thành
                                 </span> : 
                                 <span style={{color: '#d93131', padding: '10px', fontSize: '14px', fontWeight: '500', border: '1px solid'}}>
                                     Đã hủy
@@ -236,7 +258,7 @@ export default function PurchaseDetail({ params }: { params: { id: string } }) {
                         </div>
                         <div className='bottom__box'>
                         {
-                            purchaseDetail?.status === 'Delivered' ? 
+                            purchaseDetail?.status === 'Delivered' || purchaseDetail?.status === 'Completed' ? 
                             null :
                             purchaseDetail?.status === 'Processing' || purchaseDetail?.status === 'Shipping' || purchaseDetail?.status === 'Canceled' ?                    
                             <div className='cancel-order-disabled'>
