@@ -10,6 +10,7 @@ import { UnknowAvatar } from "@/lib/utils/unknow.avatar";
 import Logo from '../../../../images/thivlevel-logo-4.png'
 import { setNotify } from "@/lib/features/notifySlice";
 import { userApiRequest } from "@/app/api-request/user.api";
+import AdminNotification from "./notifications/AdminNotification";
 
 export default function NavBar() {
   const user = useAppSelector(state => state.auth).user;
@@ -81,47 +82,7 @@ export default function NavBar() {
               className="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"
               aria-labelledby="notificationDropdown"
             >
-              <button className="dropdown-item py-3 border-bottom">
-                <p className="mb-0 fw-medium float-start">
-                  You have 4 new notifications{" "}
-                </p>
-                <span className="badge badge-pill badge-primary float-end">
-                  View all
-                </span>
-              </button>
-              <button className="dropdown-item preview-item py-3">
-                <div className="preview-thumbnail">
-                  <i className="mdi mdi-alert m-auto text-primary"></i>
-                </div>
-                <div className="preview-item-content">
-                  <h6 className="preview-subject fw-normal text-dark mb-1">
-                    Application Error
-                  </h6>
-                  <p className="fw-light small-text mb-0"> Just now </p>
-                </div>
-              </button>
-              <button className="dropdown-item preview-item py-3">
-                <div className="preview-thumbnail">
-                  <i className="mdi mdi-lock-outline m-auto text-primary"></i>
-                </div>
-                <div className="preview-item-content">
-                  <h6 className="preview-subject fw-normal text-dark mb-1">
-                    Settings
-                  </h6>
-                  <p className="fw-light small-text mb-0"> Private message </p>
-                </div>
-              </button>
-              <button className="dropdown-item preview-item py-3">
-                <div className="preview-thumbnail">
-                  <i className="mdi mdi-airballoon m-auto text-primary"></i>
-                </div>
-                <div className="preview-item-content">
-                  <h6 className="preview-subject fw-normal text-dark mb-1">
-                    New user registration
-                  </h6>
-                  <p className="fw-light small-text mb-0"> 2 days ago </p>
-                </div>
-              </button>
+              <AdminNotification />
             </div>
           </li>
           <li className="nav-item dropdown">

@@ -136,6 +136,7 @@ export default function QuickView() {
                 const order = ["XS", "S", "M", "L", "XL", "XXL"];
 
                 const sortedObj: { [key: string]: string[] } = {};
+                const unsortObj: { [key: string]: string[] } = {};
 
                 order.forEach(key => {
                     if (sizeToColors[key]) {
@@ -143,7 +144,13 @@ export default function QuickView() {
                     }
                 });
 
-                setSizes(sortedObj);
+                Object.keys(sizeToColors).forEach(s => {
+                    if(!order.includes(s)) {
+                        unsortObj[s] = sizeToColors[s]
+                    }
+                })
+
+                setSizes({...sortedObj, ...unsortObj });
             }
         }
     }, [product])

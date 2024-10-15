@@ -9,7 +9,6 @@ import { BiLogOut } from 'react-icons/bi'
 import { MdHistory } from 'react-icons/md'
 import { HiOutlineShoppingBag } from 'react-icons/hi'
 import { userApiRequest } from '../api-request/user.api';
-import { useRouter } from 'next/navigation';
 import { setNotify } from '@/lib/features/notifySlice';
 import { UnknowAvatar } from '@/lib/utils/unknow.avatar';
 

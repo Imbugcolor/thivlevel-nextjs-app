@@ -53,7 +53,7 @@ header .logo {
 .logo .header-logo {
     display: block;
     padding: 5px 0;
-    height: 80px;
+    height: 65px;
     width: auto;
 }
 
@@ -110,6 +110,10 @@ header .header-nav {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+header .header-nav .notification-menu {
+    position: relative;
 }
 
 header .header-nav-tablet-mobile {
@@ -170,7 +174,7 @@ header .navbar-tablet-mobile-wrapper.active {
 }
 
 .user__container-mobile {
-    border-top: 2px solid #ccc;
+    border-top: 1px solid #ccc;
     width: 100% !important;
     margin: unset !important;
 }
@@ -220,6 +224,7 @@ header .header-nav .login_sign_up_nav {
     padding: 8px 20px;
     height: 40px;
     margin-left: 20px;
+    min-width: 104px;
 }
 
 .header-nav .login_sign_up_nav span {
@@ -448,7 +453,7 @@ header .sign_in__mobile_wrapper .sign_in__mobile svg {
     }
 
     header .logo .header-logo {
-        height: 65px;
+        height: 55px;
     }
 
     header .header-nav-tablet-mobile {

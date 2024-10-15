@@ -13,6 +13,7 @@ import { Twirl as Hamburger } from 'hamburger-react'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { setNotify } from '@/lib/features/notifySlice';
 import { userApiRequest } from '../api-request/user.api';
+import Notification from './notification/Notification';
 
 export default function NavMobile({ token }: { token: string | undefined }) {
     const cart = useAppSelector(state => state.cart)
@@ -33,7 +34,7 @@ export default function NavMobile({ token }: { token: string | undefined }) {
                 dispatch(setNotify({ loading: false }))
                 console.log("An unexpected error occurred:", error);
                 dispatch(setNotify({ error: 'Có lỗi xảy ra' }))
-                  
+
             }
             // window.location.href = '/auth';
         }
@@ -74,15 +75,18 @@ export default function NavMobile({ token }: { token: string | undefined }) {
             </>
         )
     }
-  return (
-    <>
-      <div className="header-nav-tablet-mobile">
+    return (
+        <>
+            <div className="header-nav-tablet-mobile">
                 {
                     token &&
-                        <div className="user__wrapper">
-                            <UserImage />
-                        </div>
+                    <div className="user__wrapper">
+                        <UserImage />
+                    </div>
                 }
+                <div className='notification-menu'>
+                    <Notification />
+                </div>
                 <div className="navbar-icon">
                     <Hamburger
                         color="rgb(64, 64, 64)" toggled={open}
@@ -116,10 +120,10 @@ export default function NavMobile({ token }: { token: string | undefined }) {
                 </div>
             </div>
             {
-            open && <div className="header-nav-tablet-mobile overlay"
-                onClick={() => setOpen(false)}
-            ></div> 
+                open && <div className="header-nav-tablet-mobile overlay"
+                    onClick={() => setOpen(false)}
+                ></div>
             }
-    </>
-  )
+        </>
+    )
 }

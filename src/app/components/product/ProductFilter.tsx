@@ -21,6 +21,16 @@ export default function ProductFilter() {
         }
     }
 
+    const handleKeyDownOnPrice = (e: InputChange) => {
+        var key = e.which || e.keyCode;
+        if (!(key >= 48 && key <= 57) &&  // Numbers from the main keyboard
+            !(key >= 96 && key <= 105) && // Numbers from the numeric keypad
+            key !== 8 // Backspace key
+        ) {
+            e.preventDefault()
+        }
+    }
+
     const isChecked = (size: string) => {
         return filter.sizes.includes(size)
     }
@@ -41,10 +51,10 @@ export default function ProductFilter() {
         const isValid = validation()
         if (!isValid) return;
         const productsData = await productsApiRequest.getList(NUM_PER_PAGE, 1, filter)
-        dispatch(getProducts({ 
-            data: productsData.payload.data, 
-            total: productsData.payload.total, 
-            page: Number(productsData.payload.page) 
+        dispatch(getProducts({
+            data: productsData.payload.data,
+            total: productsData.payload.total,
+            page: Number(productsData.payload.page)
         }))
     }
 
@@ -54,16 +64,20 @@ export default function ProductFilter() {
                 <h3 className="products__category-heading">Khoảng giá</h3>
                 <div className='input_filter__wrapper'>
                     <div className='price_filter_input'>
-                        <input type='number' placeholder='$ TỪ'
+                        <input type='text' placeholder='$ TỪ'
                             value={filter.fromPrice}
-                            onChange={e => dispatch(filterPrice({ fromPrice: Number(e.target.value) }))}
+                            onChange={(e) => dispatch(filterPrice({ fromPrice: e.target.value }))}
+                            onKeyDown={handleKeyDownOnPrice}
+                            tabIndex={0}
                         />
                         <div className='divider_input'>
                             <GrSubtract />
                         </div>
-                        <input type='number' placeholder='$ ĐẾN'
+                        <input type='text' placeholder='$ ĐẾN'
                             value={filter.toPrice}
-                            onChange={e => dispatch(filterPrice({ toPrice: Number(e.target.value) }))}
+                            onChange={(e) => dispatch(filterPrice({ toPrice: e.target.value }))}
+                            onKeyDown={handleKeyDownOnPrice}
+                            tabIndex={1}
                         />
                     </div>
                     <span style={{ color: 'red', fontWeight: '300' }}>{validate?.price}</span>

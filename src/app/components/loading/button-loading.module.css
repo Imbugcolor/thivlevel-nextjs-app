@@ -1,0 +1,21 @@
+.button-loading {
+    display: flex;
+    height: 20px;
+}
+
+.loading-text {
+    margin: 0 10px;
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

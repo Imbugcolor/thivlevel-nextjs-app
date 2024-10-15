@@ -57,13 +57,20 @@ export const ProductSlice = createSlice({
     filterCategory: (state, action: PayloadAction<string>) => {
       state.filter.category = action.payload;
     },
-    filterPrice: (state, action: PayloadAction<{ fromPrice?: number, toPrice?: number }>) => {
+    filterPrice: (state, action: PayloadAction<{ fromPrice?: string, toPrice?: string }>) => {
+      if (action.payload.fromPrice === '') {
+        state.filter.fromPrice = ''
+      }
+
+      if (action.payload.toPrice === '') {
+        state.filter.toPrice = ''
+      }
       if (action.payload.fromPrice) {
-        state.filter.fromPrice = action.payload.fromPrice.toString();
+        state.filter.fromPrice = action.payload.fromPrice;
       }
 
       if (action.payload.toPrice) {
-        state.filter.toPrice = action.payload.toPrice.toString();
+        state.filter.toPrice = action.payload.toPrice;
       }
     },
     filterSizes: (state, action: PayloadAction<string[]>) => {

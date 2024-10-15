@@ -8,6 +8,7 @@ import { cookies } from 'next/headers'
 import UserMenu from './UserMenu'
 import NavMobile from './NavMobile'
 import { FaUserCircle } from "react-icons/fa";
+import Notification from './notification/Notification'
 
 export default function Header() {
     const cookieStore = cookies()
@@ -27,6 +28,9 @@ export default function Header() {
                 </div>
 
                 <ul className="header-nav left__top_header">
+                    <li className='notification-menu'>
+                        <Notification />
+                    </li>
                     {
                         token ? <UserMenu /> :
                             <li>

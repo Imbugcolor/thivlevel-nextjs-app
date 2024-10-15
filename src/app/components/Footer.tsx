@@ -26,7 +26,7 @@ export default function Footer() {
                 <div className="res-row">
                     <div className="col l-4 m-4 c-12 footer-item">
                         <div className="footer-logo">
-                            <Image src={Logo} alt="logo" style={{ height: '80px', maxWidth: '276px' }}/>
+                            <Image src={Logo} alt="logo" style={{ height: '65px', width: 'auto' }}/>
                             <ul>
                                 <li>
                                     <AiFillMail />

@@ -11,6 +11,8 @@ import userReducer from "./userSlice"
 import ordersReducer from "./ordersSlice"
 import orderDetailReducer from './orderDetailSlice'
 import deletedProductsReducer from './deletedProductsSlice'
+import clientReducer from './clientSlice'
+import notificationReducer from './notificationSlice'
 
 export const RootReducers = {
     auth: authReducer,
@@ -26,4 +28,6 @@ export const RootReducers = {
     orders: ordersReducer,
     orderDetail: orderDetailReducer,
     deletedProducts: deletedProductsReducer,
+    client: clientReducer,
+    notification: notificationReducer,
 }
