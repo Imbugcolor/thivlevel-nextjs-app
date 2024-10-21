@@ -46,11 +46,7 @@
 
 .create_product form input[type='text'],
 .create_product form input[type='number'] {
-  width: 400px;
-}
-
-.create_product form textarea {
-  width: 100%;
+  max-width: 400px;
 }
 
 .create_product form input[type="text"],
@@ -63,6 +59,18 @@
   border: 1px solid #d5d3d2;
   font-weight: 300;
   font-size: 15px;
+  border-radius: 5px;
+}
+
+.create_product form textarea {
+  width: 100%;
+  padding: 5px;
+}
+
+.create_product input[type=text]:focus,
+.create_product input[type=number]:focus,
+.create_product textarea:focus {
+  border: 1px solid #0089ff !important;
 }
 
 .create_product form input[type="checkbox"] {
@@ -269,6 +277,15 @@ li.file-item .actions .delete-image {
   margin-right: 5px;
   border: 1px solid #ccc;
   padding: 5px 15px;
+}
+
+.aplly-to-all {
+  padding: 6.5px 15px;
+  margin: 0 15px;
+  background-color: #000000;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 /* TABLE VARIANTS */

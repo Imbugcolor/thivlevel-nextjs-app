@@ -38,6 +38,7 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
     const [sizes, setSizes] = useState<string[]>([])
     const [publish, setPublish] = useState(false)
     const [images, setImages] = useState<(Blob | ImageObject)[]>([])
+    const [inStockApply, setInStockApply] = useState<number | string>('');
     const [validation, setValidation] = useState<{ [key: string]: string }>({})
 
     const [inventory, setInventory] = useState(
@@ -173,6 +174,22 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
     const removeSize = (idx: number) => {
         const newSizes = sizes.filter((size, index) => index !== idx)
         setSizes(newSizes)
+    }
+
+    const applyToAll = () => {
+        if (colors.length > 0 && sizes.length > 0) {
+            if (inStockApply) {
+                setInventory([])
+                colors.forEach(color => {
+                    sizes.forEach(size => {
+                        setInventory((prevInventory) => ([
+                            ...prevInventory,
+                            { color, size, quantity: parseInt(inStockApply as string) }
+                        ]));
+                    })
+                })
+            }
+        }
     }
 
     const handleOnChangeInputInventory = (e: InputChange, color: string, size: string) => {
@@ -340,10 +357,10 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
                 },
                 body: JSON.stringify({ path: '/' })
             });
-  
+
             if (!revalidateRes.ok) {
-                dispatch(setNotify({ error: 'Failed to revalidate homepage'}));
-            } 
+                dispatch(setNotify({ error: 'Failed to revalidate homepage' }));
+            }
         } catch (error) {
             if (error instanceof HttpError) {
                 // Handle the specific HttpError
@@ -372,34 +389,39 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
                             <div className="row">
                                 <label className="p-0" htmlFor="product_id">Mã sản phẩm</label>
                                 <input type="text" name="product_sku" id="product_sku"
-                                    value={product.product_sku} onChange={handleChangeInput} />
+                                    value={product.product_sku} onChange={handleChangeInput} 
+                                    placeholder="SKU"/>
                                 <span className='validate-msg-product-create'>{validation.product_sku}</span>
                             </div>
 
                             <div className="row">
                                 <label className="p-0" htmlFor="title">Tên sản phẩm</label>
                                 <input type="text" name="title" id="title"
-                                    value={product.title} onChange={handleChangeInput} />
+                                    value={product.title} onChange={handleChangeInput} 
+                                    placeholder="Tên sản phẩm"/>
                                 <span className='validate-msg-product-create'>{validation.title}</span>
                             </div>
 
                             <div className="row">
                                 <label className="p-0" htmlFor="price">Giá</label>
                                 <input type="number" name="price" id="price"
-                                    value={product.price} onChange={handleChangeInput} />
+                                    value={product.price} onChange={handleChangeInput} 
+                                    placeholder="Giá sản phẩm"/>
                                 <span className='validate-msg-product-create'>{validation.price}</span>
                             </div>
 
                             <div className="row">
                                 <label className="p-0" htmlFor="description">Mô tả</label>
                                 <textarea name="description" id="description" required
-                                    value={product.description} rows={4} onChange={handleChangeInput} />
+                                    value={product.description} rows={4} onChange={handleChangeInput} 
+                                    placeholder="Mô tả"/>
                             </div>
 
                             <div className="row">
                                 <label className="p-0" htmlFor="content">Nội dung</label>
                                 <textarea name="content" id="content" required
-                                    value={product.content} rows={5} onChange={handleChangeInput} />
+                                    value={product.content} rows={5} onChange={handleChangeInput} 
+                                    placeholder="Nội dung chi tiết"/>
                             </div>
 
                             <div className="row">
@@ -418,7 +440,7 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
                             </div>
                         </div>
 
-                        <div className="upload">
+                        <div className="upload row">
                             <label className="p-0" htmlFor="">Hình ảnh sản phẩm</label>
                             <input
                                 type="file" name="file" id="file_up"
@@ -435,107 +457,126 @@ export default function UpdateProduct({ params }: { params: { id: string } }) {
                             </div>
                             <span className='validate-msg-product-create'>{validation.images}</span>
                             <ImageList images={images} deleteImage={deleteImage} />
-
-                            <div className="variant">
-                                <label className="p-0" htmlFor="">Biến thể: </label>
-                                <div className="variant-options">
-                                    <div className="color-options">
-                                        <label className="p-0" htmlFor="color">Màu sắc: </label>
-                                        {
-                                            colors.length > 0 && colors.map((color, idx) => (
-                                                <div key={idx} className="color-input">
-                                                    <input
-                                                        value={color}
-                                                        onChange={(e: InputChange) => handleOnChangeColorInput(e, idx)}
-                                                        required
-                                                    />
-                                                    <GoTrash onClick={() => removeColor(idx)} />
-                                                </div>
-                                            ))
-                                        }
-                                        <div className='add-option' onClick={() => setColors([...colors, ''])}>
-                                            <CiCirclePlus /> Thêm màu sắc
-                                        </div>
-                                        <span className='validate-msg-product-create'>{validation.color}</span>
+                        </div>
+                        <div className="variant row">
+                            <label className="p-0" htmlFor="">Biến thể: </label>
+                            <div className="variant-options">
+                                <div className="color-options mb-3">
+                                    <label className="p-0 mb-1" htmlFor="color">Màu sắc: </label>
+                                    {
+                                        colors.length > 0 && colors.map((color, idx) => (
+                                            <div key={idx} className="color-input">
+                                                <input
+                                                    type="text"
+                                                    name="color"
+                                                    value={color}
+                                                    onChange={(e: InputChange) => handleOnChangeColorInput(e, idx)}
+                                                    placeholder="Màu sắc: (đen, trắng, vv...)"
+                                                    required
+                                                />
+                                                <GoTrash onClick={() => removeColor(idx)} />
+                                            </div>
+                                        ))
+                                    }
+                                    <div className='add-option' onClick={() => setColors([...colors, ''])}>
+                                        <CiCirclePlus /> Thêm màu sắc
                                     </div>
-                                    <div className="sizes-options">
-                                        <label className="p-0" htmlFor="color">Kích thước: </label>
-                                        {
-                                            sizes.length > 0 && sizes.map((size, idx) => (
-                                                <div key={idx} className="size-input">
-                                                    <input
-                                                        value={size}
-                                                        onChange={(e: InputChange) => handleOnChangeInputSize(e, idx)}
-                                                        required
-                                                    />
-                                                    <GoTrash onClick={() => removeSize(idx)} />
-                                                </div>
-                                            ))
-                                        }
-                                        <div className="add-option" onClick={() => setSizes([...sizes, ''])}>
-                                            <CiCirclePlus /> Thêm kích thước
-                                        </div>
-                                        <span className='validate-msg-product-create'>{validation.size}</span>
-                                    </div>
+                                    <span className='validate-msg-product-create'>{validation.color}</span>
                                 </div>
-
-                                <div className="variant-options">
-                                    <label className="p-0" htmlFor="">Danh sách các biến thể: </label>
-                                    <table className="variants">
-                                        <thead className="table-header">
-                                            <tr>
-                                                <th>MÀU SẮC</th>
-                                                <th>KÍCH THƯỚC</th>
-                                                <th>SỐ LƯỢNG</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="table-body">
-                                            {
-                                                colors.length > 0 && colors.map((color, colorIndex) => (
-                                                    <React.Fragment key={colorIndex}>
-                                                        <tr>
-                                                            <th rowSpan={sizes.length + 1}>{color}</th>
-                                                        </tr>
-                                                        {
-                                                            sizes.length > 0 && sizes.map((size, sizeIndex) => (
-                                                                <tr key={sizeIndex}>
-                                                                    <td>{size}</td>
-                                                                    <td>
-                                                                        <div>
-                                                                            <input
-                                                                                style={{ width: '100%' }}
-                                                                                type="number"
-                                                                                placeholder="Nhập số lượng"
-                                                                                value={
-                                                                                    inventory.find(
-                                                                                        item => item.color === color && item.size === size
-                                                                                    )?.quantity || ''
-                                                                                }
-                                                                                min={0}
-                                                                                onChange={(e) => handleOnChangeInputInventory(e, color, size)}
-                                                                            />
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                            ))
-                                                        }
-                                                    </React.Fragment>
-                                                ))
-                                            }
-                                        </tbody>
-                                    </table>
+                                <div className="sizes-options mb-3">
+                                    <label className="p-0 mb-1" htmlFor="size">Kích thước: </label>
+                                    {
+                                        sizes.length > 0 && sizes.map((size, idx) => (
+                                            <div key={idx} className="size-input">
+                                                <input
+                                                    type="text"
+                                                    name="size"
+                                                    value={size}
+                                                    onChange={(e: InputChange) => handleOnChangeInputSize(e, idx)}
+                                                    placeholder="Kích thước: (S, M, L, vv...)"
+                                                    required
+                                                />
+                                                <GoTrash onClick={() => removeSize(idx)} />
+                                            </div>
+                                        ))
+                                    }
+                                    <div className="add-option" onClick={() => setSizes([...sizes, ''])}>
+                                        <CiCirclePlus /> Thêm kích thước
+                                    </div>
+                                    <span className='validate-msg-product-create'>{validation.size}</span>
+                                </div>
+                                <div className="other-options mb-3">
+                                    <label className='p-0 mb-2' htmlFor="stock">Thuộc tính khác: </label>
+                                    <div className="d-flex align-items-center">
+                                        <input
+                                            type="number"
+                                            name="stock"
+                                            value={inStockApply}
+                                            onChange={(e) => setInStockApply(e.target.value)}
+                                            placeholder="Số lượng trong kho"
+                                            min={0}
+                                        />
+                                        <span className="aplly-to-all" onClick={applyToAll}>Áp dụng cho tất cả</span>
+                                    </div>
                                 </div>
                             </div>
+                            <div className="variant-options">
+                                <label className="p-0 mb-2" htmlFor="">Danh sách các biến thể: </label>
+                                <table className="variants">
+                                    <thead className="table-header">
+                                        <tr>
+                                            <th>MÀU SẮC</th>
+                                            <th>KÍCH THƯỚC</th>
+                                            <th>SỐ LƯỢNG</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="table-body">
+                                        {
+                                            sizes.length > 0 && colors.length > 0 && colors.map((color, colorIndex) => (
+                                                <React.Fragment key={colorIndex}>
+                                                    <tr>
+                                                        <th rowSpan={sizes.length + 1}>{color}</th>
+                                                    </tr>
+                                                    {
+                                                        sizes.length > 0 && sizes.map((size, sizeIndex) => (
+                                                            <tr key={sizeIndex}>
+                                                                <td>{size}</td>
+                                                                <td>
+                                                                    <div>
+                                                                        <input
+                                                                            style={{ width: '100%' }}
+                                                                            type="number"
+                                                                            placeholder="Nhập số lượng"
+                                                                            value={
+                                                                                inventory.find(
+                                                                                    item => item.color === color && item.size === size
+                                                                                )?.quantity || ''
+                                                                            }
+                                                                            min={0}
+                                                                            onChange={(e) => handleOnChangeInputInventory(e, color, size)}
+                                                                        />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        ))
+                                                    }
+                                                </React.Fragment>
+                                            ))
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className='publish_product row'>
                             <label className="p-0" htmlFor="">Ẩn/hiện</label>
-                            <div className='publish_product'>
-                                <div className="publish-toggle"
-                                    onClick={() => setPublish(!publish)}>
-                                    {
-                                        publish ?
-                                            <BsToggleOn style={{ color: '#0e9f6e' }} /> :
-                                            <BsToggleOff style={{ color: '#ff5a1f' }} />
-                                    }
-                                </div>
+
+                            <div className="publish-toggle"
+                                onClick={() => setPublish(!publish)}>
+                                {
+                                    publish ?
+                                        <BsToggleOn style={{ color: '#0e9f6e' }} /> :
+                                        <BsToggleOff style={{ color: '#ff5a1f' }} />
+                                }
                             </div>
                         </div>
                         <button type="submit">Cập nhật</button>

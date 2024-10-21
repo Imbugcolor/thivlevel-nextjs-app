@@ -54,22 +54,22 @@ export default function Footer() {
                             <h4 className="footer-item-header">Về ThivLevel</h4>
                             <ul>
                                 <li>
-                                    <Link href="/pages/introduction">
+                                    <Link href="/about/introduction">
                                         Giới thiệu
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/pages/guarantee">
+                                    <Link href="/about/guarantee">
                                         Chính sách đổi trả
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/pages/privacyPolicy">
+                                    <Link href="/about/privacyPolicy">
                                         Chính sách bảo mật
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link href="/pages/termOfService">
+                                    <Link href="/about/termOfService">
                                         Điều khoản dịch vụ
                                     </Link>
                                 </li>
