@@ -49,15 +49,20 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
         if (!productId) return;
 
         const fetchData = async () => {
-            if (product.data_cached.every(item => item._id !== productId)) {
-                setLoading(true)
-                const res = await productsApiRequest.getProduct(productId)
-                dispatch(getProductDetail(res.payload))
-                setProductDetail(res.payload)
+            try {
+                if (product.data_cached.every(item => item._id !== productId)) {
+                    setLoading(true)
+                    const res = await productsApiRequest.getProduct(productId)
+                    dispatch(getProductDetail(res.payload))
+                    setProductDetail(res.payload)
+                } else {
+                    const product_cached = product.data_cached.find(data => data._id === productId)
+                    setProductDetail(product_cached)
+                }
+            } catch (error) {
+                console.log(error)
+            } finally {
                 setLoading(false)
-            } else {
-                const product_cached = product.data_cached.find(data => data._id === productId)
-                setProductDetail(product_cached)
             }
         }
         fetchData()
@@ -169,12 +174,12 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                 });
 
                 Object.keys(sizeToColors).forEach(s => {
-                    if(!order.includes(s)) {
+                    if (!order.includes(s)) {
                         unsortObj[s] = sizeToColors[s]
                     }
                 })
 
-                setSizes({...sortedObj, ...unsortObj });
+                setSizes({ ...sortedObj, ...unsortObj });
             }
         }
     }, [params.id, productDetail])
@@ -229,192 +234,192 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
 
     return (
         <div className='container-box'>
-            <section className="product-details res-row p30-tb-im">
-                {
-                    loading && <div className='component-loading'><Image src={LoadingGIF} alt='loading' width={0} height={0} /></div>
-                }
-                <div className="col l-12 m-12 c-12">
-                    <div className="res-row">
-                        <div className="col l-4 m-6 c-12">
-                            <div className="product-page-img">
-                                {
-                                    productDetail &&
-                                    productDetail.images.map((image, index) => (
-                                        <div key={index} className="mySlides"
-                                            style={{
-                                                display: (index + 1) === slideIndex ? "block" : "none",
-                                                "--url": `url(${image.url})`,
-                                                "--zoom-x": "0%", "--zoom-y": "0%",
-                                                "--zoom-display": "none"
-                                            } as React.CSSProperties}
-                                            onMouseMove={(e) => handleZoomImage(e, index)}
-                                            onMouseLeave={() => handleMouseLeave(index)}
-                                        >
-                                            <div className="numbertext">{index + 1} / {productDetail.images.length}</div>
-                                            <Image src={image.url} alt="" width={500} height={500} priority />
-                                        </div>
-                                    ))
-                                }
-                                <a href="#!" className="prev" onClick={() => plusSlides(-1)}>&#10094;</a>
-                                <a href="#!" className="next" onClick={() => plusSlides(+1)}>&#10095;</a>
-
-                                <div className="slider-img" draggable={true} ref={slideRef}
-                                    onDragStart={dragStart}
-                                    onDragOver={dragOver}
-                                    onDragEnd={dragEnd}
-                                >
-                                    {
-                                        productDetail &&
-                                        productDetail.images.map((image, index) => (
-                                            <div key={index}
-                                                className={`slider-box ${index + 1 === slideIndex ? 'active' : ''}`}
-                                                onClick={() => setSlideIndex(index + 1)}
-                                            >
-                                                <Image src={image.url} alt="" width={500} height={500} priority />
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col l-8 m-6 c-12">
-                            <div className="product-page-details">
-                                <strong>{productDetail?.title}</strong>
-
-                                <p className="product-category">
-                                    #{productDetail?.product_sku}
-                                    <label>/ Phân loại: </label>
-                                    {
-                                        productDetail && productDetail.category &&
-                                        <span>{productDetail.category.name}</span>
-                                    }
-                                </p>
-                                <div className="review-detail-product">
-                                    <Rating color="#ffce3d" value={productDetail?.rating as number} text={''} />
-                                    <span className='num-review-product'>&#40; {productDetail?.reviews?.length} đánh giá &#41;</span>
-                                </div>
-                                <p className="product-price">
-                                    ${productDetail?.price}
-                                </p>
-
-                                <div className='description__product_wrapper'>
-                                    <div className='description_heading'>
-                                        Đặc điểm nổi bật
-                                    </div>
-                                    <p className="small-desc">{productDetail?.description}</p>
-                                </div>
-
-                                <div className='select__type_wrapper'>
-                                    <span>Chọn màu sắc: </span>
-                                    <div className="product-options size-select" style={{ marginBottom: '10px' }}>
+            {
+                loading ? <div className='component-loading'><Image src={LoadingGIF} alt='loading' width={0} height={0} /></div> :
+                    <section className="product-details res-row p30-tb-im">
+                        <div className="col l-12 m-12 c-12">
+                            <div className="res-row">
+                                <div className="col l-4 m-6 c-12">
+                                    <div className="product-page-img">
                                         {
-                                            colors &&
-                                            Object.keys(colors).map((color, index) => (
-                                                <div className="size" key={index}>
-                                                    <input type='radio' name='color' key={index} value={color} id={color}
-                                                        onChange={() => setSelectedColor(color)}
-                                                        checked={selectedColor === color}
-                                                        disabled={colorAvailable(color) == false}
-                                                    />
-                                                    <label
-                                                        htmlFor={color}
-                                                        style={{ opacity: colorAvailable(color) ? 1 : 0.5 }}
-                                                    >{color}
-                                                    </label>
+                                            productDetail &&
+                                            productDetail.images.map((image, index) => (
+                                                <div key={index} className="mySlides"
+                                                    style={{
+                                                        display: (index + 1) === slideIndex ? "block" : "none",
+                                                        "--url": `url(${image.url})`,
+                                                        "--zoom-x": "0%", "--zoom-y": "0%",
+                                                        "--zoom-display": "none"
+                                                    } as React.CSSProperties}
+                                                    onMouseMove={(e) => handleZoomImage(e, index)}
+                                                    onMouseLeave={() => handleMouseLeave(index)}
+                                                >
+                                                    <div className="numbertext">{index + 1} / {productDetail.images.length}</div>
+                                                    <Image src={image.url} alt="" width={500} height={500} priority />
                                                 </div>
                                             ))
                                         }
-                                    </div>
-                                    {
-                                        validation.color &&
-                                        <span style={{ color: 'red' }}>{validation.color}</span>
-                                    }
-                                </div>
+                                        <a href="#!" className="prev" onClick={() => plusSlides(-1)}>&#10094;</a>
+                                        <a href="#!" className="next" onClick={() => plusSlides(+1)}>&#10095;</a>
 
-                                <div className='select__type_wrapper'>
-                                    <span>Chọn size: </span>
-                                    <div className='size-select' style={{ marginBottom: '10px' }}>
+                                        <div className="slider-img" draggable={true} ref={slideRef}
+                                            onDragStart={dragStart}
+                                            onDragOver={dragOver}
+                                            onDragEnd={dragEnd}
+                                        >
+                                            {
+                                                productDetail &&
+                                                productDetail.images.map((image, index) => (
+                                                    <div key={index}
+                                                        className={`slider-box ${index + 1 === slideIndex ? 'active' : ''}`}
+                                                        onClick={() => setSlideIndex(index + 1)}
+                                                    >
+                                                        <Image src={image.url} alt="" width={500} height={500} priority />
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col l-8 m-6 c-12">
+                                    <div className="product-page-details">
+                                        <strong>{productDetail?.title}</strong>
+
+                                        <p className="product-category">
+                                            #{productDetail?.product_sku}
+                                            <label>/ Phân loại: </label>
+                                            {
+                                                productDetail && productDetail.category &&
+                                                <span>{productDetail.category.name}</span>
+                                            }
+                                        </p>
+                                        <div className="review-detail-product">
+                                            <Rating color="#ffce3d" value={productDetail?.rating as number} text={''} />
+                                            <span className='num-review-product'>&#40; {productDetail?.reviews?.length} đánh giá &#41;</span>
+                                        </div>
+                                        <p className="product-price">
+                                            ${productDetail?.price}
+                                        </p>
+
+                                        <div className='description__product_wrapper'>
+                                            <div className='description_heading'>
+                                                Đặc điểm nổi bật
+                                            </div>
+                                            <p className="small-desc">{productDetail?.description}</p>
+                                        </div>
+
+                                        <div className='select__type_wrapper'>
+                                            <span>Chọn màu sắc: </span>
+                                            <div className="product-options size-select" style={{ marginBottom: '10px' }}>
+                                                {
+                                                    colors &&
+                                                    Object.keys(colors).map((color, index) => (
+                                                        <div className="size" key={index}>
+                                                            <input type='radio' name='color' key={index} value={color} id={color}
+                                                                onChange={() => setSelectedColor(color)}
+                                                                checked={selectedColor === color}
+                                                                disabled={colorAvailable(color) == false}
+                                                            />
+                                                            <label
+                                                                htmlFor={color}
+                                                                style={{ opacity: colorAvailable(color) ? 1 : 0.5 }}
+                                                            >{color}
+                                                            </label>
+                                                        </div>
+                                                    ))
+                                                }
+                                            </div>
+                                            {
+                                                validation.color &&
+                                                <span style={{ color: 'red' }}>{validation.color}</span>
+                                            }
+                                        </div>
+
+                                        <div className='select__type_wrapper'>
+                                            <span>Chọn size: </span>
+                                            <div className='size-select' style={{ marginBottom: '10px' }}>
+                                                {
+                                                    sizes &&
+                                                    Object.keys(sizes).map((sz, index) => {
+                                                        return <div className='size' key={index}>
+                                                            <input type='radio' name='size' key={index} value={sz} id={sz}
+                                                                onChange={() => setSelectedSize(sz)}
+                                                                checked={selectedSize === sz}
+                                                                disabled={sizeAvailable(sz) == false}
+                                                            />
+                                                            <label
+                                                                htmlFor={sz}
+                                                                style={{ opacity: sizeAvailable(sz) ? 1 : 0.5 }}
+                                                            >{sz}
+                                                            </label>
+                                                        </div>
+                                                    })
+                                                }
+                                            </div>
+                                            {
+                                                validation.size &&
+                                                <span style={{ color: 'red' }}>{validation.size}</span>
+                                            }
+                                        </div>
+
+                                        {/* <div className="product-page-offer">
+                                    <i className="fa-solid fa-tag" />20% Discount
+                                </div> */}
                                         {
-                                            sizes &&
-                                            Object.keys(sizes).map((sz, index) => {
-                                                return <div className='size' key={index}>
-                                                    <input type='radio' name='size' key={index} value={sz} id={sz}
-                                                        onChange={() => setSelectedSize(sz)}
-                                                        checked={selectedSize === sz}
-                                                        disabled={sizeAvailable(sz) == false}
-                                                    />
-                                                    <label
-                                                        htmlFor={sz}
-                                                        style={{ opacity: sizeAvailable(sz) ? 1 : 0.5 }}
-                                                    >{sz}
-                                                    </label>
-                                                </div>
-                                            })
+                                            selectedVariant &&
+                                            <div className="product-sold">
+                                                <BsCartCheck />
+                                                <strong>{selectedVariant.inventory}<span> sản phẩm có sẵn .</span></strong>
+                                            </div>
+
                                         }
-                                    </div>
-                                    {
-                                        validation.size &&
-                                        <span style={{ color: 'red' }}>{validation.size}</span>
-                                    }
-                                </div>
 
-                                {/* <div className="product-page-offer">
-                                <i className="fa-solid fa-tag" />20% Discount
-                            </div> */}
-                                {
-                                    selectedVariant &&
-                                    <div className="product-sold">
-                                        <BsCartCheck />
-                                        <strong>{selectedVariant.inventory}<span> sản phẩm có sẵn .</span></strong>
-                                    </div>
+                                        <div className="product-sold">
+                                            <Image src={SoldIcon} alt="SoldIcon" width={0} height={0} />
+                                            <strong>{productDetail?.sold ? productDetail?.sold : 0}<span> sản phẩm đã bán.</span></strong>
+                                        </div>
 
-                                }
+                                        <div className="quantity-btn">
+                                            <span className='quantity__label'>Số lượng: </span>
+                                            <div className='quantity__controll_wrapper'>
+                                                <button onClick={() => quantity === 1 ? setQuantity(1) : setQuantity(quantity - 1)}><GrFormSubtract /></button>
+                                                <span>{quantity}</span>
+                                                <button onClick={() => setQuantity(quantity + 1)}><FiPlus /></button>
+                                            </div>
+                                        </div>
 
-                                <div className="product-sold">
-                                    <Image src={SoldIcon} alt="SoldIcon" width={0} height={0} />
-                                    <strong>{productDetail?.sold ? productDetail?.sold : 0}<span> sản phẩm đã bán.</span></strong>
-                                </div>
-
-                                <div className="quantity-btn">
-                                    <span className='quantity__label'>Số lượng: </span>
-                                    <div className='quantity__controll_wrapper'>
-                                        <button onClick={() => quantity === 1 ? setQuantity(1) : setQuantity(quantity - 1)}><GrFormSubtract /></button>
-                                        <span>{quantity}</span>
-                                        <button onClick={() => setQuantity(quantity + 1)}><FiPlus /></button>
+                                        <div className="cart-btns">
+                                            <button className="add-cart"
+                                                onClick={handleAddCart}
+                                                disabled={addCartLoading}
+                                                style={{ opacity: addCartLoading ? 0.7 : 1 }}
+                                            >
+                                                Thêm vào giỏ hàng
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-
-                                <div className="cart-btns">
-                                    <button className="add-cart"
-                                        onClick={handleAddCart}
-                                        disabled={addCartLoading}
-                                        style={{ opacity: addCartLoading ? 0.7 : 1 }}
-                                    >
-                                        Thêm vào giỏ hàng
-                                    </button>
+                                <div className="col l-12 m-12 c-12">
+                                    <div className="product-page-content">
+                                        <div className='description_heading'>
+                                            Thông tin chi tiết sản phẩm
+                                        </div>
+                                        <p>{productDetail?.content}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="col l-12 m-12 c-12">
-                            <div className="product-page-content">
-                                <div className='description_heading'>
-                                    Thông tin chi tiết sản phẩm
-                                </div>
-                                <p>{productDetail?.content}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
+                    </section>
+            }
+
             {
                 productDetail &&
                 <Reviews product={productDetail} />
             }
-            
+
             {
                 productDetail && productDetail.category &&
-                <ProductsRelated productId={productDetail._id} categoryId={productDetail.category._id}/>
+                <ProductsRelated productId={productDetail._id} categoryId={productDetail.category._id} />
             }
         </div>
     )
