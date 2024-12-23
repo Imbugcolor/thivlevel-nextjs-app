@@ -17,6 +17,7 @@ import { setNotify } from '@/lib/features/notifySlice';
 import { useRouter } from 'next/navigation';
 import Reviews from '@/app/components/product/Reviews';
 import ProductsRelated from '@/app/components/product/ProductsRelated';
+import { getIdFromSlug } from '@/lib/utils/func';
 
 export default function ProductDetail({ params }: { params: { id: string } }) {
     const product = useAppSelector(state => state.productDetail)
@@ -44,15 +45,18 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
 
     useEffect(() => {
         if (!params.id) return;
+        const productId = getIdFromSlug(params.id)
+        if (!productId) return;
+
         const fetchData = async () => {
-            if (product.data_cached.every(item => item._id !== params.id)) {
+            if (product.data_cached.every(item => item._id !== productId)) {
                 setLoading(true)
-                const res = await productsApiRequest.getProduct(params.id)
+                const res = await productsApiRequest.getProduct(productId)
                 dispatch(getProductDetail(res.payload))
                 setProductDetail(res.payload)
                 setLoading(false)
             } else {
-                const product_cached = product.data_cached.find(data => data._id === params.id)
+                const product_cached = product.data_cached.find(data => data._id === productId)
                 setProductDetail(product_cached)
             }
         }

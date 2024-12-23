@@ -15,6 +15,7 @@ import Link from 'next/link'
 import { IoCloseOutline } from 'react-icons/io5'
 import { useRouter } from "next/navigation"
 import { clearProductView } from "@/lib/features/quickviewSlice"
+import { convertStringToSEO } from "@/lib/utils/func"
 
 export default function QuickView() {
     const token = useAppSelector(state => state.auth).token
@@ -375,7 +376,7 @@ export default function QuickView() {
                                 Thêm vào giỏ hàng
                             </button>
 
-                            <Link className="view-detail" href={`/product/${product._id}`} onClick={handleCloseView}>
+                            <Link className="view-detail" href={`/product/${convertStringToSEO(product.title)}-${product._id}.html`} onClick={handleCloseView}>
                                 Xem chi tiết
                             </Link>
                         </div>

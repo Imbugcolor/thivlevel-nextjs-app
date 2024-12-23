@@ -6,6 +6,7 @@ import React from 'react'
 import Rating from '../Rating';
 import { useAppDispatch } from "@/lib/hooks";
 import { setProductView } from "@/lib/features/quickviewSlice";
+import { convertStringToSEO } from "@/lib/utils/func";
 
 export default function ProductItem({ product }: { product: Product}) {
     const dispatch = useAppDispatch()
@@ -28,7 +29,7 @@ export default function ProductItem({ product }: { product: Product}) {
   
           <div className="product_box">
             <h3 title={product.title}>
-              <Link href={`/product/${product._id}`}>
+              <Link href={`/product/${convertStringToSEO(product.title)}-${product._id}.html`}>
                 {product.title}
               </Link>
             </h3>
