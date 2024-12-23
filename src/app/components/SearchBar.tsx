@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { InputChange } from '../types/html-elements';
 import { replaceAccentedCharacters } from '@/lib/utils/regex';
+import { convertStringToSEO } from '@/lib/utils/func';
 
 export default function SearchBar() {
     const [wordEntered, setWordEntered] = useState('')
@@ -64,7 +65,7 @@ export default function SearchBar() {
                                 return index > 15 ? null :
                                     <li key={item._id} className="item_suggest_result">
                                         <div className='left__item_suggest_result'>
-                                            <Link href={`/product/${item._id}`} className="redirect_item_result" onClick={(e) => {
+                                            <Link href={`/product/${convertStringToSEO(item.title)}-${item._id}.html`} className="redirect_item_result" onClick={(e) => {
                                                 setWordEntered((e.target as HTMLElement).innerText)
                                                 setOpenResult(false)
                                                 setSearch([])
@@ -75,7 +76,7 @@ export default function SearchBar() {
                                             <span>{item.price} $</span>
                                         </div>
                                         <div className='right__item_suggest_result'>
-                                            <Link href={`/product/${item._id}`} className="redirect_item_result" onClick={(e) => {
+                                            <Link href={`/product/${convertStringToSEO(item.title)}-${item._id}.html`} className="redirect_item_result" onClick={(e) => {
                                                 setWordEntered((e.target as HTMLElement).innerText)
                                                 setOpenResult(false)
                                                 setSearch([])
