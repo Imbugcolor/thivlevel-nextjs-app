@@ -32,12 +32,10 @@ export async function generateMetadata(
         }
       }
     } catch (error) {
-      notFound()
+      return notFound()
     }
   }
-  return {
-    title: '404 Not Found',
-  }
+  notFound()
 }
 
 export default function ProductDetailLayout({

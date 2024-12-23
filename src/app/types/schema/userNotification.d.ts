@@ -4,4 +4,5 @@ interface UserNotification {
     notification: NotificationSchema
     status: string;
     read_at: Date | null;
+    createdAt: Date;
 }
