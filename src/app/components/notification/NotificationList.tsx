@@ -7,6 +7,7 @@ import { HttpError } from '@/lib/utils/http';
 import React, { useEffect, useState } from 'react'
 import NotificationItem from './NotificationItem';
 import { useRouter } from 'next/navigation';
+import UserNotificationItem from './UserNotificationItem';
 
 export default function NotificationList(
     { type, setIsOpen }: { type: string, setIsOpen: (open: boolean) => void }
@@ -93,7 +94,7 @@ export default function NotificationList(
                                 className={item.status === 'UNREAD' ? styles['unread-notfification'] : ''}
                                 onClick={() => handleReadNotification(item)}
                             >
-                                <NotificationItem notification={item.notification} />
+                                <UserNotificationItem notification={item} />
                             </div>
                         ))
                     }
