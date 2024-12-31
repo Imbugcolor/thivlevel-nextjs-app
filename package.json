@@ -6,7 +6,8 @@
     "dev": "next dev -p 8080",
     "start": "next start",
     "build": "next build",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build-css": "cleancss -o src/app/assets/css/minified.css src/app/assets/css/*.css"
   },
   "dependencies": {
     "@paypal/react-paypal-js": "^8.6.0",
@@ -32,6 +33,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "clean-css-cli": "^5.6.3",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "typescript": "^5"

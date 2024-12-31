@@ -1,4 +1,4 @@
-import '../../assets/css/style.css'
+import '../../assets/css/minified.css'
 import './dashboard.css'
 import { Metadata } from 'next';
 import Script from 'next/script';
