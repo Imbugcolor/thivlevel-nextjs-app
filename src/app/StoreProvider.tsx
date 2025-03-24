@@ -6,7 +6,7 @@ import { login } from '@/lib/features/authSlice'
 import { userApiRequest } from './api-request/user.api'
 import { getProducts } from '@/lib/features/productSlice'
 import { getCategories } from '@/lib/features/categorySlice'
-import { BACKEND_SERVER_URL, NEXT_SERVER_URL, NUM_PER_PAGE } from '@/config'
+import { API_BACKEND_URL, BACKEND_SERVER_URL, NEXT_SERVER_URL, NUM_PER_PAGE } from '@/config'
 import { getCart } from '@/lib/features/cartSlice'
 import { jwtDecode } from 'jwt-decode'
 import { JwtPayload } from '@/lib/jwt.payload'
@@ -73,7 +73,7 @@ export default function StoreProvider({
   useEffect(() => {
     if (accessToken) {
       // create new socket 
-      const socket = io((BACKEND_SERVER_URL ? BACKEND_SERVER_URL : ''), {
+      const socket = io((API_BACKEND_URL ? API_BACKEND_URL : ''), {
         extraHeaders: {
           Authorization: `Bearer ${accessToken}` // WARN: this will be ignored in a browser
         }
