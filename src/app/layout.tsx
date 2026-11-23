@@ -18,7 +18,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({ subsets: ["latin"] });
 const googleAnalyticsId =
-  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-R5BZV1X5G";
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-R5BZV1X5GK";
 
 export const metadata: Metadata = {
   title: "thivlevel",
