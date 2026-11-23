@@ -14,8 +14,11 @@ import QuickViewLayout from "./components/product/QuickViewLayout";
 import ReviewModalLayout from "./components/purchase/Review/ReviewModalLayout";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "@/lib/jwt.payload";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({ subsets: ["latin"] });
+const googleAnalyticsId =
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-R5BZV1X5G";
 
 export const metadata: Metadata = {
   title: "thivlevel",
@@ -67,6 +70,7 @@ export default function RootLayout({
         </StoreProvider>
       </GoogleOAuthProvider>
       </body>
+      <GoogleAnalytics gaId={googleAnalyticsId} />
     </html>
   );
 }
