@@ -67,3 +67,85 @@
 .footer .payment__method_footer {
     margin-top: 10px;
 }
+.newsletter-form {
+    max-width: 760px;
+    margin: 24px auto 8px;
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.newsletter-form > p {
+    margin: 8px 0 16px;
+}
+
+.newsletter-form-row {
+    display: flex;
+    gap: 10px;
+}
+
+.newsletter-form-row input {
+    min-width: 0;
+    flex: 1;
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid #d4d4d4;
+    border-radius: 4px;
+}
+
+.newsletter-form-row button {
+    min-width: 120px;
+    padding: 0 18px;
+    border: 0;
+    border-radius: 4px;
+    background: #d93938;
+    color: #fff;
+    cursor: pointer;
+}
+
+.newsletter-form-row button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.newsletter-honeypot {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+}
+
+.newsletter-message {
+    margin: 12px 0 0 !important;
+}
+
+.newsletter-message.success {
+    color: #8fe3b2;
+}
+
+.newsletter-message.error {
+    color: #ff9d9d;
+}
+
+.newsletter-form small {
+    display: block;
+    margin-top: 10px;
+    opacity: 0.8;
+}
+
+@media (max-width: 600px) {
+    .newsletter-form {
+        padding: 18px 14px;
+    }
+
+    .newsletter-form-row {
+        flex-direction: column;
+    }
+
+    .newsletter-form-row button {
+        height: 44px;
+        width: 100%;
+    }
+}

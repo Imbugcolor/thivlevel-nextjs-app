@@ -11,6 +11,9 @@ export interface AnalyticsItem {
   item_name: string
   item_category?: string
   item_variant?: string
+  item_list_id?: string
+  item_list_name?: string
+  index?: number
   price: number
   quantity: number
 }
@@ -52,6 +55,42 @@ export const trackViewItem = (product: Product) => {
   })
 }
 
+export const trackViewItemList = (
+  products: Product[],
+  itemListId: string,
+  itemListName: string,
+) => {
+  if (!products.length) return
+  event('view_item_list', {
+    item_list_id: itemListId,
+    item_list_name: itemListName,
+    items: products.map((product, index) => ({
+      ...productItem(product),
+      item_list_id: itemListId,
+      item_list_name: itemListName,
+      index,
+    })),
+  })
+}
+
+export const trackSelectItem = (
+  product: Product,
+  itemListId: string,
+  itemListName: string,
+  index: number,
+) => {
+  event('select_item', {
+    item_list_id: itemListId,
+    item_list_name: itemListName,
+    items: [{
+      ...productItem(product),
+      item_list_id: itemListId,
+      item_list_name: itemListName,
+      index,
+    }],
+  })
+}
+
 export const trackAddToCart = (product: Product, variant: Variant, quantity: number) => {
   event('add_to_cart', {
     currency: CURRENCY,
@@ -85,6 +124,13 @@ export const trackAddPaymentInfo = (cart: Cart, paymentType: string) => {
 export const trackLogin = (method: 'email' | 'google') => event('login', { method })
 
 export const trackSignUp = (method: 'email' | 'google') => event('sign_up', { method })
+
+export const trackGenerateLead = (formName: string) => {
+  event('generate_lead', {
+    lead_source: 'website',
+    form_name: formName,
+  })
+}
 
 export const trackPurchase = (
   transactionId: string,

@@ -17,6 +17,7 @@ import Logo from '../../images/thivlevel-logo-4.png'
 import { AiFillMail, AiFillPhone } from 'react-icons/ai'
 import { ImLocation } from 'react-icons/im'
 import Link from 'next/link'
+import NewsletterForm from './NewsletterForm'
 
 
 export default function Footer() {
@@ -123,6 +124,9 @@ export default function Footer() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div className="col l-12 m-12 c-12 footer-item">
+                        <NewsletterForm />
                     </div>
                     <div className="col l-12 m-12 c-12">
                         <h5 className="copyright">@Since 2022 THIVLEVEL</h5>

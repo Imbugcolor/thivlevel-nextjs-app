@@ -7,9 +7,32 @@ import Rating from '../Rating';
 import { useAppDispatch } from "@/lib/hooks";
 import { setProductView } from "@/lib/features/quickviewSlice";
 import { convertStringToSEO } from "@/lib/utils/func";
+import { trackSelectItem } from "@/lib/analytics";
 
-export default function ProductItem({ product }: { product: Product}) {
+interface ProductItemProps {
+  product: Product
+  itemListId?: string
+  itemListName?: string
+  itemIndex?: number
+}
+
+export default function ProductItem({
+  product,
+  itemListId,
+  itemListName,
+  itemIndex = 0,
+}: ProductItemProps) {
     const dispatch = useAppDispatch()
+    const trackSelection = () => {
+      if (itemListId && itemListName) {
+        trackSelectItem(product, itemListId, itemListName, itemIndex)
+      }
+    }
+
+    const handleQuickView = () => {
+      trackSelection()
+      dispatch(setProductView(product))
+    }
     return (
       <div className="col l-3 m-4 c-6">
         <div className="product_card">
@@ -22,14 +45,17 @@ export default function ProductItem({ product }: { product: Product}) {
                 <Image className="product_img-2" src={product.images[1]?.url} alt="product_thumbnail" width={500} height={500}/>
               </>
             }
-            <div className="quick-view" onClick={() => dispatch(setProductView(product))}>
+            <div className="quick-view" onClick={handleQuickView}>
               Xem nhanh
             </div>
           </div>
   
           <div className="product_box">
             <h3 title={product.title}>
-              <Link href={`/product/${convertStringToSEO(product.title)}-${product._id}.html`}>
+              <Link
+                href={`/product/${convertStringToSEO(product.title)}-${product._id}.html`}
+                onClick={trackSelection}
+              >
                 {product.title}
               </Link>
             </h3>

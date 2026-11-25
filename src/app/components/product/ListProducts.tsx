@@ -1,13 +1,13 @@
 'use client'
 import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import React from 'react'
-import ProductItem from './ProductItem'
 import ProductFilter from './ProductFilter'
 import Paginator from '../Paginator'
 import { changePage, getProducts, ProductState } from '@/lib/features/productSlice'
 import { productsApiRequest } from '@/app/api-request/products.api'
 import { NUM_PER_PAGE } from '@/config'
 import TopBarProduct from './TopBarProduct'
+import TrackedProductList from './TrackedProductList'
 
 export default function ListProducts() {
   const products = useAppSelector((state) => state.producs)
@@ -44,9 +44,12 @@ export default function ListProducts() {
                     }
                   </div>
                   {
-                    products.data.length > 0 && products.data.map(product => {
-                      return <ProductItem key={product._id} product={product} />
-                    })
+                    products.data.length > 0 &&
+                    <TrackedProductList
+                      products={products.data}
+                      itemListId="product_catalog"
+                      itemListName="Product catalog"
+                    />
                   }
                 </div>
 

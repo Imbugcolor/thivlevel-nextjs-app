@@ -1,6 +1,6 @@
 import { productsApiRequest } from '@/app/api-request/products.api'
 import React, { useEffect, useState } from 'react'
-import ProductItem from './ProductItem'
+import TrackedProductList from './TrackedProductList'
 
 export default function ProductsRelated({ productId, categoryId }: { productId: string, categoryId: string }) {
 
@@ -19,9 +19,12 @@ export default function ProductsRelated({ productId, categoryId }: { productId: 
       <h2 className='tag-color'>Sản phẩm liên quan</h2>
       <div className="products relate-products-list res-row">
         {
-          productsRelated.length > 0 && productsRelated.map((product) =>
-            <ProductItem key={product._id} product={product} />
-          )
+          productsRelated.length > 0 &&
+          <TrackedProductList
+            products={productsRelated}
+            itemListId="related_products"
+            itemListName="Related products"
+          />
         }
       </div>
     </div>

@@ -9,7 +9,7 @@ import RecomFYBanner from '../images/banner-clothing.jpg'
 import BestSABanner from '../images/best-seller-banner.jpg'
 import NewABanner from '../images/img-banner-index.jpg'
 import Link from "next/link";
-import ProductItem from "./components/product/ProductItem";
+import TrackedProductList from "./components/product/TrackedProductList";
 import { productsApiRequest } from "./api-request/products.api";
 
 const fetchData = async () => {
@@ -103,9 +103,11 @@ export default async function Home() {
                             data.recommendList.length > 0 &&
                             <div className="res-row products">
                                 {
-                                    data.recommendList.map((product: Product) => {
-                                        return <ProductItem key={product._id} product={product}/>
-                                    })
+                                    <TrackedProductList
+                                        products={data.recommendList}
+                                        itemListId="recommended_products"
+                                        itemListName="Recommended products"
+                                    />
                                 }
                             </div>
                         }
@@ -125,9 +127,11 @@ export default async function Home() {
                             data.bestSellerList.length > 0 &&
                             <div className="res-row products">
                                 {
-                                    data.bestSellerList.map(product => {
-                                        return <ProductItem key={product._id} product={product}/>
-                                    })
+                                    <TrackedProductList
+                                        products={data.bestSellerList}
+                                        itemListId="best_sellers"
+                                        itemListName="Best sellers"
+                                    />
                                 }
                             </div>
                         }
@@ -148,9 +152,11 @@ export default async function Home() {
                             data.newArrivalList.length > 0 &&
                             <div className="res-row products">
                                 {
-                                    data.newArrivalList.map(product => {
-                                        return <ProductItem key={product._id} product={product} />
-                                    })
+                                    <TrackedProductList
+                                        products={data.newArrivalList}
+                                        itemListId="new_arrivals"
+                                        itemListName="New arrivals"
+                                    />
                                 }
                             </div>
                         }
