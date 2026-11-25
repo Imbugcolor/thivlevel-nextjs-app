@@ -74,8 +74,8 @@ export default function StoreProvider({
     if (accessToken) {
       // create new socket 
       const socket = io((API_BACKEND_URL ? API_BACKEND_URL : ''), {
-        extraHeaders: {
-          Authorization: `Bearer ${accessToken}` // WARN: this will be ignored in a browser
+        auth: {
+          token: accessToken
         }
       })
 
@@ -87,12 +87,8 @@ export default function StoreProvider({
       });
 
       return () => {
-        socket.off('connect', () => {
-          if (storeRef.current) {
-            // Create the store instance the first time this renders
-            storeRef.current.dispatch(connect(socket))
-          }
-        })
+        socket.removeAllListeners()
+        socket.disconnect()
       }
     }
   }, [accessToken])

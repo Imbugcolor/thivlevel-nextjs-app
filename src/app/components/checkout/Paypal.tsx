@@ -53,7 +53,12 @@ export default function Paypal({ name, phone, address }: { name: string, phone: 
   }, [dispatch, socket]);
 
   async function createOrderCallback() {
-    if (!token || !user || !socket || !socket.connected) return ''
+    if (!token || !user) {
+      throw new Error('Vui lòng đăng nhập lại trước khi thanh toán PayPal.')
+    }
+    if (!socket || !socket.connected) {
+      throw new Error('Chưa kết nối được máy chủ thanh toán. Vui lòng thử lại sau ít giây.')
+    }
 
     try {
       const body: CreatePaypalCheckoutRequest = { socketId: (socket.id as string), userId: user._id, name, phone, address }
@@ -80,6 +85,7 @@ export default function Paypal({ name, phone, address }: { name: string, phone: 
         console.log("An unexpected error occurred:", error);
         dispatch(setNotify({ error: 'An unexpected error occurred' }))
       }
+      throw error
     }
   }
 
