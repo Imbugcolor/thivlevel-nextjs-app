@@ -13,11 +13,13 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks"
 import { IoCloseOutline } from "react-icons/io5"
 import { HttpError } from "@/lib/utils/http"
 import { setNotify } from "@/lib/features/notifySlice"
+import { trackAddPaymentInfo, trackPurchase } from "@/lib/analytics"
 
 interface OrderProps extends CreateCheckoutSessionRequest { }
 
 export default function Payment({ order }: { order: OrderProps }) {
     const token = useAppSelector(state => state.auth).token
+    const cart = useAppSelector(state => state.cart)
     const dispatch = useAppDispatch()
     const [method, setMethod] = useState('')
     const [validation, setValidation] = useState<{ [key: string]: string }>({})
@@ -49,7 +51,10 @@ export default function Payment({ order }: { order: OrderProps }) {
         if (!token) return;
         try {
             setLoading(true)
-            await ordersApiRequest.createCodOrder(token, dispatch, order)
+            const response = await ordersApiRequest.createCodOrder(token, dispatch, order)
+            const payload = response.payload as unknown as Record<string, unknown>
+            const transactionId = String(payload._id || payload.id || payload.orderId || '')
+            trackPurchase(transactionId)
             dispatch(setNotify({loading: true}))
             window.location.href = '/cart/checkout/thanks'
         } catch (error: any) {
@@ -112,6 +117,7 @@ export default function Payment({ order }: { order: OrderProps }) {
         if (!isValid) return
         try {
             setLoading(true)
+            trackAddPaymentInfo(cart, method)
             if (method === 'cod') {
                 return handlePaymentCOD()
             }

@@ -4,6 +4,7 @@ import { vnpayApiRequest } from '@/app/api-request/vnpay.api';
 import { HttpError } from '@/lib/utils/http';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
+import { trackPurchase } from '@/lib/analytics';
 
 export default function VnpayCheckoutResult() {
     const [loading, setLoading] = useState(true)
@@ -20,6 +21,9 @@ export default function VnpayCheckoutResult() {
                     setLoading(true)
                     const response = await vnpayApiRequest.verifyReturnUrl(qs)
                     if (response.payload.success === true) {
+                        const params = new URLSearchParams(qs)
+                        const transactionId = params.get('vnp_TxnRef') || params.get('vnp_TransactionNo') || ''
+                        trackPurchase(transactionId)
                         setIsSuccess(true)
                     } else {
                         setIsFailed(true)

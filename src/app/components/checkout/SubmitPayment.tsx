@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react'
 import Loading from '../loading/Loading';
 import { usePayPalHostedFields } from '@paypal/react-paypal-js';
 import { paypalApiRequest } from '@/app/api-request/paypal.api';
-import { useAppDispatch } from '@/lib/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { setNotify } from '@/lib/features/notifySlice';
+import { trackAddPaymentInfo, trackPurchase } from '@/lib/analytics';
 
 export default function SubmitPayment({ cardHolderName }: { cardHolderName: React.RefObject<HTMLInputElement> }) {
   const dispatch = useAppDispatch()
+  const cart = useAppSelector(state => state.cart)
   const [paying, setPaying] = useState(false);
   const hostedField = usePayPalHostedFields();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -56,6 +58,11 @@ export default function SubmitPayment({ cardHolderName }: { cardHolderName: Reac
           orderData,
           JSON.stringify(orderData, null, 2),
         );
+        const amount = Number(transaction?.amount?.value)
+        trackPurchase(transaction.id, {
+          currency: transaction?.amount?.currency_code,
+          value: Number.isFinite(amount) ? amount : undefined,
+        })
       }
       setPaying(false)
       dispatch(setNotify({ loading: true }))
@@ -80,6 +87,7 @@ export default function SubmitPayment({ cardHolderName }: { cardHolderName: Reac
         "Thông tin thanh toán không hợp lệ."
       );
     }
+    trackAddPaymentInfo(cart, 'paypal')
     setPaying(true);
     hostedField.cardFields
       .submit({

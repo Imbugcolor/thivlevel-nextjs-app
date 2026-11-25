@@ -6,12 +6,21 @@ import { FormSubmit, InputChange } from '@/app/types/html-elements'
 import { useAppSelector } from '@/lib/hooks'
 import useLocationForm, { AddressFullObject, AddressLocation } from '@/lib/location/useLocationForm'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { IoReturnDownBackSharp } from 'react-icons/io5'
 import Select from 'react-select'
+import { trackAddShippingInfo, trackBeginCheckout } from '@/lib/analytics'
 
 export default function Checkout() {
     const cart = useAppSelector(state => state.cart)
+    const checkoutTracked = useRef(false)
+
+    useEffect(() => {
+        if (!checkoutTracked.current && cart.items.length) {
+            trackBeginCheckout(cart)
+            checkoutTracked.current = true
+        }
+    }, [cart])
 
     const [detail, setDetail] = useState({
         name: '',
@@ -107,6 +116,7 @@ export default function Checkout() {
         const isValid = validate()
         if(!isValid) return
         onClick(e, numStreet, setAddress, "delivery-detail-form")
+        trackAddShippingInfo(cart)
         
         handlePaymentMethodModal()
     }

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { IoCloseCircleOutline } from 'react-icons/io5'
 import { MdDone } from 'react-icons/md'
+import { trackSignUp } from '@/lib/analytics'
 
 export default function Active({ params }: { params: { token: string } }) {
     const [err, setErr] = useState('')
@@ -18,6 +19,7 @@ export default function Active({ params }: { params: { token: string } }) {
                 try {
                     setLoading(true)
                     const res = await userApiRequest.active(params.token)
+                    trackSignUp('email')
                     setSuccess('Kích hoạt tài khoản thành công')
                     setLoading(false)
                 } catch (error: any) {

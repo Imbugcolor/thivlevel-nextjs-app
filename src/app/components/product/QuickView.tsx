@@ -16,6 +16,7 @@ import { IoCloseOutline } from 'react-icons/io5'
 import { useRouter } from "next/navigation"
 import { clearProductView } from "@/lib/features/quickviewSlice"
 import { convertStringToSEO } from "@/lib/utils/func"
+import { trackAddToCart, trackViewItem } from "@/lib/analytics"
 
 export default function QuickView() {
     const token = useAppSelector(state => state.auth).token
@@ -37,8 +38,15 @@ export default function QuickView() {
     const [start, setStart] = useState(0)
     const [change, setChange] = useState(0)
     const slideRef = useRef<HTMLInputElement>(null)
+    const trackedProductId = useRef('')
 
     const [validation, setValidation] = useState<{ [key: string]: string }>({})
+
+    useEffect(() => {
+        if (!product || trackedProductId.current === product._id) return
+        trackViewItem(product)
+        trackedProductId.current = product._id
+    }, [product])
 
     useEffect(() => {
         if (!slideRef.current) return;
@@ -200,6 +208,7 @@ export default function QuickView() {
             const addCartRequest = { productId: product._id, variantId: selectedVariant._id as string, quantity }
             const addCart = await cartApiRequest.addCart(token, dispatch, addCartRequest)
             dispatch(getCart(addCart.payload))
+            trackAddToCart(product, selectedVariant, quantity)
             setAddCartLoading(false)
             dispatch(setNotify({ success: 'Đã thêm vào giỏ hàng' }))
         }

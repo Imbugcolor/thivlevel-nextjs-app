@@ -1,17 +1,26 @@
 'use client'
 import "./cart.css"
 import { useAppSelector } from '@/lib/hooks'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { BiSolidShoppingBag } from 'react-icons/bi'
 import CartItem from '../components/cart/CartItem'
 import Image from "next/image"
 import EmptyCart from '../../images/empty-cart.jpg'
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { trackViewCart } from "@/lib/analytics"
 
 export default function Cart() {
   const cart = useAppSelector(state => state.cart)
   const router = useRouter()
+  const cartTracked = useRef(false)
+
+  useEffect(() => {
+    if (!cartTracked.current && cart.items.length) {
+      trackViewCart(cart)
+      cartTracked.current = true
+    }
+  }, [cart])
 
   const handleBuyClick = () => {
     router.push('/cart/checkout')

@@ -10,6 +10,7 @@ import { useSearchParams } from "next/navigation";
 import { useGoogleLogin } from "@react-oauth/google";
 import { FcGoogle } from "react-icons/fc";
 import ButtonLoading from "../components/loading/ButtonLoading";
+import { trackLogin } from "@/lib/analytics";
 
 export default function Login() {
   const searchParams = useSearchParams()
@@ -76,6 +77,7 @@ export default function Login() {
         return dispatch(setNotify({ error: errorData.message ? errorData.message : 'Đăng nhập thất bại'}))
       } 
       setLoading(false)
+      trackLogin('email')
 
       if(previousUrl) {
         window.location.href = `/${previousUrl}`
@@ -117,6 +119,7 @@ export default function Login() {
         return dispatch(setNotify({ error: errorData.message ? errorData.message : 'Đăng nhập thất bại'}))
       } 
       setLoading(false)
+      trackLogin('google')
 
       if(previousUrl) {
         window.location.href = `/${previousUrl}`

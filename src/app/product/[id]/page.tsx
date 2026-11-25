@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import Reviews from '@/app/components/product/Reviews';
 import ProductsRelated from '@/app/components/product/ProductsRelated';
 import { getIdFromSlug } from '@/lib/utils/func';
+import { trackAddToCart, trackViewItem } from '@/lib/analytics';
 
 export default function ProductDetail({ params }: { params: { id: string } }) {
     const product = useAppSelector(state => state.productDetail)
@@ -40,8 +41,15 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
     const [start, setStart] = useState(0)
     const [change, setChange] = useState(0)
     const slideRef = useRef<HTMLInputElement>(null)
+    const trackedProductId = useRef('')
 
     const [validation, setValidation] = useState<{ [key: string]: string }>({})
+
+    useEffect(() => {
+        if (!productDetail || trackedProductId.current === productDetail._id) return
+        trackViewItem(productDetail)
+        trackedProductId.current = productDetail._id
+    }, [productDetail])
 
     useEffect(() => {
         if (!params.id) return;
@@ -227,6 +235,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
             const addCartRequest = { productId: productDetail._id, variantId: selectedVariant._id, quantity }
             const addCart = await cartApiRequest.addCart(token, dispatch, addCartRequest)
             dispatch(getCart(addCart.payload))
+            trackAddToCart(productDetail, selectedVariant, quantity)
             setAddCartLoading(false)
             dispatch(setNotify({ success: 'Đã thêm vào giỏ hàng' }))
         }
